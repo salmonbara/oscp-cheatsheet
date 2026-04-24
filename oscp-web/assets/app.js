@@ -834,11 +834,14 @@ function renderCommand(item) {
   const source = node.querySelector(".source");
   const title = node.querySelector("h3");
   const description = node.querySelector(".command-description");
+  const codePanel = node.querySelector(".code-panel");
+  const codeKindBadge = node.querySelector(".code-kind-badge");
   const code = node.querySelector("code");
   const pre = node.querySelector("pre");
   const statePill = node.querySelector(".state-pill");
   const badges = node.querySelector(".badges");
-  const copyButton = node.querySelector(".copy-button");
+  const outputs = node.querySelector(".outputs");
+  const copyButton = node.querySelector(".code-copy-button");
   const body = applyVariables(commandBody(command));
   const kind = inferCodeKind(body, command.lang || "");
 
@@ -846,7 +849,9 @@ function renderCommand(item) {
   title.textContent = command.title;
   description.textContent = command.description || "";
   description.classList.toggle("hidden", !command.description);
+  codePanel.classList.add(`code-kind-${kind}`);
   pre.classList.add(`code-kind-${kind}`);
+  codeKindBadge.textContent = codeKindLabel(kind);
   code.textContent = body;
 
   if (missing.length) {
@@ -856,18 +861,18 @@ function renderCommand(item) {
     statePill.textContent = "ready";
   }
 
-  badges.append(badge(`code:${codeKindLabel(kind)}`, "code-kind"));
   for (const tag of commandTags(command).slice(0, 14)) {
     badges.append(badge(tag));
-  }
-  for (const output of list(command.outputs).slice(0, 5)) {
-    badges.append(badge(`out:${output}`, "muted"));
   }
   for (const need of missing) {
     badges.append(badge(`needs:${need}`, "need"));
   }
 
-  copyButton.dataset.command = body;
+  const outputList = list(command.outputs);
+  outputs.textContent = outputList.length ? `Outputs: ${outputList.join(", ")}` : "";
+  outputs.classList.toggle("hidden", !outputList.length);
+
+  copyButton.dataset.copyCode = body;
   return node;
 }
 

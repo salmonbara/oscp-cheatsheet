@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-04-24T11:21:51.559Z",
+  "generated_at": "2026-04-24T14:12:10.593Z",
   "source_root": "../OSCP Cheatsheet",
   "commands": [
     {
@@ -3877,6 +3877,34 @@
       "lang": "sh"
     },
     {
+      "id": "note-enumeration-services-21-ftp-md-2",
+      "title": "Anonymous / Default Checks",
+      "description": "Try anonymous/default FTP credentials before using known creds.",
+      "source": "Enumeration/Services/21 - FTP.md",
+      "source_type": "markdown",
+      "tab": "Enum",
+      "tags": [
+        "FTP",
+        "Enumeration"
+      ],
+      "requires": [],
+      "services": [
+        "FTP"
+      ],
+      "attack_types": [
+        "Enumeration"
+      ],
+      "target_types": [],
+      "outputs": [
+        "Banner",
+        "Files",
+        "Password"
+      ],
+      "next": [],
+      "command": "# Common anonymous/default check.\nnxc ftp <TARGET_IP> -u 'anonymous' -p ''",
+      "lang": "sh"
+    },
+    {
       "id": "smb-admin-creds-and-sam",
       "source_type": "curated",
       "title": "Check SMB admin rights and dump SAM with credentials",
@@ -4176,9 +4204,9 @@
       "description": "Crack the extracted document hash with John."
     },
     {
-      "id": "note-enumeration-services-21-ftp-md-2",
+      "id": "note-enumeration-services-21-ftp-md-3",
       "title": "Credentialed Checks",
-      "description": "Try anonymous/default credentials and validate known FTP creds.",
+      "description": "Validate known FTP credentials.",
       "source": "Enumeration/Services/21 - FTP.md",
       "source_type": "markdown",
       "tab": "Enum",
@@ -4205,7 +4233,7 @@
         "Password"
       ],
       "next": [],
-      "command": "# Common anonymous/default check.\nnxc ftp <TARGET_IP> -u 'anonymous' -p ''\n\n# Test known credentials.\nnxc ftp <TARGET_IP> -u <USER> -p '<PASS>'",
+      "command": "# Test known credentials.\nnxc ftp <TARGET_IP> -u <USER> -p '<PASS>'",
       "lang": "sh"
     },
     {
@@ -12803,6 +12831,27 @@
         {
           "type": "heading",
           "depth": 3,
+          "text": "Anonymous / Default Checks"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "FTP",
+            "Enumeration"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Try anonymous/default FTP credentials before using known creds."
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "# Common anonymous/default check.\nnxc ftp <TARGET_IP> -u 'anonymous' -p ''"
+        },
+        {
+          "type": "heading",
+          "depth": 3,
           "text": "Credentialed Checks"
         },
         {
@@ -12816,12 +12865,12 @@
         },
         {
           "type": "paragraph",
-          "text": "Try anonymous/default credentials and validate known FTP creds."
+          "text": "Validate known FTP credentials."
         },
         {
           "type": "code",
           "lang": "sh",
-          "text": "# Common anonymous/default check.\nnxc ftp <TARGET_IP> -u 'anonymous' -p ''\n\n# Test known credentials.\nnxc ftp <TARGET_IP> -u <USER> -p '<PASS>'"
+          "text": "# Test known credentials.\nnxc ftp <TARGET_IP> -u <USER> -p '<PASS>'"
         },
         {
           "type": "heading",

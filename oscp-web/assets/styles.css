@@ -640,6 +640,10 @@ pre[class*="code-kind-"] {
   background: var(--code-bg);
 }
 
+.code-panel[class*="code-kind-"] {
+  border-color: color-mix(in srgb, var(--code-accent) 45%, var(--border));
+}
+
 .code-panel pre {
   border: 0;
   border-radius: 0;
@@ -661,7 +665,6 @@ pre[class*="code-kind-"] {
   font-family: var(--mono);
   font-size: 0.74rem;
   font-weight: 700;
-  text-transform: uppercase;
 }
 
 .code-copy-button {
@@ -729,9 +732,7 @@ code {
 
 .card-footer {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 10px;
-  align-items: end;
+  gap: 8px;
   margin-top: 12px;
 }
 
@@ -952,17 +953,10 @@ code {
   color: var(--warning);
 }
 
-.badge.code-kind {
-  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
-  background: var(--accent-soft);
-  color: var(--accent-text);
-}
-
-.copy-button {
-  min-width: 74px;
-  padding: 9px 12px;
-  font-size: 0.84rem;
-  font-weight: 500;
+.outputs {
+  margin: 0;
+  color: var(--dim);
+  font-size: 0.78rem;
 }
 
 .empty-state {
@@ -1111,8 +1105,7 @@ code {
     grid-template-columns: 1fr;
   }
 
-  .state-pill,
-  .copy-button {
+  .state-pill {
     justify-self: start;
   }
 

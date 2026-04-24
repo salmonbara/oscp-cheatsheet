@@ -44,15 +44,22 @@ nmap <TARGET_IP> -p 21 -sV --script=<SCRIPT1>,<SCRIPT2>
 nxc ftp <TARGET_IP>
 ```
 
-### Credentialed Checks
+### Anonymous / Default Checks
 
-#Username #Password #FTP #Enumeration
-Try anonymous/default credentials and validate known FTP creds.
+#FTP #Enumeration
+Try anonymous/default FTP credentials before using known creds.
 
 ```sh
 # Common anonymous/default check.
 nxc ftp <TARGET_IP> -u 'anonymous' -p ''
+```
 
+### Credentialed Checks
+
+#Username #Password #FTP #Enumeration
+Validate known FTP credentials.
+
+```sh
 # Test known credentials.
 nxc ftp <TARGET_IP> -u <USER> -p '<PASS>'
 ```
