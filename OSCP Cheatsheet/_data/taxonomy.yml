@@ -1,0 +1,84 @@
+version: 1
+
+groups:
+  tabs:
+    - Enum
+    - Initial Access
+    - Exploitation
+    - Privesc
+    - Post-Exploitation
+    - Credentials
+    - Pivoting
+    - Payloads
+    - Reporting
+    - Active Directory
+    - Tools
+
+  what_you_have:
+    - Username
+    - Password
+    - Hash
+    - ProtectedFile
+    - PrivateKey
+    - TGS
+    - TGT
+    - PFX
+    - Shell
+    - PowerShell
+
+  services:
+    - SMB
+    - WMI
+    - Kerberos
+    - RPC
+    - LDAP
+    - NTLM
+    - DNS
+    - HTTP
+    - UDP
+    - NTP
+    - SNMP
+    - ActiveDirectory
+    - FTP
+    - SSH
+    - NFS
+
+  attack_types:
+    - Enumeration
+    - Exploitation
+    - Persistence
+    - PrivilegeEscalation
+    - LateralMovement
+    - Looting
+    - CredentialDumping
+    - Crack
+    - PostExploit
+    - InitialAccess
+    - Credentials
+    - Pivoting
+    - Tunnelling
+    - Payloads
+    - Reporting
+
+  meta:
+    - Inbox
+    - Triage
+    - Troubleshooting
+
+  target_types:
+    - Linux
+    - Windows
+    - ActiveDirectory
+
+  executor:
+    - Linux
+    - Windows
+
+matching_notes:
+  - requires means the selected inputs must include all listed values.
+  - useful_when means the command is still useful in those contexts, but not mandatory.
+  - services, attack_types, and target_types are filters/scoring fields.
+  - target_types describe the command target/source, not where the command is executed.
+  - Empty target_types means target-agnostic or target not known yet.
+  - executor is metadata for runner platform only and should not be rendered as an OS tag.
+  - Use Linux only for Linux targets, Windows only for Windows targets, and ActiveDirectory for domain/DC/AD targets.
