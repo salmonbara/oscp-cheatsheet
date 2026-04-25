@@ -4,7 +4,11 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const webRoot = path.resolve(__dirname, "..");
-const notesRoot = path.resolve(webRoot, "..", "OSCP Cheatsheet");
+const notesRootCandidates = [
+  path.resolve(webRoot, "..", "oscp-cheatsheet"),
+  path.resolve(webRoot, "..", "OSCP Cheatsheet"),
+];
+const notesRoot = notesRootCandidates.find((candidate) => fs.existsSync(candidate)) || notesRootCandidates[0];
 const dataRoot = path.join(notesRoot, "_data");
 const outDir = path.join(webRoot, "data");
 
@@ -172,6 +176,7 @@ function normalizeCommand(command) {
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean)
+    .filter((line) => !/^(#|::|--\s|\/\/|REM\b)/i.test(line))
     .join("\n")
     .toLowerCase();
 }
@@ -195,6 +200,18 @@ function isCommandFence(lang) {
   return ["sh", "bash", "shell", "powershell", "ps1", "pwsh", "cmd", "bat", "sql"].includes(normalized);
 }
 
+function isWorkflowFence(lang) {
+  const normalized = normalizeFenceLang(lang);
+  return isCommandFence(normalized) || normalized.startsWith("file-") || ["php", "aspx", "jsp", "xml", "html", "text", "c", "cpp", "ini"].includes(normalized);
+}
+
+function workflowFenceLabel(lang) {
+  const normalized = normalizeFenceLang(lang);
+  if (!normalized || isCommandFence(normalized)) return "";
+  if (normalized.startsWith("file-")) return normalized.replace(/^file-/, "file ");
+  return normalized;
+}
+
 function normalizeText(value) {
   return String(value || "")
     .toLowerCase()
@@ -209,6 +226,7 @@ function uniq(values) {
 function deriveTab(source, explicitTab) {
   if (explicitTab) return explicitTab;
   if (source.startsWith("Active Directory/")) return "Active Directory";
+  if (source.startsWith("Enumeration/Services/")) return "Services";
   if (source.startsWith("Enumeration/")) return "Enum";
   if (source.startsWith("Privilege Escalation/")) return "Privesc";
   if (source.startsWith("Post-Exploitation/")) return "Post-Exploitation";
@@ -256,7 +274,7 @@ function getMarkdownFiles(dir) {
     .sort((a, b) => a.name.localeCompare(b.name));
 
   for (const entry of entries) {
-    if (entry.name === ".obsidian" || entry.name === "_data") continue;
+    if (entry.name === ".obsidian" || entry.name === "_data" || entry.name === "OSCP Template") continue;
     const fullPath = path.join(dir, entry.name);
 
     if (entry.isDirectory()) {
@@ -298,15 +316,10 @@ function partitionTags(tags, taxonomy) {
 function inferTargetTypes(source, frontmatter, tags, taxonomy) {
   const targetTypes = new Set(taxonomy.groups?.target_types || []);
   const inferred = new Set(tags.filter((tag) => targetTypes.has(tag)));
-  const frontmatterTags = Array.isArray(frontmatter.tags) ? frontmatter.tags : [];
 
-  for (const tag of frontmatterTags) {
-    if (targetTypes.has(tag)) inferred.add(tag);
-  }
-
+  // Do not infer Linux/Windows from the runner, fence language, or note frontmatter.
+  // OS target tags must describe the target/source context for this specific command.
   if (source.startsWith("Active Directory/")) inferred.add("ActiveDirectory");
-  if (/\bLinux\b/i.test(source) || frontmatterTags.includes("Linux")) inferred.add("Linux");
-  if (/\bWindows\b/i.test(source) || frontmatterTags.includes("Windows")) inferred.add("Windows");
 
   return [...inferred];
 }
@@ -329,6 +342,117 @@ function nearestTagLine(lines, startIndex) {
   }
 
   return [];
+}
+
+function nextMethodBoundary(lines, startIndex) {
+  for (let i = startIndex + 1; i < lines.length; i += 1) {
+    const trimmed = lines[i].trim();
+    if (/^#{2,6}\s+/.test(trimmed)) return i;
+    if (isTagOnlyLine(trimmed)) return i;
+  }
+
+  return lines.length;
+}
+
+function previousNonEmptyLine(lines, startIndex) {
+  for (let i = startIndex; i >= 0; i -= 1) {
+    const trimmed = lines[i].trim();
+    if (trimmed) return { index: i, text: trimmed };
+  }
+
+  return null;
+}
+
+function firstParagraphAfterTag(lines, tagIndex, boundaryIndex) {
+  for (let i = tagIndex + 1; i < boundaryIndex; i += 1) {
+    const trimmed = lines[i].trim();
+    if (!trimmed) continue;
+    if (/^```/.test(trimmed) || /^\d+\.\s+/.test(trimmed) || /^#{1,6}\s+/.test(trimmed)) {
+      return "";
+    }
+    return trimmed;
+  }
+
+  return "";
+}
+
+function collectFences(lines, startIndex, boundaryIndex) {
+  const fences = [];
+
+  for (let i = startIndex; i < boundaryIndex; i += 1) {
+    if (!lines[i].trim().startsWith("```")) continue;
+
+    const fenceStart = i;
+    const fenceLang = lines[i].trim().replace(/^```/, "").trim();
+    let fenceEnd = i + 1;
+    while (fenceEnd < boundaryIndex && !lines[fenceEnd].trim().startsWith("```")) fenceEnd += 1;
+    if (fenceEnd >= boundaryIndex) break;
+
+    fences.push({
+      start: fenceStart,
+      end: fenceEnd,
+      lang: fenceLang,
+      text: stripTrailingLineSpaces(lines.slice(fenceStart + 1, fenceEnd).join("\n")),
+    });
+    i = fenceEnd;
+  }
+
+  return fences;
+}
+
+function buildStepWorkflowGroups(lines, taxonomy, frontmatter, source) {
+  const groups = new Map();
+
+  for (let i = 0; i < lines.length; i += 1) {
+    const trimmed = lines[i].trim();
+    if (!isTagOnlyLine(trimmed)) continue;
+
+    const tags = extractTags(trimmed);
+    if (!tags.length) continue;
+
+    const boundary = nextMethodBoundary(lines, i);
+    const fences = collectFences(lines, i + 1, boundary).filter((fence) => fence.text && isWorkflowFence(fence.lang));
+    if (fences.length < 2) continue;
+
+    const hasOrderedSteps = fences.some((fence) => {
+      const previous = previousNonEmptyLine(lines, fence.start - 1);
+      return previous && /^\d+\.\s+/.test(previous.text);
+    });
+    if (!hasOrderedSteps) continue;
+
+    const fields = partitionTags(tags, taxonomy);
+    fields.target_types = uniq([
+      ...fields.target_types,
+      ...inferTargetTypes(source, frontmatter, tags, taxonomy),
+    ]);
+
+    const title = nearestHeading(lines, i + 1);
+    const description = firstParagraphAfterTag(lines, i, boundary);
+    const commandParts = [];
+
+    for (const fence of fences) {
+      const previous = previousNonEmptyLine(lines, fence.start - 1);
+      if (previous && /^\d+\.\s+/.test(previous.text)) {
+        commandParts.push(`# ${previous.text}`);
+      }
+      const label = workflowFenceLabel(fence.lang);
+      if (label) commandParts.push(`# --- ${label} ---`);
+      commandParts.push(fence.text);
+      if (label) commandParts.push(`# --- end ${label} ---`);
+    }
+
+    groups.set(fences[0].start, {
+      end: fences[fences.length - 1].end,
+      title,
+      description,
+      tags,
+      fields,
+      command: commandParts.join("\n\n"),
+      lang: "",
+    });
+  }
+
+  return groups;
 }
 
 function resolveTitle(frontmatter, source, markdown) {
@@ -446,10 +570,35 @@ function extractMarkdownCommands(taxonomy) {
     const frontmatter = parseFrontmatter(markdown);
     const tab = deriveTab(source, frontmatter.tab);
     const lines = markdown.split(/\r?\n/);
+    const stepWorkflowGroups = buildStepWorkflowGroups(lines, taxonomy, frontmatter, source);
     let extractedCount = 0;
 
     for (let i = 0; i < lines.length; i += 1) {
       if (!lines[i].trim().startsWith("```")) continue;
+
+      const groupedWorkflow = stepWorkflowGroups.get(i);
+      if (groupedWorkflow) {
+        extractedCount += 1;
+        commands.push({
+          id: `note-${slugify(source)}-${extractedCount}`,
+          title: groupedWorkflow.title,
+          description:
+            groupedWorkflow.description && groupedWorkflow.description !== groupedWorkflow.title
+              ? groupedWorkflow.description
+              : "",
+          source,
+          source_type: "markdown",
+          tab,
+          tags: groupedWorkflow.tags,
+          ...groupedWorkflow.fields,
+          outputs: Array.isArray(frontmatter.outputs) ? frontmatter.outputs : [],
+          next: [],
+          command: groupedWorkflow.command,
+          lang: groupedWorkflow.lang,
+        });
+        i = groupedWorkflow.end;
+        continue;
+      }
 
       const start = i;
       const fenceLang = lines[i].trim().replace(/^```/, "").trim();

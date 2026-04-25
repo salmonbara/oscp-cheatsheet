@@ -3,6 +3,7 @@
   "groups": {
     "tabs": [
       "Enum",
+      "Services",
       "Initial Access",
       "Exploitation",
       "Privesc",
@@ -10,8 +11,8 @@
       "Credentials",
       "Pivoting",
       "Payloads",
-      "Reporting",
       "Active Directory",
+      "Checklists",
       "Tools"
     ],
     "what_you_have": [
@@ -41,7 +42,8 @@
       "ActiveDirectory",
       "FTP",
       "SSH",
-      "NFS"
+      "NFS",
+      "Redis"
     ],
     "attack_types": [
       "Enumeration",
@@ -57,8 +59,7 @@
       "Credentials",
       "Pivoting",
       "Tunnelling",
-      "Payloads",
-      "Reporting"
+      "Payloads"
     ],
     "meta": [
       "Inbox",

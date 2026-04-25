@@ -16,6 +16,7 @@ html[data-theme="light"] {
   --code-bg: #f6f8fb;
   --code-text: #1f2937;
   --code-accent: #64748b;
+  --code-comment: #6b7280;
   --text: #111827;
   --muted: #4b5563;
   --dim: #6b7280;
@@ -44,6 +45,7 @@ html[data-theme="dark"] {
   --code-bg: #0d1622;
   --code-text: #e5e7eb;
   --code-accent: #94a3b8;
+  --code-comment: #6b7280;
   --text: #e5e7eb;
   --muted: #94a3b8;
   --dim: #64748b;
@@ -718,6 +720,13 @@ pre[class*="code-kind-"] {
   --code-accent: #64748b;
 }
 
+.code-kind-html,
+.code-kind-xml,
+.code-kind-php,
+.code-kind-text {
+  --code-accent: #38bdf8;
+}
+
 code {
   display: block;
   width: max-content;
@@ -728,6 +737,12 @@ code {
   font-size: 0.89rem;
   line-height: 1.6;
   white-space: pre;
+}
+
+.code-line-comment {
+  color: var(--code-comment);
+  font-style: italic;
+  opacity: 0.78;
 }
 
 .card-footer {

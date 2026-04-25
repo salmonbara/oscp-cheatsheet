@@ -1,10 +1,10 @@
 {
-  "name": "oscp-command-suggest",
+  "name": "oscp-cheatsheet",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
     "build:data": "node scripts/build-data.mjs",
-    "serve": "python -m http.server 4173"
+    "serve": "python -m http.server 1234"
   }
 }

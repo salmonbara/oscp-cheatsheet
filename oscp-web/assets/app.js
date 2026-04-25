@@ -203,6 +203,10 @@ const codeKindLabels = {
   rb: "Ruby",
   sql: "SQL",
   ini: "Config",
+  html: "HTML",
+  xml: "XML",
+  php: "PHP",
+  text: "Text",
 };
 
 const codeKindAliases = {
@@ -228,6 +232,9 @@ function inferCodeKind(text, declaredLang = "") {
     powershell: 0,
     cmd: 0,
     sh: 0,
+    html: 0,
+    xml: 0,
+    php: 0,
     c: 0,
     python: 0,
     ruby: 0,
@@ -241,6 +248,9 @@ function inferCodeKind(text, declaredLang = "") {
     if (/^(Get-|Set-|New-|Invoke-|Enter-|Import-|Start-|Stop-|Remove-|Copy-|Move-|\$[A-Za-z_])/i.test(line)) scores.powershell += 2;
     if (/^(cmd\.exe|net\b|reg\b|sc\b|wmic\b|whoami\b|ipconfig\b|dir\b|type\b|copy\b|move\b)/i.test(line)) scores.cmd += 2;
     if (/^(sudo\b|chmod\b|chown\b|find\b|grep\b|awk\b|sed\b|curl\b|wget\b|nc\b|python3?\b|gcc\b|cat\b|echo\b|export\b|cd\b|ls\b|\/|\.\/)/i.test(line)) scores.sh += 2;
+    if (/^(<\?php|php\b)/i.test(line)) scores.php += 3;
+    if (/^(<svg\b|<\?xml\b|<!DOCTYPE\b)/i.test(line)) scores.xml += 3;
+    if (/^<[^>]+>/.test(line)) scores.html += 2;
     if (/^(#include\b|static\b|int\b|void\b|BOOL\b|IMPLEMENT_|using namespace\b|class\b)/.test(line) || /;\s*$/.test(line)) scores.c += 2;
     if (/^(import\b|from\b|def\b|print\(|os\.|subprocess\.)/.test(line)) scores.python += 2;
     if (/^(require\b|exit if fork|TCPSocket|IO\.popen|exec\b)/.test(line)) scores.ruby += 2;
@@ -254,6 +264,59 @@ function inferCodeKind(text, declaredLang = "") {
 
 function codeKindLabel(kind) {
   return codeKindLabels[kind] || kind || "code";
+}
+
+function isHashCommentLine(trimmed, kind = "") {
+  if (!trimmed.startsWith("#")) return false;
+  const normalized = normalizeCodeKind(kind);
+  if (["c", "cpp"].includes(normalized)) {
+    return !/^#\s*(include|define|undef|if|ifdef|ifndef|elif|else|endif|pragma|error|warning|line)\b/i.test(trimmed);
+  }
+  return true;
+}
+
+function isCommentLine(line, kind = "") {
+  const trimmed = String(line || "").trimStart();
+  if (!trimmed) return false;
+  const normalized = normalizeCodeKind(kind);
+
+  if (["sh", "bash", "powershell", "ps1", "python", "py", "ruby", "rb"].includes(normalized)) {
+    return isHashCommentLine(trimmed, normalized);
+  }
+
+  if (normalized === "cmd") return isHashCommentLine(trimmed, normalized) || /^::|^REM\b/i.test(trimmed);
+  if (normalized === "sql") return trimmed.startsWith("--") || isHashCommentLine(trimmed, normalized);
+  if (["c", "cpp", "php", "html", "xml"].includes(normalized)) {
+    return (
+      isHashCommentLine(trimmed, normalized) ||
+      trimmed.startsWith("//") ||
+      trimmed.startsWith("/*") ||
+      trimmed.startsWith("*") ||
+      trimmed.startsWith("<!--")
+    );
+  }
+  if (normalized === "ini") return isHashCommentLine(trimmed, normalized) || trimmed.startsWith(";");
+
+  return (
+    isHashCommentLine(trimmed, normalized) ||
+    trimmed.startsWith("::") ||
+    /^REM\b/i.test(trimmed) ||
+    trimmed.startsWith("--") ||
+    trimmed.startsWith("//")
+  );
+}
+
+function renderHighlightedCode(codeNode, text, kind = "") {
+  codeNode.replaceChildren();
+  const lines = String(text || "").split("\n");
+
+  lines.forEach((line, index) => {
+    const span = document.createElement("span");
+    span.className = `code-line${isCommentLine(line, kind) ? " code-line-comment" : ""}`;
+    span.textContent = line || " ";
+    codeNode.append(span);
+    if (index < lines.length - 1) codeNode.append(document.createTextNode("\n"));
+  });
 }
 
 function commandBody(command) {
@@ -498,6 +561,26 @@ function selectedMatches(command, selected = state.selected) {
   return [...selected].filter((tag) => tags.has(tag));
 }
 
+function selectedTagsByGroup(selected = state.selected) {
+  const groups = state.taxonomy?.groups || {};
+  const whatYouHave = new Set(groups.what_you_have || []);
+  const strictGroups = ["services", "target_types", "attack_types"];
+  const strict = [];
+  const soft = [];
+
+  for (const tag of selected) {
+    if (whatYouHave.has(tag)) {
+      soft.push(tag);
+      continue;
+    }
+
+    if (strictGroups.some((group) => list(groups[group]).includes(tag))) strict.push(tag);
+    else soft.push(tag);
+  }
+
+  return { strict, soft };
+}
+
 function scoreCommand(command, selected = state.selected, tabOverride = state.tab) {
   if (tabOverride !== "All" && command.tab !== tabOverride) return null;
 
@@ -510,6 +593,9 @@ function scoreCommand(command, selected = state.selected, tabOverride = state.ta
 
   const selectedTags = [...selected];
   const matched = selectedMatches(command, selected);
+  const { strict } = selectedTagsByGroup(selected);
+  const commandTagSet = new Set(commandTags(command));
+  if (strict.some((tag) => !commandTagSet.has(tag))) return null;
   if (selectedTags.length && !matched.length) return null;
 
   let score = missing.length ? Math.max(0, 24 - missing.length * 10) : 70;
@@ -821,7 +907,7 @@ function createCodePanel(text, lang = "", options = {}) {
   const pre = document.createElement("pre");
   pre.className = `code-kind-${kind}`;
   const code = document.createElement("code");
-  code.textContent = codeText;
+  renderHighlightedCode(code, codeText, kind);
   pre.append(code);
 
   wrapper.append(head, pre);
@@ -852,7 +938,7 @@ function renderCommand(item) {
   codePanel.classList.add(`code-kind-${kind}`);
   pre.classList.add(`code-kind-${kind}`);
   codeKindBadge.textContent = codeKindLabel(kind);
-  code.textContent = body;
+  renderHighlightedCode(code, body, kind);
 
   if (missing.length) {
     statePill.classList.add("needs");

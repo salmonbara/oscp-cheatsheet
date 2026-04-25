@@ -6,10 +6,10 @@ Static command suggestion UI generated from the OSCP Cheatsheet notes.
 
 ```sh
 node scripts/build-data.mjs
-python -m http.server 4173
+python -m http.server 1234
 ```
 
-Open `http://localhost:4173`.
+Open `http://localhost:1234`.
 
 On Windows PowerShell, `npm.ps1` may be blocked by execution policy. If you prefer npm scripts, use `npm.cmd run build:data` instead of `npm run build:data`.
 
