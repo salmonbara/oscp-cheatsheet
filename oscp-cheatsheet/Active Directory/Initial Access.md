@@ -21,7 +21,7 @@ Get the first valid domain credential or crackable hash.
 
 ## NEXT
 
-- Got valid creds: [[Post_Creds_Enum]]
+- Got valid creds: [[Post-Creds Enum]]
 - Got hash: [[../Credentials/Hash Crack]]
 
 ## Commands
@@ -175,7 +175,7 @@ john --format=netntlmv2 --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
 john --show --format=netntlmv2 hash.txt
 ```
 
-## Gotchas
+## Key Notes
 
 - Do not spray until lockout policy is known.
 - ASREPRoast needs a username list but not valid creds.

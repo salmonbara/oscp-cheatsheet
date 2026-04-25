@@ -22,7 +22,7 @@ Abuse BloodHound paths, AD CS, delegation, or misconfigurations to reach Domain 
 
 ## NEXT
 
-- DA achieved: [[Post_DA]]
+- DA achieved: [[Post-DA]]
 
 ## Commands
 

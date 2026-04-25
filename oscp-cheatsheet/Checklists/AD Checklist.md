@@ -21,6 +21,7 @@ Move from first contact to a usable AD path: identify the DC, collect users, tes
 - [ ] Try AS-REP roast and Kerberoast paths.
 - [ ] Collect BloodHound data once creds are available.
 - [ ] Run post-creds enum from Windows if you have a shell.
+- [ ] Save usernames, groups, shares, policy, and found files for later suggestions.
 
 ## Nmap
 
@@ -88,8 +89,11 @@ hashcat -m 13100 tgs.hashes <WORDLIST>
 ## BloodHound
 
 ```sh
+# dump bloodhound
 bloodhound-python -u <USER> -p '<PASS>' -d <DOMAIN> -dc <DC_HOST> -ns <DC_IP> -c All --zip
 bloodhound-python -u <USER> -p '<PASS>' -d <DOMAIN> -dc <DC_HOST> -ns <DC_IP> -c All --dns-tcp --zip
+# Start bloodhound
+bloodhound-legacy/BloodHound --no-sandbox --disable-gpu
 ```
 
 ## Post-Creds Enum

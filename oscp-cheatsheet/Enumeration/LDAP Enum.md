@@ -26,5 +26,5 @@ tags: [LDAP, Kerberos, ActiveDirectory, Enumeration]
 ## Next
 
 - Need the command flow: [[../Active Directory/Enumeration/LDAP Enum]]
-- Need wider domain workflow: [[Post_Creds_Enum]]
-- Need first credential path: [[Initial_Access]]
+- Need wider domain workflow: [[../Active Directory/Post-Creds Enum]]
+- Need first credential path: [[../Active Directory/Initial Access]]

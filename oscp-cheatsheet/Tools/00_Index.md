@@ -8,4 +8,4 @@ tags: [Tools]
 # Tools
 
 - [[grep Cheatsheet]]
-- [[Potato Family]]
+- Windows privesc tool families live under [[../Privilege Escalation/Potato Family]].

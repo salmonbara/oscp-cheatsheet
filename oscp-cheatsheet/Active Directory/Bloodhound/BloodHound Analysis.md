@@ -19,7 +19,7 @@ tags:
 
 ## Focus
 
-- BloodHound collection commands now live in [[Post_Creds_Enum]].
+- BloodHound collection commands now live in [[../Post-Creds Enum]].
 - This note is for what to look at after the data is loaded.
 
 ## What To Review
@@ -63,7 +63,7 @@ MATCH (g:Group {name:"<GROUP>@<DOMAIN>"})-[r]->(o) RETURN g,r,o
 
 ## Next
 
-- Collection flow: [[Post_Creds_Enum]]
+- Collection flow: [[../Post-Creds Enum]]
 - Edge abuse: [[Edges Privilege]]
 - AD CS abuse: [[Certification - ADCS]]
 - Full privesc pathing: [[Privesc]]

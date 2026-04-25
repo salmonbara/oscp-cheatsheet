@@ -9,5 +9,5 @@ tags: [Credentials, Hash, Crack]
 
 - [[Hash Crack]]
 - [[../Initial Access/Password Guessing|Password Guessing]]
-- [[Initial_Access|AD Initial Access]]
-- [[Post_Creds_Enum|AD Post-Creds Enum]]
+- [[../Active Directory/Initial Access|AD Initial Access]]
+- [[../Active Directory/Post-Creds Enum|AD Post-Creds Enum]]

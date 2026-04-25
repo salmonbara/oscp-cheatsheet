@@ -21,7 +21,7 @@ Map the domain attack surface after the first valid credential.
 ## NEXT
 
 - BloodHound path found: [[Privesc]]
-- Local admin found: [[Lateral_Movement]]
+- Local admin found: [[Lateral Movement]]
 - Kerberos hash found: [[../Credentials/Hash Crack]]
 
 ## Commands
@@ -206,7 +206,7 @@ Search SYSVOL for interesting files.
 smbclient //<DC_IP>/SYSVOL -U '<DOMAIN>/<USER>%<PASS>'
 ```
 
-## Gotchas
+## Key Notes
 
 - BloodHound collection is usually the fastest route to a privesc path.
 - Kerberoast requires valid creds or an existing Kerberos-authenticated context, but not elevated privileges.

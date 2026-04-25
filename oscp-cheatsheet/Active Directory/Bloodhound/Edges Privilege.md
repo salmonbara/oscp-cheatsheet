@@ -24,4 +24,4 @@ tags: [ActiveDirectory, PrivilegeEscalation, SMB]
 ## Next
 
 - Abuse commands: [[Privesc]]
-- Validate access and move laterally: [[Lateral_Movement]]
+- Validate access and move laterally: [[../Lateral Movement]]

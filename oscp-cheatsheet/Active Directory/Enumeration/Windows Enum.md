@@ -32,4 +32,4 @@ Invoke-adPEAS
 ## Next
 
 - Generic Windows shell enum: [[../../Post-Exploitation/Windows Post-Exploitation]]
-- AD post-creds workflow: [[Post_Creds_Enum]]
+- AD post-creds workflow: [[../Post-Creds Enum]]

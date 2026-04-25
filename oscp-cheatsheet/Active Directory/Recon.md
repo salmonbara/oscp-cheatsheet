@@ -20,8 +20,8 @@ Find domain name, DC IP, AD ports, and naming context before valid creds.
 
 ## NEXT
 
-- Username list found: go to [[Initial_Access]].
-- Valid creds found: go to [[Post_Creds_Enum]].
+- Username list found: go to [[Initial Access]].
+- Valid creds found: go to [[Post-Creds Enum]].
 
 ## Commands
 
@@ -84,7 +84,7 @@ Try SMB null session.
 nxc smb <DC_IP> -u '' -p ''
 ```
 
-## Gotchas
+## Key Notes
 
 - DNS can reveal the domain even when LDAP anonymous bind is blocked.
 - If anonymous SMB/RPC works, immediately build a user list and check SYSVOL.

@@ -11,14 +11,14 @@ tags: [ActiveDirectory, Enumeration, Exploitation, PrivilegeEscalation]
 
 ```text
 AD ports open? 88 / 389 / 445 / 5985
-  -> [[01_Recon]]
-  -> [[02_Initial_Access]]
+  -> [[Recon]]
+  -> [[Initial Access]]
   -> got creds?
-  -> [[03_Post_Creds_Enum]]
+  -> [[Post-Creds Enum]]
   -> got path?
-  -> [[04_Lateral_Movement]] <-> [[05_Privesc]]
+  -> [[Lateral Movement]] <-> [[Privesc]]
   -> got DA?
-  -> [[06_Post_DA]]
+  -> [[Post-DA]]
 ```
 
 ## 12-Step Checklist
@@ -45,9 +45,9 @@ AD ports open? 88 / 389 / 445 / 5985
 - Local admin found: dump SAM/LSASS, then lateral movement.
 - BloodHound path found: abuse edge in [[Privesc]].
 - AD CS vulnerable: use ESC path in [[Bloodhound/Certification - ADCS]].
-- DA achieved: run [[Post_DA]].
+- DA achieved: run [[Post-DA]].
 
-## Gotchas
+## Trick
 
 - Check password policy before spraying: `nxc smb <DC_IP> -u <USER> -p '<PASS>' --pass-pol`.
 - ASREPRoast does not require valid creds, but needs a username list.

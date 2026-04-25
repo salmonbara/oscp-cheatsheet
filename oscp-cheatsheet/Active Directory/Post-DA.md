@@ -213,7 +213,7 @@ type C:\Users\Administrator\Desktop\flag.txt
 3. Save `krbtgt` hash for Golden Ticket persistence.
 4. Look for trusts and pivot paths.
 
-## Gotchas
+## Key Notes
 
 - DCSync is cleaner than logging onto the DC.
 - NTDS.dit requires SYSTEM hive to decrypt.

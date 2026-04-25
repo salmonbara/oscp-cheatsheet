@@ -28,4 +28,4 @@ tags: [SMB, RPC, ActiveDirectory, Enumeration]
 
 - AD-focused SMB commands: [[../Active Directory/Enumeration/SMB Enum]]
 - Service-level SMB workflow: [[Services/135, 445 - SMB]]
-- If you have creds already: [[Post_Creds_Enum]]
+- If you have creds already: [[../Active Directory/Post-Creds Enum]]
