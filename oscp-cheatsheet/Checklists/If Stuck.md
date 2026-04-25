@@ -53,13 +53,13 @@ site:medium.com "/usr/bin/backup"
 
 ## 📚 Top OSCP Resources
 
-- **Official PEN-200 Course:** [https://www.offsec.com/courses/pen-200/](https://www.offsec.com/courses/pen-200/)
-- **HackTricks:** [https://book.hacktricks.xyz](https://book.hacktricks.xyz)
-- **GTFOBins (Linux LPE):** [https://gtfobins.github.io](https://gtfobins.github.io)
-- **LOLBAS (Windows LPE):** [https://lolbas-project.github.io](https://lolbas-project.github.io)
-- **Revshells Generator:** [https://www.revshells.com](https://www.revshells.com)
-- **PayloadsAllTheThings:** [https://github.com/swisskyrepo/PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings)
-- **CyberChef (encode/decode):** [https://gchq.github.io/CyberChef](https://gchq.github.io/CyberChef)
-- **ExploitDB:** [https://www.exploit-db.com](https://www.exploit-db.com)
-- [**ired.team](http://ired.team):** [https://www.ired.team](https://www.ired.team)
-- **0xdf HTB writeups:** [https://0xdf.gitlab.io](https://0xdf.gitlab.io)
+- **Official PEN-200 Course:** https://www.offsec.com/courses/pen-200/
+- **HackTricks:** https://book.hacktricks.xyz
+- **GTFOBins (Linux LPE):** https://gtfobins.github.io
+- **LOLBAS (Windows LPE):** https://lolbas-project.github.io
+- **Revshells Generator:** https://www.revshells.com
+- **PayloadsAllTheThings:** https://github.com/swisskyrepo/PayloadsAllTheThings
+- **CyberChef (encode/decode):** https://gchq.github.io/CyberChef
+- **ExploitDB:** https://www.exploit-db.com
+- **ired.team:** https://www.ired.team
+- **0xdf HTB writeups:** https://0xdf.gitlab.io
