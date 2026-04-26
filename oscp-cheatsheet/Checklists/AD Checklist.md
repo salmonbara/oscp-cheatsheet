@@ -67,8 +67,14 @@ nxc smb <DC_IP> -u guest -p '' --shares
 nxc smb <DC_IP> -u anonymous -p '' --rid-brute 5000 > rid.txt
 nxc smb <DC_IP> -u guest -p '' --rid-brute 5000 >> rid.txt
 
-# Extract user accounts and remove machine accounts.
-cat rid.txt | grep "SidTypeUser" | awk '{print $6}' | cut -d '\\' -f2 | grep -v '\\$$' > users.txt
+# Extract user, dedupe, append only new users.
+grep "SidTypeUser" rid.txt | awk '{print $6}' | awk -F'\\' '{print $2}' | grep -v '\$$' | tr '[:upper:]' '[:lower:]' | sort -u | grep -vxFf users.txt >> users.txt
+
+# Kerberos username enum.  
+kerbrute userenum -d <DOMAIN> --dc <DC_IP> <USERLIST> -o kerbrute.txt
+
+# Extract valid users, dedupe, append only new users.  
+grep -a "VALID USERNAME:" kerbrute.txt | awk -F'[@ ]+' '{print tolower($(NF-1))}' | sort -u | grep -vxFf users.txt >> users.txt
 ```
 
 ## AS-REP Roast / Kerberoast
