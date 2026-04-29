@@ -43,6 +43,9 @@
       "FTP",
       "SSH",
       "NFS",
+      "MSSQL",
+      "MySQL",
+      "PostgreSQL",
       "Redis"
     ],
     "attack_types": [

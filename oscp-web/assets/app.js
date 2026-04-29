@@ -31,6 +31,16 @@ function readSelectedTags() {
 function readVariables() {
   try {
     const parsed = JSON.parse(readStorage("oscp-command-vars", "{}"));
+    const stored = parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+    return { ...defaultVariables(), ...stored };
+  } catch {
+    return defaultVariables();
+  }
+}
+
+function readChecklistState() {
+  try {
+    const parsed = JSON.parse(readStorage("oscp-checklists", "{}"));
     return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
   } catch {
     return {};
@@ -48,24 +58,47 @@ function slugify(value) {
 const noteLikeViews = new Set(["notes"]);
 
 const variableFields = [
-  { key: "LHOST", label: "LHOST", aliases: ["LHOST", "LOCAL_IP", "ATTACKER_IP"] },
-  { key: "LPORT", label: "LPORT", aliases: ["LPORT", "PORT"] },
-  { key: "TARGET_IP", label: "Target IP", aliases: ["TARGET_IP", "RHOST", "RHOSTS", "IP", "VICTIM_IP"] },
-  { key: "TARGET_HOST", label: "Target Host", aliases: ["TARGET_HOST", "HOST", "HOSTNAME"] },
-  { key: "TARGET_SUBNET", label: "Subnet", aliases: ["TARGET_SUBNET", "SUBNET"] },
-  { key: "DC_IP", label: "DC IP", aliases: ["DC_IP"] },
-  { key: "DC_HOST", label: "DC Host", aliases: ["DC_HOST"] },
-  { key: "DOMAIN", label: "Domain", aliases: ["DOMAIN"] },
-  { key: "USER", label: "User", aliases: ["USER", "USERNAME"] },
-  { key: "PASS", label: "Pass", aliases: ["PASS", "PASSWORD"] },
-  { key: "HASH", label: "Hash", aliases: ["HASH", "NTLM_HASH"] },
-  { key: "WORDLIST", label: "Wordlist", aliases: ["WORDLIST"] },
+  { key: "LHOST", label: "LHOST", group: "Listener", aliases: ["LHOST", "LOCAL_IP", "ATTACKER_IP"] },
+  { key: "LPORT", label: "LPORT", group: "Listener", aliases: ["LPORT"] },
+  { key: "TARGET_IP", label: "Target IP", group: "Target / Service", aliases: ["TARGET_IP", "RHOST", "RHOSTS", "IP", "VICTIM_IP"] },
+  { key: "TARGET_HOST", label: "Target Host", group: "Target / Service", aliases: ["TARGET_HOST", "HOST", "HOSTNAME"] },
+  { key: "TARGET_SUBNET", label: "Subnet", group: "Target / Service", aliases: ["TARGET_SUBNET", "SUBNET"] },
+  { key: "PORT", label: "Port", group: "Target / Service", aliases: ["PORT"] },
+  { key: "DC_IP", label: "DC IP", group: "Active Directory", aliases: ["DC_IP"] },
+  { key: "DC_HOST", label: "DC Host", group: "Active Directory", aliases: ["DC_HOST"] },
+  { key: "DOMAIN", label: "Domain", group: "Active Directory", aliases: ["DOMAIN"] },
+  { key: "USER", label: "User", group: "Credentials", aliases: ["USER", "USERNAME"] },
+  { key: "PASS", label: "Pass", group: "Credentials", aliases: ["PASS", "PASSWORD"] },
+  { key: "HASH", label: "Hash", group: "Credentials", aliases: ["HASH", "NTLM_HASH"] },
+  { key: "USERLIST", label: "Userlist", group: "Files / Lists", aliases: ["USERLIST"], defaultValue: "users.txt" },
+  {
+    key: "WORDLIST",
+    label: "Wordlist",
+    group: "Files / Lists",
+    aliases: ["WORDLIST"],
+    options: [
+      "/usr/share/wordlists/rockyou.txt",
+      "/usr/share/seclists/Passwords/Common-Credentials/10-million-password-list-top-1000000.txt",
+      "/usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt",
+      "/usr/share/seclists/Discovery/Web-Content/raft-medium-words.txt",
+      "passwords.txt",
+      "words.txt",
+    ],
+  },
 ];
+
+const variableGroups = ["Target / Service", "Active Directory", "Listener", "Credentials", "Files / Lists"];
 
 const sensitiveVariables = new Set(variableFields.filter((field) => field.sensitive).map((field) => field.key));
 const variableAliasMap = new Map(
   variableFields.flatMap((field) => [[field.key, field.key], ...field.aliases.map((alias) => [alias, field.key])]),
 );
+
+function defaultVariables() {
+  return Object.fromEntries(
+    variableFields.filter((field) => field.defaultValue).map((field) => [field.key, field.defaultValue]),
+  );
+}
 
 const viewModes = {
   notes: {
@@ -118,6 +151,8 @@ const state = {
   theme: readStorage("oscp-theme", "") || getSystemTheme(),
   view: readStorage("oscp-active-view", "suggest"),
   variables: { ...readVariables() },
+  varPreview: readStorage("oscp-var-preview", "nxc smb <TARGET_IP> -u <USER> -p '<PASS>' --shares"),
+  checklist: { ...readChecklistState() },
   routeSectionId: "",
   pendingScrollId: "",
   tocCollapsed: new Set(),
@@ -136,7 +171,7 @@ const els = {
   searchInput: document.querySelector("#searchInput"),
   toolbar: document.querySelector(".toolbar"),
   readyOnlyButton: document.querySelector("#readyOnlyButton"),
-  copyVisibleButton: document.querySelector("#copyVisibleButton"),
+  resetChecklistButton: document.querySelector("#resetChecklistButton"),
   themeToggleButton: document.querySelector("#themeToggleButton"),
   resetButton: document.querySelector("#resetButton"),
   viewSwitch: document.querySelector("#viewSwitch"),
@@ -333,6 +368,10 @@ function persistVariables() {
   writeStorage("oscp-command-vars", JSON.stringify(persisted));
 }
 
+function persistChecklistState() {
+  writeStorage("oscp-checklists", JSON.stringify(state.checklist));
+}
+
 function applyVariables(text) {
   const applied = String(text || "").replace(/<([A-Za-z0-9_]+)>/g, (match, rawName) => {
     const key = variableAliasMap.get(rawName.toUpperCase());
@@ -341,6 +380,38 @@ function applyVariables(text) {
     return value ? value : match;
   });
   return cleanCodeText(applied);
+}
+
+function extractPlaceholders(text) {
+  const found = new Set();
+  const regex = /<([A-Za-z0-9_]+)>/g;
+  let match;
+  while ((match = regex.exec(String(text || "")))) {
+    found.add(match[1].toUpperCase());
+  }
+  return [...found].sort();
+}
+
+function variableReport(text) {
+  const placeholders = extractPlaceholders(text);
+  const knownKeys = new Set();
+  const unknown = [];
+
+  for (const token of placeholders) {
+    const key = variableAliasMap.get(token);
+    if (key) knownKeys.add(key);
+    else unknown.push(token);
+  }
+
+  const known = [...knownKeys].sort((a, b) => {
+    const left = variableFields.findIndex((field) => field.key === a);
+    const right = variableFields.findIndex((field) => field.key === b);
+    return left - right;
+  });
+
+  const missing = known.filter((key) => !state.variables[key]);
+  const applied = known.filter((key) => state.variables[key]);
+  return { placeholders, known, applied, missing, unknown };
 }
 
 function isNoteLikeView(view = state.view) {
@@ -508,6 +579,20 @@ function makeUniqueId(base, text, seen) {
   return count ? `${key}-${count + 1}` : key;
 }
 
+function headingHasDirectContent(blocks, headingIndex) {
+  const heading = blocks[headingIndex];
+  if (!heading || heading.type !== "heading") return false;
+  const depth = heading.depth || 3;
+
+  for (let i = headingIndex + 1; i < blocks.length; i += 1) {
+    const block = blocks[i];
+    if (block.type === "heading" && (block.depth || 3) <= depth) return false;
+    if (block.type !== "heading") return true;
+  }
+
+  return false;
+}
+
 function buildNotePage(note) {
   if (notePageCache.has(note.id)) return notePageCache.get(note.id);
 
@@ -540,11 +625,21 @@ function buildNotePage(note) {
           text: block.text,
           depth: block.depth || 3,
           parentId: currentSection.id,
+          blockIndex: currentSection.blocks.length,
         });
       }
     }
 
     target.push(block);
+  }
+
+  for (const section of sections) {
+    section.children = section.children.filter((child) => {
+      const block = section.blocks[child.blockIndex];
+      if (!block || block.type !== "heading") return false;
+      if ((block.depth || 3) !== 3) return true;
+      return headingHasDirectContent(section.blocks, child.blockIndex);
+    });
   }
 
   const page = { note, intro, sections };
@@ -712,29 +807,166 @@ function renderViewSwitch() {
 }
 
 function renderVariables(container) {
-  const grid = document.createElement("div");
-  grid.className = "vars-grid";
+  const groups = document.createElement("div");
+  groups.className = "vars-groups";
 
-  for (const field of variableFields) {
-    const label = document.createElement("label");
-    label.className = `var-field${field.sensitive ? " is-sensitive" : ""}`;
+  for (const groupName of variableGroups) {
+    const fields = variableFields.filter((field) => field.group === groupName);
+    if (!fields.length) continue;
 
-    const labelText = document.createElement("span");
-    labelText.textContent = field.label;
+    const section = document.createElement("section");
+    section.className = "vars-group";
 
-    const input = document.createElement("input");
-    input.type = field.sensitive ? "password" : "text";
-    input.autocomplete = "off";
-    input.spellcheck = false;
-    input.dataset.varKey = field.key;
-    input.placeholder = `<${field.key}>`;
-    input.value = state.variables[field.key] || "";
+    const heading = document.createElement("h4");
+    heading.textContent = groupName;
+    section.append(heading);
 
-    label.append(labelText, input);
-    grid.append(label);
+    const grid = document.createElement("div");
+    grid.className = "vars-grid";
+
+    for (const field of fields) {
+      const label = document.createElement("label");
+      label.className = `var-field${field.sensitive ? " is-sensitive" : ""}`;
+
+      const labelText = document.createElement("span");
+      labelText.textContent = field.label;
+
+      const input = document.createElement("input");
+      input.type = "text";
+      input.autocomplete = "off";
+      input.spellcheck = false;
+      input.dataset.varKey = field.key;
+      input.placeholder = `<${field.key}>`;
+      input.value = state.variables[field.key] || "";
+
+      if (field.options?.length) {
+        const listId = `var-options-${field.key.toLowerCase()}`;
+        input.setAttribute("list", listId);
+
+        const datalist = document.createElement("datalist");
+        datalist.id = listId;
+        for (const optionValue of field.options) {
+          const option = document.createElement("option");
+          option.value = optionValue;
+          datalist.append(option);
+        }
+        label.append(labelText, input, datalist);
+        grid.append(label);
+        continue;
+      }
+
+      label.append(labelText, input);
+      grid.append(label);
+    }
+
+    section.append(grid);
+    groups.append(section);
   }
 
-  container.append(grid);
+  container.append(groups);
+}
+
+function renderVariableReport(container, report) {
+  container.replaceChildren();
+
+  const rows = [
+    ["Applied", report.applied, ""],
+    ["Missing", report.missing, "need"],
+    ["Context only", report.unknown, "muted"],
+  ].filter(([, values]) => values.length);
+
+  if (!rows.length) {
+    const empty = document.createElement("p");
+    empty.className = "vars-preview-empty";
+    empty.textContent = "No placeholders detected yet.";
+    container.append(empty);
+    return;
+  }
+
+  for (const [label, values, kind] of rows) {
+    const row = document.createElement("div");
+    row.className = "vars-report-row";
+
+    const rowLabel = document.createElement("span");
+    rowLabel.className = "vars-report-label";
+    rowLabel.textContent = label;
+    row.append(rowLabel);
+
+    const chips = document.createElement("div");
+    chips.className = "badges";
+    for (const value of values) chips.append(badge(value, kind));
+    row.append(chips);
+    container.append(row);
+  }
+}
+
+function appendLinkedText(container, text) {
+  const urlPattern = /https?:\/\/[^\s<>"')\]]+/g;
+  const value = String(text || "");
+  let lastIndex = 0;
+  let match;
+
+  while ((match = urlPattern.exec(value))) {
+    if (match.index > lastIndex) {
+      container.append(document.createTextNode(value.slice(lastIndex, match.index)));
+    }
+
+    const link = document.createElement("a");
+    link.href = match[0];
+    link.textContent = match[0];
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    container.append(link);
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < value.length) {
+    container.append(document.createTextNode(value.slice(lastIndex)));
+  }
+}
+
+function updateVariablePreview(previewCard) {
+  const input = previewCard.querySelector("[data-var-preview]");
+  const output = previewCard.querySelector("[data-var-preview-output]");
+  const reportNode = previewCard.querySelector("[data-var-preview-report]");
+  const rawText = input?.value || "";
+  const report = variableReport(rawText);
+
+  output.replaceChildren();
+  const panel = createCodePanel(rawText, inferCodeKind(rawText), { copy: true }).wrapper;
+  output.append(panel);
+  renderVariableReport(reportNode, report);
+}
+
+function renderVariablePreview(container) {
+  const preview = document.createElement("section");
+  preview.className = "vars-preview-card";
+
+  const title = document.createElement("h3");
+  title.textContent = "Preview applied command";
+
+  const helper = document.createElement("p");
+  helper.className = "vars-help";
+  helper.textContent = "Paste a command here to preview which global variables will be replaced. Context-only placeholders stay unchanged.";
+
+  const input = document.createElement("textarea");
+  input.className = "vars-preview-input";
+  input.dataset.varPreview = "true";
+  input.spellcheck = false;
+  input.placeholder = "Paste command with placeholders, e.g. nxc smb <TARGET_IP> -u <USER> -p '<PASS>'";
+  input.value = state.varPreview;
+
+  const report = document.createElement("div");
+  report.className = "vars-preview-report";
+  report.dataset.varPreviewReport = "true";
+
+  const output = document.createElement("div");
+  output.className = "vars-preview-output";
+  output.dataset.varPreviewOutput = "true";
+
+  preview.append(title, helper, input, report, output);
+  container.append(preview);
+  updateVariablePreview(preview);
 }
 
 function renderVarsStatus() {
@@ -917,6 +1149,7 @@ function createCodePanel(text, lang = "", options = {}) {
 function renderCommand(item) {
   const { command, missing } = item;
   const node = els.commandTemplate.content.firstElementChild.cloneNode(true);
+  node.id = `cmd-${command.id}`;
   const source = node.querySelector(".source");
   const title = node.querySelector("h3");
   const description = node.querySelector(".command-description");
@@ -928,7 +1161,9 @@ function renderCommand(item) {
   const badges = node.querySelector(".badges");
   const outputs = node.querySelector(".outputs");
   const copyButton = node.querySelector(".code-copy-button");
-  const body = applyVariables(commandBody(command));
+  const rawBody = commandBody(command);
+  const report = variableReport(rawBody);
+  const body = applyVariables(rawBody);
   const kind = inferCodeKind(body, command.lang || "");
 
   source.textContent = `${command.tab} / ${command.source || "generated"}`;
@@ -953,10 +1188,20 @@ function renderCommand(item) {
   for (const need of missing) {
     badges.append(badge(`needs:${need}`, "need"));
   }
+  for (const need of report.missing) {
+    badges.append(badge(`missing:${need}`, "need"));
+  }
 
   const outputList = list(command.outputs);
   outputs.textContent = outputList.length ? `Outputs: ${outputList.join(", ")}` : "";
   outputs.classList.toggle("hidden", !outputList.length);
+
+  if (report.missing.length) {
+    const hints = document.createElement("p");
+    hints.className = "var-hints";
+    hints.textContent = `Missing vars: ${report.missing.join(", ")}`;
+    node.querySelector(".card-footer").append(hints);
+  }
 
   copyButton.dataset.copyCode = body;
   return node;
@@ -968,7 +1213,61 @@ function headingTag(depth) {
   return "h5";
 }
 
-function renderNoteBlock(block) {
+function checklistKey(context, text, index) {
+  return [context.noteId || "note", context.sectionId || "intro", context.blockIndex ?? 0, index, slugify(text)]
+    .filter((part) => part !== "")
+    .join("::");
+}
+
+function resetChecklistKeys(prefix) {
+  for (const key of Object.keys(state.checklist)) {
+    if (key.startsWith(prefix)) delete state.checklist[key];
+  }
+  persistChecklistState();
+}
+
+function currentChecklistPrefix() {
+  return state.noteId ? `${state.noteId}::` : "";
+}
+
+function parseTaskItem(item) {
+  const match = String(item || "").match(/^\[( |x|X)\]\s+(.*)$/);
+  if (!match) return null;
+  return {
+    checked: match[1].toLowerCase() === "x",
+    text: match[2],
+  };
+}
+
+function blockHasChecklist(block) {
+  return block?.type === "list" && list(block.items).some((item) => parseTaskItem(item));
+}
+
+function blocksHaveChecklist(blocks) {
+  return list(blocks).some((block) => blockHasChecklist(block));
+}
+
+function subsectionHasChecklist(blocks, startIndex) {
+  const items = list(blocks);
+  for (let index = startIndex + 1; index < items.length; index += 1) {
+    const block = items[index];
+    if (block.type === "heading" && (block.depth || 3) === 3) return false;
+    if (blockHasChecklist(block)) return true;
+  }
+  return false;
+}
+
+function makeSectionResetButton(prefix, title) {
+  const resetButton = document.createElement("button");
+  resetButton.className = "section-reset-button";
+  resetButton.type = "button";
+  resetButton.dataset.resetChecklistSection = prefix;
+  resetButton.textContent = "Reset";
+  resetButton.title = `Reset checklist items in ${title}`;
+  return resetButton;
+}
+
+function renderNoteBlock(block, context = {}) {
   if (block.type === "heading") {
     const node = document.createElement(headingTag(block.depth || 2));
     node.textContent = block.text;
@@ -978,7 +1277,7 @@ function renderNoteBlock(block) {
 
   if (block.type === "paragraph") {
     const node = document.createElement("p");
-    node.textContent = block.text;
+    appendLinkedText(node, block.text);
     return node;
   }
 
@@ -993,9 +1292,33 @@ function renderNoteBlock(block) {
     const node = document.createElement(block.ordered ? "ol" : "ul");
     node.className = "note-list";
     if (block.ordered && Number(block.start) > 1) node.start = Number(block.start);
-    for (const item of list(block.items)) {
+    const parsedItems = list(block.items).map((item) => parseTaskItem(item));
+    const isChecklist = !block.ordered && parsedItems.some(Boolean);
+    if (isChecklist) node.classList.add("note-checklist");
+
+    for (const [index, item] of list(block.items).entries()) {
       const li = document.createElement("li");
-      li.textContent = item;
+      const task = parsedItems[index];
+      if (isChecklist && task) {
+        const key = checklistKey(context, task.text, index);
+        const label = document.createElement("label");
+        label.className = "checklist-item";
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.dataset.checklistKey = key;
+        checkbox.checked = Object.prototype.hasOwnProperty.call(state.checklist, key)
+          ? Boolean(state.checklist[key])
+          : task.checked;
+
+        const text = document.createElement("span");
+        text.textContent = task.text;
+
+        label.append(checkbox, text);
+        li.append(label);
+      } else {
+        appendLinkedText(li, item);
+      }
       node.append(li);
     }
     return node;
@@ -1008,7 +1331,7 @@ function renderNoteBlock(block) {
   return null;
 }
 
-function renderNoteSection(section) {
+function renderNoteSection(section, noteId = "") {
   const details = document.createElement("details");
   details.className = "note-section";
   details.id = section.id;
@@ -1016,19 +1339,33 @@ function renderNoteSection(section) {
 
   const summary = document.createElement("summary");
   summary.className = "note-summary";
-  summary.innerHTML = `<span class="note-summary-caret">></span><span>${section.title}</span>`;
+  const caret = document.createElement("span");
+  caret.className = "note-summary-caret";
+  caret.textContent = ">";
+  const summaryTitle = document.createElement("span");
+  summaryTitle.className = "note-summary-title";
+  summaryTitle.textContent = section.title;
+  summary.append(caret, summaryTitle);
+  if (blocksHaveChecklist(section.blocks)) {
+    summary.append(makeSectionResetButton(`${noteId}::${section.id}::`, section.title));
+  }
 
   const body = document.createElement("div");
   body.className = "note-section-body";
 
   let activeSubsection = null;
-  const appendBlock = (target, block) => {
-    const rendered = renderNoteBlock(block);
+  const appendBlock = (target, block, blockIndex) => {
+    const rendered = renderNoteBlock(block, { noteId, sectionId: section.id, blockIndex });
     if (rendered) target.append(rendered);
   };
 
-  for (const block of list(section.blocks)) {
+  for (const [blockIndex, block] of list(section.blocks).entries()) {
     if (block.type === "heading" && (block.depth || 3) === 3) {
+      if (!headingHasDirectContent(section.blocks, blockIndex)) {
+        activeSubsection = null;
+        continue;
+      }
+
       activeSubsection = document.createElement("details");
       activeSubsection.className = "note-subsection";
       activeSubsection.id = block.anchorId || "";
@@ -1036,7 +1373,16 @@ function renderNoteSection(section) {
 
       const subSummary = document.createElement("summary");
       subSummary.className = "note-summary note-subsummary";
-      subSummary.innerHTML = `<span class="note-summary-caret">></span><span>${block.text}</span>`;
+      const subCaret = document.createElement("span");
+      subCaret.className = "note-summary-caret";
+      subCaret.textContent = ">";
+      const subTitle = document.createElement("span");
+      subTitle.className = "note-summary-title";
+      subTitle.textContent = block.text;
+      subSummary.append(subCaret, subTitle);
+      if (subsectionHasChecklist(section.blocks, blockIndex)) {
+        subSummary.append(makeSectionResetButton(`${noteId}::${activeSubsection.id}::`, block.text));
+      }
 
       const subBody = document.createElement("div");
       subBody.className = "note-section-body note-subsection-body";
@@ -1046,7 +1392,7 @@ function renderNoteSection(section) {
     }
 
     const target = activeSubsection?.querySelector(".note-subsection-body") || body;
-    appendBlock(target, block);
+    appendBlock(target, block, blockIndex);
   }
 
   details.append(summary, body);
@@ -1067,8 +1413,8 @@ function renderNote(page) {
   if (page.intro.length) {
     const intro = document.createElement("div");
     intro.className = "note-intro";
-    for (const block of page.intro) {
-      const rendered = renderNoteBlock(block);
+    for (const [blockIndex, block] of page.intro.entries()) {
+      const rendered = renderNoteBlock(block, { noteId: page.note.id, sectionId: "intro", blockIndex });
       if (rendered) intro.append(rendered);
     }
     wrapper.append(intro);
@@ -1078,7 +1424,7 @@ function renderNote(page) {
     const sections = document.createElement("div");
     sections.className = "note-sections";
     for (const section of page.sections) {
-      sections.append(renderNoteSection(section));
+      sections.append(renderNoteSection(section, page.note.id));
     }
     wrapper.append(sections);
   }
@@ -1155,6 +1501,83 @@ function renderNoteToc(page) {
   els.noteToc.append(fragment);
 }
 
+function commandTocGroups(ranked) {
+  const grouped = new Map();
+  for (const item of ranked) {
+    const source = item.command.source || "Generated";
+    if (!grouped.has(source)) {
+      grouped.set(source, {
+        id: `cmdsrc-${slugify(source)}`,
+        title: source.split("/").pop()?.replace(/\.md$/i, "") || source,
+        commands: [],
+      });
+    }
+    grouped.get(source).commands.push(item.command);
+  }
+  return [...grouped.values()];
+}
+
+function renderCommandToc(ranked) {
+  els.noteToc.innerHTML = "";
+  els.noteTocHeading.textContent = "Commands";
+
+  if (!ranked.length) {
+    const empty = document.createElement("div");
+    empty.className = "toc-empty";
+    empty.textContent = "No matching commands yet.";
+    els.noteToc.append(empty);
+    return;
+  }
+
+  const groups = commandTocGroups(ranked);
+  const fragment = document.createDocumentFragment();
+  const activeId = state.routeSectionId || `cmd-${ranked[0].command.id}`;
+
+  for (const groupInfo of groups) {
+    const group = document.createElement("div");
+    group.className = "toc-group";
+
+    const row = document.createElement("div");
+    row.className = "toc-row";
+
+    const toggle = document.createElement("button");
+    toggle.className = "toc-toggle";
+    toggle.type = "button";
+    toggle.dataset.toggleSection = groupInfo.id;
+    toggle.textContent = state.tocCollapsed.has(groupInfo.id) ? ">" : "v";
+    toggle.setAttribute("aria-label", `Toggle ${groupInfo.title}`);
+
+    const link = document.createElement("button");
+    const firstCommand = groupInfo.commands[0];
+    const firstId = `cmd-${firstCommand.id}`;
+    link.className = `toc-link${activeId === firstId ? " is-active" : ""}`;
+    link.type = "button";
+    link.dataset.scrollId = firstId;
+    link.textContent = groupInfo.title;
+
+    row.append(toggle, link);
+    group.append(row);
+
+    const children = document.createElement("div");
+    children.className = `toc-children${state.tocCollapsed.has(groupInfo.id) ? " is-collapsed" : ""}`;
+    for (const command of groupInfo.commands) {
+      const commandId = `cmd-${command.id}`;
+      const childButton = document.createElement("button");
+      childButton.className = `toc-sublink${activeId === commandId ? " is-active" : ""}`;
+      childButton.type = "button";
+      childButton.dataset.scrollId = commandId;
+      childButton.dataset.parentSection = groupInfo.id;
+      childButton.textContent = command.title;
+      children.append(childButton);
+    }
+
+    group.append(children);
+    fragment.append(group);
+  }
+
+  els.noteToc.append(fragment);
+}
+
 function setActiveTocId(anchorId) {
   if (!anchorId || state.routeSectionId === anchorId) return;
   state.routeSectionId = anchorId;
@@ -1220,6 +1643,30 @@ function setupScrollSpy(page) {
   updateActiveSection();
 }
 
+function setupCommandScrollSpy(ranked) {
+  teardownScrollSpy();
+  const sectionIds = ranked.map((item) => `cmd-${item.command.id}`);
+  if (!sectionIds.length) return;
+
+  const updateActiveCommand = () => {
+    if (scrollSpyFrame) return;
+    scrollSpyFrame = requestAnimationFrame(() => {
+      scrollSpyFrame = 0;
+      if (state.view !== "suggest") return;
+      setActiveTocId(currentSectionId(sectionIds));
+    });
+  };
+
+  window.addEventListener("scroll", updateActiveCommand, { passive: true });
+  window.addEventListener("resize", updateActiveCommand);
+  scrollSpyCleanup = () => {
+    window.removeEventListener("scroll", updateActiveCommand);
+    window.removeEventListener("resize", updateActiveCommand);
+  };
+
+  updateActiveCommand();
+}
+
 function updateBackToTopVisibility() {
   if (!els.backToTopButton) return;
   const shouldShow = window.scrollY > 420;
@@ -1240,8 +1687,10 @@ function renderSuggestions() {
   teardownScrollSpy();
   const ranked = getRankedCommands();
   els.results.innerHTML = "";
+  state.routeSectionId = "";
   els.resultTitle.textContent = state.tab === "All" ? "All commands" : state.tab;
   els.resultCount.textContent = `${ranked.length} result${ranked.length === 1 ? "" : "s"}`;
+  renderCommandToc(ranked);
 
   if (!ranked.length) {
     const empty = document.createElement("div");
@@ -1258,6 +1707,7 @@ function renderSuggestions() {
   }
   els.results.append(fragment);
   renderSuggestStatus(ranked);
+  setupCommandScrollSpy(ranked);
 }
 
 function scrollToNoteAnchor(anchorId) {
@@ -1332,7 +1782,7 @@ function renderVarsView() {
   title.textContent = "Set command placeholders";
   const helper = document.createElement("p");
   helper.className = "vars-help";
-  helper.textContent = "Values are applied to matching placeholders when commands are rendered. Sensitive values stay in memory only.";
+  helper.textContent = "Values are applied to matching global placeholders when commands are rendered. Context-only placeholders stay unchanged.";
   copy.append(title, helper);
 
   const actions = document.createElement("div");
@@ -1347,6 +1797,7 @@ function renderVarsView() {
   head.append(copy, actions);
   card.append(head);
   renderVariables(card);
+  renderVariablePreview(card);
   els.results.append(card);
 }
 
@@ -1366,11 +1817,12 @@ function syncViewChrome() {
 
   els.toolbar.classList.toggle("hidden", meta.showToolbar === false);
   els.readyOnlyButton.classList.toggle("hidden", !showSuggest);
+  els.resetChecklistButton.classList.toggle("hidden", !showNotes);
   els.selectionPanel.classList.toggle("hidden", !showSuggest);
   els.tagGroups.classList.toggle("hidden", !showSuggest);
   els.filters.classList.toggle("hidden", !showSuggest && !showNotes);
   els.noteIndexPanel.classList.toggle("hidden", !showNotes);
-  els.noteTocPanel.classList.toggle("hidden", !showNotes);
+  els.noteTocPanel.classList.toggle("hidden", !showNotes && !showSuggest);
   els.tabs.classList.toggle("hidden", !meta.showTabs);
 }
 
@@ -1433,16 +1885,12 @@ function bindEvents() {
     render();
   });
 
-  els.copyVisibleButton.addEventListener("click", () => {
-    if (state.view === "suggest") {
-      const commands = getRankedCommands().map((item) => applyVariables(commandBody(item.command)));
-      copyText(commands.join("\n\n"), els.copyVisibleButton);
-      return;
-    }
-
-    const activeNote = resolveActiveNote(getVisibleNotes());
-    if (!activeNote) return;
-    copyText(applyVariables(noteToText(activeNote)), els.copyVisibleButton);
+  els.resetChecklistButton.addEventListener("click", () => {
+    const prefix = currentChecklistPrefix();
+    if (prefix) resetChecklistKeys(prefix);
+    else state.checklist = {};
+    persistChecklistState();
+    render();
   });
 
   els.themeToggleButton.addEventListener("click", () => {
@@ -1530,6 +1978,15 @@ function bindEvents() {
 
     const anchorId = link.dataset.scrollId;
     const parentSection = link.dataset.parentSection || anchorId;
+
+    if (state.view === "suggest") {
+      state.routeSectionId = anchorId;
+      if (link.dataset.parentSection) state.tocCollapsed.delete(parentSection);
+      setActiveTocId(anchorId);
+      scrollToNoteAnchor(anchorId);
+      return;
+    }
+
     state.routeSectionId = anchorId;
     state.pendingScrollId = anchorId;
     if (link.dataset.parentSection) state.tocCollapsed.delete(parentSection);
@@ -1538,9 +1995,18 @@ function bindEvents() {
   });
 
   els.results.addEventListener("click", (event) => {
+    const sectionResetButton = event.target.closest("[data-reset-checklist-section]");
+    if (sectionResetButton) {
+      event.preventDefault();
+      event.stopPropagation();
+      resetChecklistKeys(sectionResetButton.dataset.resetChecklistSection);
+      render();
+      return;
+    }
+
     const clearVarsButton = event.target.closest("[data-clear-vars]");
     if (clearVarsButton) {
-      state.variables = {};
+      state.variables = defaultVariables();
       persistVariables();
       render();
       return;
@@ -1558,11 +2024,29 @@ function bindEvents() {
   });
 
   els.results.addEventListener("input", (event) => {
+    const previewInput = event.target.closest("[data-var-preview]");
+    if (previewInput) {
+      state.varPreview = previewInput.value;
+      writeStorage("oscp-var-preview", state.varPreview);
+      const previewCard = previewInput.closest(".vars-preview-card");
+      if (previewCard) updateVariablePreview(previewCard);
+      return;
+    }
+
     const input = event.target.closest("[data-var-key]");
     if (!input) return;
     state.variables[input.dataset.varKey] = input.value.trim();
     persistVariables();
     renderVarsStatus();
+    const previewCard = input.closest(".vars-card")?.querySelector(".vars-preview-card");
+    if (previewCard) updateVariablePreview(previewCard);
+  });
+
+  els.results.addEventListener("change", (event) => {
+    const checkbox = event.target.closest("[data-checklist-key]");
+    if (!checkbox) return;
+    state.checklist[checkbox.dataset.checklistKey] = checkbox.checked;
+    persistChecklistState();
   });
 
   els.results.addEventListener(

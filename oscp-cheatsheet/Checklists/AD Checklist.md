@@ -17,6 +17,7 @@ Move from first contact to a usable AD path: identify the DC, collect users, tes
 - [ ] Scan ports and identify AD services.
 - [ ] Sync time before Kerberos work.
 - [ ] Try anonymous LDAP/SMB/RPC enum.
+- [ ] Don't forget to look at description at LDAP user enum
 - [ ] Build a username list.
 - [ ] Try AS-REP roast and Kerberoast paths.
 - [ ] Collect BloodHound data once creds are available.
@@ -24,7 +25,7 @@ Move from first contact to a usable AD path: identify the DC, collect users, tes
 - [ ] Save usernames, groups, shares, policy, and found files for later suggestions.
 
 ## Nmap
-
+- [ ]  Checked
 ```sh
 # Fast full TCP scan.
 nmap -p- --min-rate 1000 -T4 <TARGET_IP> -oN nmap_ports.txt
@@ -49,7 +50,7 @@ sudo hwclock --systohc
 ```
 
 ## Anonymous Enum
-
+- [ ] Checked
 ```sh
 # LDAP user descriptions and usernames.
 nxc ldap <DC_IP> -u '' -p '' --query '(objectclass=user)' '' | awk '/description/{desc=substr($0,index($0,$6));valid=(desc!~/Built-in account for guest access to the computer\/domain/)} /sAMAccountName/&&valid{ if(!seen[$6]++){ printf "[+]Description: %-30s User: %s\n", desc, $6 } valid=0 }'
@@ -62,7 +63,7 @@ nxc smb <DC_IP> -u guest -p '' --shares
 ```
 
 ## Username Enum
-
+- [ ] Checked
 ```sh
 # RID brute and save discovered names.
 nxc smb <DC_IP> -u anonymous -p '' --rid-brute 5000 > rid.txt
@@ -79,12 +80,13 @@ grep -a "VALID USERNAME:" kerbrute.txt | awk -F'[@ ]+' '{print tolower($(NF-1))}
 ```
 
 ## Username Enum (with cred)
+- [ ] Checked
 ```shell
-nxc smb <DC_IP> -u <USER> -p '<PASS>' --users > real_users.txt
+nxc smb <DC_IP> -u <USER> -p '<PASS>' --users | tee real_users.txt
 # Extract user, dedupe, append only new users.
 awk '{print $5}' real_users.txt | grep -E '^[A-Za-z][A-Za-z.]+$' | tr '[:upper:]' '[:lower:]' | sort -u | grep -vxFf users.txt >> users.txt
 
-nxc ldap <DC_IP> -u <USER> -p '<PASS>' --users > real_users.txt
+nxc ldap <DC_IP> -u <USER> -p '<PASS>' --users | tee real_users.txt
 # Extract user, dedupe, append only new users.
 awk '{print $5}' real_users.txt | grep -E '^[A-Za-z][A-Za-z.]+$' | tr '[:upper:]' '[:lower:]' | sort -u | grep -vxFf users.txt >> users.txt
 ```

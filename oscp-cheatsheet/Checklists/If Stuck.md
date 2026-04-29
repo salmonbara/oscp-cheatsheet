@@ -24,6 +24,11 @@ tags: [Troubleshooting, Checklist]
 
 ## AD Privesc / Post-Exploitation
 
+- [ ] If RDP works, open an elevated command prompt with the current credential when needed.
+- [ ] BloodHound: check `Find Principals with Control`, especially `GenericAll`, `AllExtendedRights`, and `ReadLAPSPassword`.
+- [ ] BloodHound: check `Find Computers with LAPS Enabled`.
+- [ ] BloodHound: check `Shortest Paths to Domain Admins`.
+- [ ] Re-check group nesting paths: `user -> Group A -> Group B -> Domain Admins`.
 - [ ] If BloodHound or normal AD tooling is blocked, go back to basic Windows privesc.
 - [ ] Re-check service binary hijacking.
 - [ ] Re-check DLL hijacking.
@@ -51,7 +56,7 @@ site:medium.com "/usr/bin/backup"
 "/usr/bin/backup" "walkthrough"
 ```
 
-## 📚 Top OSCP Resources
+## Top OSCP Resources
 
 - HackTricks: https://book.hacktricks.xyz
 - GTFOBins (Linux LPE): https://gtfobins.github.io

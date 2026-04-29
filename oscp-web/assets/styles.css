@@ -229,8 +229,29 @@ h3 {
 
 .vars-grid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(120px, 1fr));
+  grid-template-columns: repeat(4, minmax(130px, 1fr));
   gap: 10px;
+}
+
+.vars-groups {
+  display: grid;
+  gap: 16px;
+}
+
+.vars-group {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.vars-group h4 {
+  margin: 0;
+  color: var(--accent-text);
+  font-size: 0.86rem;
+  font-weight: 700;
 }
 
 .var-field {
@@ -282,6 +303,65 @@ h3 {
   margin: 6px 0 0;
   color: var(--muted);
   font-size: 0.92rem;
+}
+
+.vars-preview-card {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.vars-preview-card h3 {
+  margin: 0;
+}
+
+.vars-preview-input {
+  width: 100%;
+  min-height: 112px;
+  resize: vertical;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--input-bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  outline: none;
+}
+
+.vars-preview-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.vars-preview-report {
+  display: grid;
+  gap: 8px;
+}
+
+.vars-report-row {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+
+.vars-report-label {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.vars-preview-empty,
+.var-hints {
+  margin: 0;
+  color: var(--dim);
+  font-size: 0.8rem;
 }
 
 .search-box {
@@ -411,7 +491,7 @@ h3 {
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+  grid-template-columns: minmax(280px, 340px) minmax(0, 1fr) minmax(220px, 280px);
   gap: 18px;
   align-items: start;
   min-width: 0;
@@ -804,6 +884,36 @@ code {
   font-weight: 600;
 }
 
+.note-summary-title {
+  min-width: 0;
+  flex: 1;
+}
+
+.section-reset-button {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1;
+  opacity: 0.78;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease,
+    opacity 140ms ease;
+}
+
+.section-reset-button:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  opacity: 1;
+}
+
 .note-subsummary {
   padding: 10px 12px;
 }
@@ -847,6 +957,16 @@ code {
   color: var(--text);
 }
 
+.note-content a {
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.note-content a:hover {
+  color: var(--accent);
+}
+
 .note-list {
   margin: 0;
   padding-left: 18px;
@@ -855,6 +975,41 @@ code {
 
 .note-list li + li {
   margin-top: 6px;
+}
+
+.note-checklist {
+  display: grid;
+  gap: 8px;
+  padding-left: 0;
+  list-style: none;
+}
+
+.note-checklist li + li {
+  margin-top: 0;
+}
+
+.checklist-item {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  color: var(--text);
+}
+
+.checklist-item input {
+  width: 16px;
+  height: 16px;
+  margin: 4px 0 0;
+  accent-color: var(--accent);
+}
+
+.checklist-item span {
+  line-height: 1.55;
+}
+
+.checklist-item input:checked + span {
+  color: var(--dim);
+  text-decoration: line-through;
 }
 
 .note-tags {

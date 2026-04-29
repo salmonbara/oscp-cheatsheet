@@ -125,8 +125,12 @@ hashcat -m 31300 -a 3 hash.txt -w 3 ?l?l?l?l?l?l?l
 Crack other Windows-oriented hashes.
 
 ```sh
-# MSCache v2
+# MSCache v2 / DCC2
 hashcat -m 2100 -a 0 hash.txt <WORDLIST>
+
+# DCC2 can be slow. Save the target hash and run a focused wordlist attack.
+echo '<DCC2_HASH>' > dcc2.hash
+hashcat -m 2100 dcc2.hash <WORDLIST>
 
 # SCCM PXE
 hashcat -m 19850 -a 0 hash.txt <WORDLIST>
@@ -140,9 +144,48 @@ Extract and crack ZIP archive passwords with John.
 ```sh
 zip2john creds.zip > creds.hash
 john creds.hash --wordlist=/usr/share/wordlists/rockyou.txt
+fcrackzip -u -D -p /usr/share/wordlists/rockyou.txt creds.zip
 
 # Extract with the cracked password.
 7z x creds.zip -p<PASS>
+```
+
+### Protected File Hashes - 7z
+
+#ProtectedFile #Crack
+Extract and crack 7z archive passwords.
+
+```sh
+7z2john archive.7z > 7z.hash
+john 7z.hash --wordlist=<WORDLIST>
+
+# Quick test a password list directly with 7za.
+cat <WORDLIST> | 7za t archive.7z
+```
+
+### Protected File Hashes - PDF
+
+#ProtectedFile #Crack
+Crack or decrypt protected PDF files.
+
+```sh
+pdf2john file.pdf > pdf.hash
+john pdf.hash --wordlist=<WORDLIST>
+pdfcrack file.pdf -w <WORDLIST>
+
+# Decrypt after recovering the password.
+qpdf --password=<PASS> --decrypt encrypted.pdf plaintext.pdf
+```
+
+### Protected File Hashes - Office
+
+#ProtectedFile #Crack #Windows
+Extract and crack Microsoft Office document passwords.
+
+```sh
+office2john file.docx > office.hash
+office2john file.xlsx > office.hash
+john office.hash --wordlist=<WORDLIST>
 ```
 
 ### Protected File Hashes - Looted Backup ZIP
@@ -202,6 +245,7 @@ dir C:\Users\Administrator /s /b 2>nul | findstr /i "\.kdbx"
 # Attacker: crack the KeePass database.
 keepass2john Creds.kdbx > keepass.hash
 john keepass.hash --wordlist=<WORDLIST>
+hashcat -m 13400 keepass.hash <WORDLIST> -r /usr/share/hashcat/rules/rockyou-30000.rule --force
 ```
 
 ### UltraVNC Password Decrypt

