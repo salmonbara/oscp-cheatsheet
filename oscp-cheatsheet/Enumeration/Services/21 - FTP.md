@@ -19,6 +19,12 @@ tags: [FTP, Enumeration, Exploitation]
 - Always try anonymous login.
 - Common anonymous creds: `anonymous:anonymous`, `anonymous:<blank>`, `ftp:ftp`.
 
+## Found / Do / Then
+
+- Found: `21/tcp open ftp`.
+- Do: grab banner, try anonymous/default access, then test known creds only if you have them.
+- Then: loot readable files, look for web-root upload paths, credentials, backups, or private keys.
+
 ## Commands
 
 ### Quick Checks

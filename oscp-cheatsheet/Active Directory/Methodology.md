@@ -44,7 +44,7 @@ AD ports open? 88 / 389 / 445 / 5985
 - First creds found: BloodHound, Kerberoast, LDAP/SMB enum.
 - Local admin found: dump SAM/LSASS, then lateral movement.
 - BloodHound path found: abuse edge in [[Privesc]].
-- AD CS vulnerable: use ESC path in [[Bloodhound/Certification - ADCS]].
+- AD CS vulnerable: review [[Bloodhound/BloodHound Analysis]] and use ESC path in [[Privesc]].
 - DA achieved: run [[Post-DA]].
 
 ## Trick

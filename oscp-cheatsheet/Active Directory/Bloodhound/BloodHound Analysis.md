@@ -30,6 +30,24 @@ tags:
 - ACL abuse paths such as `GenericAll`, `WriteDACL`, `ForceChangePassword`
 - Delegation and AD CS shortcuts
 
+## Edge Cheat Sheet
+
+- `GenericAll` on group: add yourself or another principal to the target group.
+- `ForceChangePassword`: reset the target password, then validate access.
+- `WriteDACL`: grant yourself stronger rights such as DCSync.
+- `AddMember`: add yourself into a privileged group path.
+- Abuse commands live in [[../Privesc|AD Privesc To DA]].
+- After abuse, validate access and move laterally with [[../Lateral Movement]].
+
+## AD CS Review
+
+- `certipy find` = discover vulnerable templates / CA issues.
+- `certipy req` = request a certificate that gives you access.
+- `certipy auth` = turn a PFX into auth material.
+- `nxc smb ... -H` = quickly validate the recovered hash/access.
+- Enumeration commands live in [[../Post-Creds Enum]].
+- Exploitation commands live in [[../Privesc|AD Privesc To DA]].
+
 ## Cypher Queries
 
 #ActiveDirectory #Enumeration
@@ -64,6 +82,6 @@ MATCH (g:Group {name:"<GROUP>@<DOMAIN>"})-[r]->(o) RETURN g,r,o
 ## Next
 
 - Collection flow: [[../Post-Creds Enum]]
-- Edge abuse: [[Edges Privilege]]
-- AD CS abuse: [[Certification - ADCS]]
-- Full privesc pathing: [[Privesc]]
+- Edge abuse: [[../Privesc|AD Privesc To DA]]
+- AD CS abuse: [[../Post-Creds Enum]] then [[../Privesc|AD Privesc To DA]]
+- Full privesc pathing: [[../Privesc|AD Privesc To DA]]

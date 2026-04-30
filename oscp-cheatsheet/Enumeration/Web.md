@@ -99,8 +99,11 @@ ffuf -u http://<TARGET_IP>/FUZZ -w <(printf "index.php\n.index.php\n.#index.php\
 Use `ohmybackup` to scan for backup directories and files on a target site.
 
 ```sh
+# Install or update ohmybackup locally.
 git clone https://github.com/tismayil/ohmybackup.git
 cd ohmybackup
+
+# Run directly or build a local binary.
 go run ohmybackup.go --hostname <TARGET_HOST>
 go build ohmybackup.go
 ./ohmybackup --hostname <TARGET_HOST>
@@ -112,8 +115,11 @@ go build ohmybackup.go
 Basic web vulnerability scan.
 
 ```sh
+# Basic HTTP/HTTPS scans.
 nikto -h http://<TARGET_IP>
 nikto -h https://<TARGET_IP> -ssl
+
+# Scan a specific port and save reports.
 nikto -h http://<TARGET_IP> -p <PORT> -o nikto.txt
 nikto -h http://<TARGET_IP> -Format html -o nikto.html
 ```
@@ -137,9 +143,12 @@ wappalyzer http://<TARGET_IP>
 Run a quick Nuclei pass for known CVEs and exposed configs.
 
 ```sh
+# Update templates, then run quick and focused scans.
 nuclei -update-templates
 nuclei -u http://<TARGET_IP>
 nuclei -u http://<TARGET_IP> -severity critical,high
+
+# Target specific template groups or a target list.
 nuclei -u http://<TARGET_IP> -t cves/2021/
 nuclei -u http://<TARGET_IP> -t exposures/configs/
 nuclei -l targets.txt -severity high,critical -o nuclei-results.txt
@@ -222,7 +231,10 @@ search drupal_dru
 Scan WordPress for users, plugins, themes, and vulnerable plugins when an API token is available.
 
 ```sh
+# Scan the site first.
 wpscan --url http://<TARGET_IP>
+
+# Enumerate users, plugins, themes, and vulnerable plugins.
 wpscan --url http://<TARGET_IP> --enumerate u,p,t
 wpscan --url http://<TARGET_IP> --enumerate vp --api-token <TOKEN>
 ```

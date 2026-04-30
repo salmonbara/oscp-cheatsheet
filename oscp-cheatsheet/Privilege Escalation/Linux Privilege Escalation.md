@@ -198,6 +198,8 @@ john id_rsa.hash --wordlist=/usr/share/wordlists/rockyou.txt
 
 ### Writable Password Files
 
+Check writable credential files first; editing password material is noisy but very direct when allowed.
+
 ### Writable Password Files - Direct Root Entries
 
 #Shell #Linux #PrivilegeEscalation

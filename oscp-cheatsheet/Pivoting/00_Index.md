@@ -8,4 +8,4 @@ tags: [Pivoting, Tunnelling]
 # Pivoting
 
 - [[Tunnelling]]
-- Add Ligolo, Chisel, SSH dynamic forwarding, and proxychains notes here.
+- Tunnelling covers Proxychains, Chisel, SSH forwarding, Socat, Ligolo routed pivot, and Ligolo localhost forwarding.

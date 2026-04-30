@@ -2,6 +2,7 @@
 title: Certification - ADCS
 type: note
 tab: Active Directory
+hidden: true
 tools: [certipy, nxc]
 inputs: [Username, Password, PFX, Hash]
 outputs: [PFX, Hash, DA]
@@ -12,8 +13,9 @@ tags: [ActiveDirectory, Enumeration, PrivilegeEscalation, Kerberos]
 
 ## Focus
 
+- This page is hidden from the web note list to reduce AD page noise.
 - AD CS enum and exploitation commands are already covered in [[../Post-Creds Enum]] and [[../Privesc]].
-- This note keeps the attack path readable without duplicating the command blocks again.
+- The quick mental model now lives in [[BloodHound Analysis]] under `AD CS Review`.
 
 ## Quick Mental Model
 
@@ -25,4 +27,4 @@ tags: [ActiveDirectory, Enumeration, PrivilegeEscalation, Kerberos]
 ## Next
 
 - Enumeration step: [[../Post-Creds Enum]]
-- Privilege escalation step: [[Privesc]]
+- Privilege escalation step: [[../Privesc|AD Privesc To DA]]

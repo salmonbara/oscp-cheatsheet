@@ -11,6 +11,8 @@ tags: [ActiveDirectory, SMB, RPC, Enumeration]
 
 # AD SMB Enum
 
+## Commands
+
 #SMB #ActiveDirectory #Enumeration
 Test SMB null session.
 

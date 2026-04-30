@@ -55,7 +55,30 @@ function slugify(value) {
     .slice(0, 80);
 }
 
+function normalizeText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
 const noteLikeViews = new Set(["notes"]);
+
+const noteTabOrder = [
+  "All",
+  "Enum",
+  "Services",
+  "Web",
+  "Linux",
+  "Windows",
+  "Post-Exploitation",
+  "Active Directory",
+  "Credentials",
+  "Pivoting",
+  "Payloads",
+  "Checklists",
+  "Tools",
+];
 
 const variableFields = [
   { key: "LHOST", label: "LHOST", group: "Listener", aliases: ["LHOST", "LOCAL_IP", "ATTACKER_IP"] },
@@ -69,6 +92,7 @@ const variableFields = [
   { key: "DOMAIN", label: "Domain", group: "Active Directory", aliases: ["DOMAIN"] },
   { key: "USER", label: "User", group: "Credentials", aliases: ["USER", "USERNAME"] },
   { key: "PASS", label: "Pass", group: "Credentials", aliases: ["PASS", "PASSWORD"] },
+  { key: "NEWPASS", label: "New Pass", group: "Credentials", aliases: ["NEWPASS", "NEW_PASS", "NEW_PASSWORD"] },
   { key: "HASH", label: "Hash", group: "Credentials", aliases: ["HASH", "NTLM_HASH"] },
   { key: "USERLIST", label: "Userlist", group: "Files / Lists", aliases: ["USERLIST"], defaultValue: "users.txt" },
   {
@@ -470,6 +494,7 @@ function noteBag(note) {
     note.title,
     note.source,
     note.tab,
+    note.note_group,
     ...list(note.tags),
     ...list(note.blocks).map((block) => blockText(block)),
   ];
@@ -564,7 +589,7 @@ function applyRouteFromLocation() {
   if (note) {
     if (state.noteId !== note.id) clearNoteNavigationState();
     state.noteId = note.id;
-    state.tab = note.tab;
+    state.tab = note.note_group || note.tab;
   }
 
   state.routeSectionId = route.sectionId || "";
@@ -716,15 +741,83 @@ function getRankedCommands(selected = state.selected, tabOverride = state.tab) {
     .sort((a, b) => b.score - a.score || a.command.title.localeCompare(b.command.title));
 }
 
+function indexOfMatch(value, patterns, fallback = 1000) {
+  const haystack = normalizeText(value);
+  const index = patterns.findIndex((pattern) => pattern.test(haystack));
+  return index === -1 ? fallback : index * 10;
+}
+
+function firstPortNumber(note) {
+  const value = `${note.title || ""} ${note.source || ""}`;
+  const match = value.match(/\b(\d{1,5})(?:\s*[,/-]|\s+-\s+)/);
+  return match ? Number(match[1]) : Number.MAX_SAFE_INTEGER;
+}
+
+function noteFlowWeight(note) {
+  const value = `${note.source || ""} ${note.title || ""}`;
+  const group = note.note_group || note.tab;
+
+  if (group === "Services") return firstPortNumber(note);
+
+  if (group === "Active Directory") {
+    return indexOfMatch(value, [
+      /\bmethodology\b/,
+      /\brecon\b/,
+      /\benumeration\b|\bldap enum\b|\bsmb enum\b|\bwindows enum\b/,
+      /\binitial access\b/,
+      /\bpost creds\b|\bpost-credentials\b/,
+      /\bbloodhound analysis\b/,
+      /\bcertification\b|\badcs\b|\bedges privilege\b/,
+      /\bprivesc\b|\bprivilege\b/,
+      /\blateral movement\b/,
+      /\bpost da\b/,
+    ]);
+  }
+
+  const perTab = {
+    Enum: [/\bpassive\b/, /\bnmap\b/, /\bweb\b/, /\bldap\b/, /\bsmb\b/],
+    Web: [/\bweb enumeration\b/, /\bsql injection\b/, /\blfi\b|\blocal file inclusion\b/, /\btomcat\b/, /\bweb payload\b/],
+    Linux: [/\bmethodology\b/, /\benumeration\b|\bpost exploitation\b/, /\bprivilege escalation\b/],
+    Windows: [/\bmethodology\b/, /\benumeration\b|\bpost exploitation\b/, /\bprivilege escalation\b/, /\bpotato\b/],
+    "Post-Exploitation": [/\bfull interactive\b/, /\bfile transfer\b/, /\bpersistence\b/],
+    Credentials: [/\bpassword guessing\b/, /\bonline password\b/, /\bhash crack\b/],
+    Pivoting: [/\btunnelling\b|\btunneling\b/],
+    Payloads: [/\breverse shells?\b/],
+    Checklists: [/\benumeration\b/, /\bweb\b/, /\blinux\b/, /\bwindows\b/, /\bad\b/, /\bif stuck\b/],
+    Tools: [/\bgrep\b/],
+  };
+
+  return indexOfMatch(value, perTab[group] || []);
+}
+
+function compareNotes(a, b) {
+  const groupA = a.note_group || a.tab;
+  const groupB = b.note_group || b.tab;
+  const tabCompare = noteTabOrder.indexOf(groupA) - noteTabOrder.indexOf(groupB);
+  if (state.tab === "All" && tabCompare !== 0) return tabCompare;
+
+  const weightCompare = noteFlowWeight(a) - noteFlowWeight(b);
+  if (weightCompare !== 0) return weightCompare;
+
+  const portCompare = firstPortNumber(a) - firstPortNumber(b);
+  if (portCompare !== 0 && Number.isFinite(portCompare)) return portCompare;
+
+  return String(a.title || "").localeCompare(String(b.title || ""), undefined, {
+    numeric: true,
+    sensitivity: "base",
+  });
+}
+
 function getVisibleNotes(tabOverride = state.tab, viewOverride = state.view) {
   const query = state.query.trim().toLowerCase();
 
   return state.notes.filter((note) => {
-    if (viewOverride === "notes" && tabOverride !== "All" && note.tab !== tabOverride) return false;
+    const group = note.note_group || note.tab;
+    if (viewOverride === "notes" && tabOverride !== "All" && group !== tabOverride) return false;
     if (!query) return true;
     const bag = noteBag(note);
     return query.split(/\s+/).every((part) => bag.includes(part));
-  });
+  }).sort(compareNotes);
 }
 
 function resolveActiveNote(visibleNotes) {
@@ -901,21 +994,25 @@ function renderVariableReport(container, report) {
 }
 
 function appendLinkedText(container, text) {
-  const urlPattern = /https?:\/\/[^\s<>"')\]]+/g;
+  const linkPattern = /\[([^\]]+)\]\(([^)\s]+)\)|(https?:\/\/[^\s<>"')\]]+)/g;
   const value = String(text || "");
   let lastIndex = 0;
   let match;
 
-  while ((match = urlPattern.exec(value))) {
+  while ((match = linkPattern.exec(value))) {
     if (match.index > lastIndex) {
       container.append(document.createTextNode(value.slice(lastIndex, match.index)));
     }
 
+    const [, label, markdownUrl, bareUrl] = match;
+    const href = markdownUrl || bareUrl;
     const link = document.createElement("a");
-    link.href = match[0];
-    link.textContent = match[0];
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
+    link.href = href;
+    link.textContent = label || href;
+    if (/^https?:\/\//i.test(href)) {
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+    }
     container.append(link);
     lastIndex = match.index + match[0].length;
   }
@@ -982,7 +1079,10 @@ function renderTabs() {
     return;
   }
 
-  const tabs = ["All", ...list(state.taxonomy.groups.tabs)];
+  const tabs =
+    state.view === "notes"
+      ? noteTabOrder.filter((tab) => tab === "All" || state.notes.some((note) => (note.note_group || note.tab) === tab))
+      : ["All", ...list(state.taxonomy.groups.tabs)];
   const counts = new Map();
 
   for (const tab of tabs) {
@@ -1099,7 +1199,7 @@ function renderNotesStatus(visibleNotes) {
   if (state.tab === "All") {
     totalInScope = state.notes.length || 1;
   } else {
-    totalInScope = state.notes.filter((note) => note.tab === state.tab).length || 1;
+    totalInScope = state.notes.filter((note) => (note.note_group || note.tab) === state.tab).length || 1;
   }
 
   els.statusCount.textContent = String(visibleNotes.length);
@@ -1168,7 +1268,8 @@ function renderCommand(item) {
 
   source.textContent = `${command.tab} / ${command.source || "generated"}`;
   title.textContent = command.title;
-  description.textContent = command.description || "";
+  description.replaceChildren();
+  appendLinkedText(description, command.description || "");
   description.classList.toggle("hidden", !command.description);
   codePanel.classList.add(`code-kind-${kind}`);
   pre.classList.add(`code-kind-${kind}`);
@@ -1407,7 +1508,7 @@ function renderNote(page) {
   const wrapper = document.createElement("div");
   wrapper.className = "note-page";
 
-  source.textContent = `${page.note.tab} / ${page.note.source}`;
+  source.textContent = `${page.note.note_group || page.note.tab} / ${page.note.source}`;
   title.textContent = page.note.title;
 
   if (page.intro.length) {
@@ -1731,11 +1832,27 @@ function syncNoteRoute(activeNote, mode = "replace") {
 
 function renderNotes() {
   teardownScrollSpy();
-  const visibleNotes = getVisibleNotes();
-  const activeNote = resolveActiveNote(visibleNotes);
   els.results.innerHTML = "";
-  renderNoteIndex(visibleNotes, activeNote);
-  renderNotesStatus(visibleNotes);
+  els.noteIndex.innerHTML = "";
+  renderNoteToc(null);
+
+  let visibleNotes = [];
+  let activeNote = null;
+  try {
+    visibleNotes = getVisibleNotes();
+    activeNote = resolveActiveNote(visibleNotes);
+    renderNoteIndex(visibleNotes, activeNote);
+    renderNotesStatus(visibleNotes);
+  } catch (error) {
+    console.error(error);
+    els.resultTitle.textContent = "Notes render error";
+    els.resultCount.textContent = "0 sections";
+    const empty = document.createElement("div");
+    empty.className = "empty-state";
+    empty.textContent = `Could not render notes: ${error.message}`;
+    els.results.append(empty);
+    return;
+  }
 
   if (!activeNote) {
     els.resultTitle.textContent = "No note selected";
@@ -1748,13 +1865,25 @@ function renderNotes() {
     return;
   }
 
-  const page = buildNotePage(activeNote);
-  els.resultTitle.textContent = activeNote.title;
-  els.resultCount.textContent = `${page.sections.length} section${page.sections.length === 1 ? "" : "s"}`;
-  renderNoteToc(page);
-  els.results.append(renderNote(page));
-  setupScrollSpy(page);
-  syncNoteRoute(activeNote, "replace");
+  try {
+    const page = buildNotePage(activeNote);
+    els.resultTitle.textContent = activeNote.title;
+    els.resultCount.textContent = `${page.sections.length} section${page.sections.length === 1 ? "" : "s"}`;
+    renderNoteToc(page);
+    els.results.append(renderNote(page));
+    setupScrollSpy(page);
+    syncNoteRoute(activeNote, "replace");
+  } catch (error) {
+    console.error(error);
+    els.resultTitle.textContent = "Notes render error";
+    els.resultCount.textContent = "0 sections";
+    renderNoteToc(null);
+    const empty = document.createElement("div");
+    empty.className = "empty-state";
+    empty.textContent = `Could not render ${activeNote.title}: ${error.message}`;
+    els.results.append(empty);
+    return;
+  }
 
   if (state.pendingScrollId) {
     requestAnimationFrame(() => {
@@ -1827,6 +1956,8 @@ function syncViewChrome() {
 }
 
 function render() {
+  if (!state.taxonomy) return;
+
   normalizeView();
   syncThemeButton();
   syncViewChrome();
@@ -1917,21 +2048,16 @@ function bindEvents() {
   els.viewSwitch.addEventListener("click", (event) => {
     const button = event.target.closest("[data-view]");
     if (!button) return;
+    event.preventDefault();
 
     const nextView = button.dataset.view;
+    if (state.view === nextView) return;
+
     state.view = nextView;
+    state.query = "";
+    els.searchInput.value = "";
     clearNoteNavigationState();
-
-    if (nextView === "suggest" || nextView === "vars") {
-      clearRoute("replace");
-      render();
-      return;
-    }
-
-    const visibleNotes = getVisibleNotes(state.tab, nextView);
-    const activeNote = resolveActiveNote(visibleNotes);
-    if (activeNote) setRoute(nextView, activeNote.id, "", "replace");
-    else clearRoute("replace");
+    clearRoute("replace");
     render();
   });
 
@@ -2066,6 +2192,11 @@ function bindEvents() {
   );
 
   window.addEventListener("popstate", () => {
+    applyRouteFromLocation();
+    render();
+  });
+
+  window.addEventListener("hashchange", () => {
     applyRouteFromLocation();
     render();
   });

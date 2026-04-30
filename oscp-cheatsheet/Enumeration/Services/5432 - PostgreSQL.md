@@ -16,6 +16,12 @@ tags:
 
 # 5432 - PostgreSQL
 
+## Found / Do / Then
+
+- Found: `5432/tcp open postgresql`.
+- Do: connect with discovered creds and list databases/tables.
+- Then: loot application secrets, hashes, or data that points to initial access.
+
 ## Commands
 
 ### Connect

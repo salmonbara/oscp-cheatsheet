@@ -14,6 +14,12 @@ tags: [SSH, Enumeration, Exploitation]
 
 `22/tcp open ssh`
 
+## Found / Do / Then
+
+- Found: `22/tcp open ssh`.
+- Do: fingerprint auth methods and test known creds or private keys.
+- Then: crack protected keys, log in, stabilize shell, and move to post-exploitation/privesc.
+
 ## Commands
 
 ### Nmap

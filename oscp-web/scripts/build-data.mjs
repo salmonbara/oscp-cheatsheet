@@ -240,6 +240,31 @@ function deriveTab(source, explicitTab) {
   return "Enum";
 }
 
+function deriveNoteGroup(source, title, tab) {
+  const value = normalizeText(`${source} ${title}`);
+
+  if (source.startsWith("Active Directory/")) return "Active Directory";
+  if (source.startsWith("Enumeration/Services/")) return "Services";
+  if (source.startsWith("Checklists/")) return "Checklists";
+  if (source.startsWith("Tools/")) return "Tools";
+  if (source.startsWith("Pivoting/")) return "Pivoting";
+  if (source.startsWith("Payloads/")) return "Payloads";
+  if (source.startsWith("Credentials/")) return "Credentials";
+
+  if (/\bwindows\b|\bpotato\b/.test(value)) return "Windows";
+  if (/\blinux\b/.test(value)) return "Linux";
+  if (/\bfile transfer\b|\bfull interactive shell\b/.test(value)) return "Post-Exploitation";
+  if (/\bpersistence\b/.test(value)) return "Post-Exploitation";
+  if (/\bweb\b|\bsql injection\b|\blfi\b|\blocal file inclusion\b|\btomcat\b/.test(value)) return "Web";
+
+  if (tab === "Initial Access") return "Credentials";
+  if (tab === "Exploitation") return "Web";
+  if (tab === "Privesc") return "Windows";
+  if (tab === "Post-Exploitation") return "Post-Exploitation";
+
+  return tab || "Enum";
+}
+
 function frontmatterEnd(markdown) {
   if (!markdown.startsWith("---")) return -1;
   return markdown.indexOf("\n---", 3);
@@ -297,6 +322,10 @@ function shouldSkipMarkdownSource(source) {
     source.endsWith("/00_Index.md") ||
     source === "00_Index.md"
   );
+}
+
+function isHiddenFrontmatter(frontmatter) {
+  return String(frontmatter.hidden || "").toLowerCase() === "true";
 }
 
 function extractTags(line) {
@@ -577,6 +606,9 @@ function extractMarkdownCommands(taxonomy) {
 
     const markdown = readText(filePath);
     const frontmatter = parseFrontmatter(markdown);
+    if (isHiddenFrontmatter(frontmatter)) {
+      continue;
+    }
     const tab = deriveTab(source, frontmatter.tab);
     const lines = markdown.split(/\r?\n/);
     const stepWorkflowGroups = buildStepWorkflowGroups(lines, taxonomy, frontmatter, source);
@@ -678,8 +710,12 @@ function extractNotes() {
 
     const markdown = readText(filePath);
     const frontmatter = parseFrontmatter(markdown);
+    if (isHiddenFrontmatter(frontmatter)) {
+      continue;
+    }
     const title = resolveTitle(frontmatter, source, markdown);
     const tab = deriveTab(source, frontmatter.tab);
+    const noteGroup = frontmatter.note_group || deriveNoteGroup(source, title, tab);
     const blocks = parseNoteBlocks(markdown, title);
 
     notes.push({
@@ -687,6 +723,7 @@ function extractNotes() {
       title,
       source,
       tab,
+      note_group: noteGroup,
       type: frontmatter.type || "note",
       tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : [],
       blocks,

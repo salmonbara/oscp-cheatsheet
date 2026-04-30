@@ -23,7 +23,7 @@ tabs: [Enum, Services, Initial Access, Exploitation, Privesc, Post-Exploitation,
 
 ## Supporting
 
-- [[prompt|Prompt Inbox]] - drop raw commands/notes here for triage.
+- [[Log|Prompt Inbox]] - drop raw commands/notes here for triage.
 - [[Checklists/If Stuck|If Stuck]] - quick reroute checklist when blocked.
 - [[_data/taxonomy.yml|Taxonomy]] - future web filter groups.
 - [[_data/commands.yml|Command Data]] - structured command cards for later web usage.

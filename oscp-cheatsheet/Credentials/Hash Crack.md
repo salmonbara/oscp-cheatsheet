@@ -35,13 +35,11 @@ nth -t '<HASH_VALUE>' --john
 #Hash #Crack
 Quickly check common hashes online when exam/network rules allow it, before spending time on full cracking.
 
-```text
-CrackStation: https://crackstation.net
-Hashes.com: https://hashes.com/en/decrypt/hash
-MD5Decrypt: https://md5decrypt.net
+- [CrackStation](https://crackstation.net)
+- [Hashes.com](https://hashes.com/en/decrypt/hash)
+- [MD5Decrypt](https://md5decrypt.net)
 
 Best for MD5, SHA1, NTLM, and other common-password hashes.
-```
 
 ## NTLM Family
 

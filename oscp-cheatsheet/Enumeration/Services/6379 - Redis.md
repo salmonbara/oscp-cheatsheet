@@ -14,6 +14,12 @@ tags: [Redis, Enumeration, Exploitation, SSH, Linux]
 
 `6379/tcp open redis`
 
+## Found / Do / Then
+
+- Found: `6379/tcp open redis`.
+- Do: check whether Redis allows unauthenticated or password-authenticated `INFO`.
+- Then: review config/write ability and consider SSH key injection only when Redis can write to a useful path.
+
 ## Commands
 
 ### Quick Checks

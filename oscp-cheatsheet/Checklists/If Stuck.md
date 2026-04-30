@@ -58,12 +58,12 @@ site:medium.com "/usr/bin/backup"
 
 ## Top OSCP Resources
 
-- HackTricks: https://book.hacktricks.xyz
-- GTFOBins (Linux LPE): https://gtfobins.github.io
-- LOLBAS (Windows LPE): https://lolbas-project.github.io
-- Revshells Generator: https://www.revshells.com
-- PayloadsAllTheThings: https://github.com/swisskyrepo/PayloadsAllTheThings
-- CyberChef: https://gchq.github.io/CyberChef
-- ExploitDB: https://www.exploit-db.com
-- ired.team: https://www.ired.team
-- 0xdf HTB writeups: https://0xdf.gitlab.io
+- [HackTricks](https://book.hacktricks.xyz)
+- [GTFOBins - Linux LPE](https://gtfobins.github.io)
+- [LOLBAS - Windows LPE](https://lolbas-project.github.io)
+- [Revshells Generator](https://www.revshells.com)
+- [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings)
+- [CyberChef](https://gchq.github.io/CyberChef)
+- [ExploitDB](https://www.exploit-db.com)
+- [ired.team](https://www.ired.team)
+- [0xdf HTB writeups](https://0xdf.gitlab.io)
