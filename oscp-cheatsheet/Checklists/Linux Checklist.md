@@ -94,16 +94,24 @@ whoami
 hostname
 uname -a
 cat /etc/passwd
+getent passwd | grep -v nologin | grep -v false
+
+grep -r "password" /home 2>/dev/null
+find / -name "*.conf" 2>/dev/null
+find / -name "id_rsa" 2>/dev/null
 
 # Sudo.
 sudo -l
+sudo --version
 
 # SUID/SGID.
 find / -perm -4000 -type f 2>/dev/null | xargs ls -la
 find / -perm -2000 -type f 2>/dev/null | xargs ls -la
+find / -perm /6000 -type f 2>/dev/null -exec ls -l {} +
 
 # Capabilities.
 getcap -r / 2>/dev/null
+getcap -r / 2>/dev/null | grep -E "cap_setuid|cap_setgid|cap_sys_admin"
 
 # Cron.
 cat /etc/crontab
@@ -111,8 +119,12 @@ ls -la /etc/cron*
 crontab -l
 
 # Writable paths.
+find / -writable -type d 2>/dev/null
 ls -la /etc/passwd
 ls -la /opt /var/www /home/*
+ls -la /home
+ls -la /var/www
+ls -la /var/www/html
 
 # Kernel.
 uname -r

